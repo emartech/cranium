@@ -1,16 +1,11 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'cranium/version'
-
 Gem::Specification.new do |spec|
   spec.name          = "cranium"
-  spec.version       = Cranium::VERSION
-  spec.authors       = ["Zoltan Ormandi"]
-  spec.email         = ["zoltan.ormandi@emarsys.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.version       = "0.1.#{ENV['BUILD_NUMBER'] || 0 }"
+  spec.authors       = ["Emarsys Technologies"]
+  spec.email         = ["emarsys_hungary@emarsys.com"]
+  spec.description   = %q{Provides Extract, Transform and Load functionality for loading data from CSV files to a database.}
+  spec.summary       = %q{Pure Ruby ETL framework}
+  spec.homepage      = "http://gems.ett.local"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
