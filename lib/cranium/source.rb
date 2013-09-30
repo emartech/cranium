@@ -24,4 +24,10 @@ class Cranium::Source
     @fields[name] = type
   end
 
+
+
+  def ==(other)
+    name == other.name and file_name == other.file_name and fields == other.fields
+  end
+
 end

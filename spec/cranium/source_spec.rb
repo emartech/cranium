@@ -36,4 +36,19 @@ describe Cranium::Source do
     end
   end
 
+
+  describe "#==" do
+    it "should return true if all attributes of two sources are equal" do
+      source1 = Cranium::Source.new "name"
+      source1.file "filename"
+      source1.field :field, String
+
+      source2 = Cranium::Source.new "name"
+      source2.file "filename"
+      source2.field :field, String
+
+      source1.should == source2
+    end
+  end
+
 end
