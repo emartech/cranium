@@ -1,0 +1,8 @@
+default:
+  --backtrace
+  --tags ~@wip
+
+build:
+  --backtrace
+  --format progress
+  --tags ~@wip

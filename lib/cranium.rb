@@ -1,3 +1,22 @@
+require 'cranium/dsl'
+
 module Cranium
-  # Your code goes here...
+
+  autoload :DataImporter, 'cranium/data_importer'
+  autoload :TestFramework, 'cranium/test_framework'
+
+  class << self
+
+    def application
+      @application ||= Application.new
+    end
+
+
+
+    def run
+      application.run
+    end
+
+  end
+
 end
