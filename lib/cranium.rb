@@ -5,6 +5,7 @@ module Cranium
   autoload :Application, 'cranium/application'
   autoload :Configuration, 'cranium/configuration'
   autoload :DataImporter, 'cranium/data_importer'
+  autoload :Source, 'cranium/source'
   autoload :TestFramework, 'cranium/test_framework'
 
   class << self

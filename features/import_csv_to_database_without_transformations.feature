@@ -22,7 +22,7 @@ Feature: Import a CSV file into the database without any transformations
     end
 
     import :products do
-      to :warehouse__dim_product
+      to :dim_product
       put :item => :id
       put :title => :name
       put :category => :category
