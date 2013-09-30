@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-raise "\n\nPlease set $SMART_INSIGHT_DATA_HOME to continue\n \n" if ENV["SMART_INSIGHT_DATA_HOME"].nil?
+raise "\n\nPlease set $GPFDIST_HOME to continue\n \n" if ENV["GPFDIST_HOME"].nil?
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.synced_folder ".", "/vagrant", :disabled => true
-  config.vm.synced_folder ENV["SMART_INSIGHT_DATA_HOME"], "/home/gpadmin/smart-insight-data", owner: "gpadmin", group: "gpadmin"
+  config.vm.synced_folder ENV["GPFDIST_HOME"], "/home/gpadmin/smart-insight-data", owner: "gpadmin", group: "gpadmin"
 
   config.vm.provision :shell, :inline => "chown -R gpadmin.gpadmin /home/gpadmin"
 end

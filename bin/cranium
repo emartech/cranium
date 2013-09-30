@@ -2,4 +2,4 @@
 
 require 'cranium'
 
-Cranium.run
+Cranium.run ARGV
