@@ -2,7 +2,7 @@ module Cranium
   module DSL
 
     def source(name, &block)
-
+      Cranium.application.register_source name, &block
     end
 
 

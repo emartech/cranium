@@ -17,12 +17,6 @@ module Cranium
 
 
 
-    def run(args)
-      application.run args
-    end
-
-
-
     def configuration
       @configuration ||= Configuration.new.freeze
     end

@@ -2,8 +2,18 @@ require_relative 'spec_helper'
 
 describe Cranium do
 
-  describe ".configure" do
+  describe ".application" do
+    it "should return an Application object" do
+      Cranium.application.should be_a Cranium::Application
+    end
 
+    it "should return a singleton" do
+      Cranium.application.should equal Cranium.application
+    end
+  end
+
+
+  describe ".configure" do
     it "should set or modify the existing configuration" do
       Cranium.configure do |config|
         config.greenplum_connection_string = "greenplum connection"
@@ -17,7 +27,6 @@ describe Cranium do
       Cranium.configuration.greenplum_connection_string.should == "new greenplum connection"
       Cranium.configuration.mysql_connection_string.should == "mysql connection"
     end
-
   end
 
 
