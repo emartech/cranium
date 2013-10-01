@@ -5,6 +5,7 @@ class Cranium::Import
   end
 
 
+  attr_reader :name
   attr_reader :field_associations
   define_attribute :to
 

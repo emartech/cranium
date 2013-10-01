@@ -12,6 +12,14 @@ describe Cranium::Import do
     end
   end
 
+
+  describe "#name" do
+    it "should return the name of the import definition" do
+      import.name.should == "import_name"
+    end
+  end
+
+
   describe "#field_associations" do
     context "when no fields are set" do
       it "should return empty hash" do
@@ -19,6 +27,7 @@ describe Cranium::Import do
       end
     end
   end
+
 
   describe "#put" do
     it "should add field associations" do
