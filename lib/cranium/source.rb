@@ -1,21 +1,28 @@
 class Cranium::Source
 
+  class << self
+    include Cranium::AttributeDSL
+  end
+
   attr_reader :name
-  attr_reader :file_name
   attr_reader :fields
+
+  define_attribute :file
+  define_attribute :delimiter
+  define_attribute :escape
+  define_attribute :quote
+  define_attribute :encoding
 
 
 
   def initialize(name)
     @name = name
-    @file_name = "#{name}.csv"
+    @file = "#{name}.csv"
     @fields = {}
-  end
-
-
-
-  def file(file_name)
-    @file_name = file_name
+    @delimiter = ","
+    @escape = '"'
+    @quote = '"'
+    @encoding = "UTF-8"
   end
 
 
@@ -27,7 +34,13 @@ class Cranium::Source
 
 
   def ==(other)
-    name == other.name and file_name == other.file_name and fields == other.fields
+    name == other.name and
+      file == other.file and
+      delimiter == other.delimiter and
+      escape == other.escape and
+      quote == other.quote and
+      encoding == other.encoding and
+      fields == other.fields
   end
 
 end

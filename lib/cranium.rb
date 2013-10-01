@@ -3,8 +3,10 @@ require 'cranium/dsl'
 module Cranium
 
   autoload :Application, 'cranium/application'
+  autoload :AttributeDSL, 'cranium/attribute_dsl'
   autoload :Configuration, 'cranium/configuration'
   autoload :DataImporter, 'cranium/data_importer'
+  autoload :ExternalTable, 'cranium/external_table'
   autoload :Source, 'cranium/source'
   autoload :SourceRegistry, 'cranium/source_registry'
   autoload :TestFramework, 'cranium/test_framework'

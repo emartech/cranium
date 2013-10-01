@@ -4,19 +4,29 @@ describe Cranium::Source do
 
   let(:source) { Cranium::Source.new "name" }
 
-  describe "#file_name" do
-    it "should return the the source name as the default filename" do
-      source.file_name.should == "name.csv"
+
+  { file: "name.csv",
+    delimiter: ",",
+    escape: '"',
+    quote: '"',
+    encoding: "UTF-8" }.each do |attribute, default_value|
+
+    describe "#attribute" do
+      context "if called without a parameter" do
+        it "should return the (default) value of the attribute" do
+          source.send(attribute).should == default_value
+        end
+      end
+
+      context "if called with a parameter" do
+        it "should set the attribute to the specified value" do
+          source.send(attribute, "new value")
+
+          source.send(attribute).should == "new value"
+        end
+      end
     end
-  end
 
-
-  describe "#file" do
-    it "should set the file_name" do
-      source.file "new_file_name.csv"
-
-      source.file_name.should == "new_file_name.csv"
-    end
   end
 
 
@@ -33,21 +43,6 @@ describe Cranium::Source do
         field1: String,
         field2: Fixnum
       }
-    end
-  end
-
-
-  describe "#==" do
-    it "should return true if all attributes of two sources are equal" do
-      source1 = Cranium::Source.new "name"
-      source1.file "filename"
-      source1.field :field, String
-
-      source2 = Cranium::Source.new "name"
-      source2.file "filename"
-      source2.field :field, String
-
-      source1.should == source2
     end
   end
 
