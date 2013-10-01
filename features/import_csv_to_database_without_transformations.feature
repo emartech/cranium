@@ -14,13 +14,6 @@ Feature: Import a CSV file into the database without any transformations
     """
     And the following definition:
     """
-    Cranium.configure do |config|
-      config.greenplum_connection_string = "postgres://cranium:cranium@192.168.56.42:5432/cranium"
-      config.gpfdist_url = "gpfdhost:8123"
-      config.gpfdist_home_directory = ENV["GPFDIST_HOME"]
-      config.upload_directory = "#{File.basename Dir.pwd}/data"
-    end
-
     source :products do
       field :id, String
       field :name, String

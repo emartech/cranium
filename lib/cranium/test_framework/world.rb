@@ -1,5 +1,4 @@
 require 'open3'
-require 'fileutils'
 
 class Cranium::TestFramework::World
 
@@ -7,27 +6,36 @@ class Cranium::TestFramework::World
 
 
 
-  def initialize(greenplum_connection)
+  def initialize(working_directory, greenplum_connection)
     @greenplum_connection = greenplum_connection
+    @directory = working_directory
   end
 
 
 
   def save_definition(definition)
-    save_file DEFINITION_FILE, definition
+    config = <<-config_string
+      Cranium.configure do |config|
+        config.greenplum_connection_string = "#{Cranium.configuration.greenplum_connection_string}"
+        config.gpfdist_url = "#{Cranium.configuration.gpfdist_url}"
+        config.gpfdist_home_directory = "#{Cranium.configuration.gpfdist_home_directory}"
+        config.upload_directory = "#{Cranium.configuration.upload_directory}"
+      end
+    config_string
+
+    save_file DEFINITION_FILE, config + definition
   end
 
 
 
-  def save_file(file_name, content, directory = Dir.pwd)
-    FileUtils.mkdir_p directory unless Dir.exists? directory
-    File.open(File.join(directory, file_name), "w:UTF-8") { |file| file.write content }
+  def save_file(file_name, content)
+    File.open(File.join(@directory, file_name), "w:UTF-8") { |file| file.write content }
   end
 
 
 
   def execute_definition
-    out, err, status = Open3.capture3("bundle exec cranium #{DEFINITION_FILE}")
+    out, err, status = Open3.capture3("bundle exec cranium #{@directory}/#{DEFINITION_FILE}")
   rescue
     puts "output: #{out}"
     puts "error: #{err}"

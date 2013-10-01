@@ -1,29 +1,24 @@
 require 'sequel'
-require 'tmpdir'
+require 'yaml'
+require 'fileutils'
 require_relative "../../lib/cranium"
 
-Cranium.configure do |config|
-  config.greenplum_connection_string = "postgres://cranium:cranium@192.168.56.42:5432/cranium"
-  config.gpfdist_home_directory = ENV["GPFDIST_HOME"]
+environment = YAML.load_file("#{File.dirname(__FILE__)}/environment.yml")["environment"]
+require_relative "environments/#{environment}"
+
+raise "Configuration missing" if Cranium.configuration.gpfdist_home_directory.nil? or Cranium.configuration.upload_directory.nil?
+directory = File.join(Cranium.configuration.gpfdist_home_directory, Cranium.configuration.upload_directory)
+
+Before do
+  FileUtils.rm_rf directory
+  FileUtils.mkdir_p directory
 end
 
-greenplum_connection = Sequel.connect "postgres://cranium:cranium@192.168.56.42:5432/cranium"
-greenplum_connection.logger = Logger.new('log/query.log')
-
-
-Around do |_, block|
-  Dir.mktmpdir nil, Cranium.configuration.gpfdist_home_directory do |dir|
-    Cranium.configure do |config|
-      config.upload_directory = "#{File.basename dir}/data"
-    end
-
-    Dir.chdir dir
-    block.call
-    Cranium::TestFramework::DatabaseTable.cleanup
-  end
+After do
+  Cranium::TestFramework::DatabaseTable.cleanup
 end
 
-
+greenplum_connection = Sequel.connect Cranium.configuration.greenplum_connection_string
 World do
-  Cranium::TestFramework::World.new greenplum_connection
+  Cranium::TestFramework::World.new directory, greenplum_connection
 end
