@@ -1,4 +1,3 @@
-@wip
 Feature: Import a CSV file into the database without any transformations
 
   Scenario: Successful import
@@ -9,27 +8,34 @@ Feature: Import a CSV file into the database without any transformations
       | category   | TEXT       |
     And a "products.csv" data file containing:
     """
-    item,title,category
+    id,name,category
     JNI-123,Just a product name,Main category > Subcategory > Sub-subcategory
     CDI-234,Another product name,Smart Insight > Cool stuff > Scripts
     """
     And the following definition:
     """
+    Cranium.configure do |config|
+      config.greenplum_connection_string = "postgres://cranium:cranium@192.168.56.42:5432/cranium"
+      config.gpfdist_url = "gpfdhost:8123"
+      config.gpfdist_home_directory = ENV["GPFDIST_HOME"]
+      config.upload_directory = "#{File.basename Dir.pwd}/data"
+    end
+
     source :products do
-      field :item, String
-      field :title, String
+      field :id, String
+      field :name, String
       field :category, String
     end
 
     import :products do
       to :dim_product
-      put :item => :id
-      put :title => :name
+      put :id => :item
+      put :name => :title
       put :category => :category
     end
     """
     When I execute the definition
     Then the "dim_product" table should contain:
-      | item | title                | category                                      |
-      | 1    | Just a product name  | Main category > Subcategory > Sub-subcategory |
-      | 2    | Another product name | Smart Insight > Cool stuff > Scripts          |
+      | item    | title                | category                                      |
+      | JNI-123 | Just a product name  | Main category > Subcategory > Sub-subcategory |
+      | CDI-234 | Another product name | Smart Insight > Cool stuff > Scripts          |

@@ -28,6 +28,7 @@ class Cranium::TestFramework::World
 
   def execute_definition
     out, err, status = Open3.capture3("bundle exec cranium #{DEFINITION_FILE}")
+  rescue
     puts "output: #{out}"
     puts "error: #{err}"
     puts "exit status: #{status.exitstatus}"
