@@ -36,7 +36,7 @@ describe Cranium::ExternalTable do
           date_field DATE,
           timestamp_field TIMESTAMP WITHOUT TIME ZONE
       )
-      LOCATION ('gpfdist://gpfdist-url/gpfdist-home/test_products.csv')
+      LOCATION ('gpfdist://gpfdist-url/upload-dir/test_products.csv')
       FORMAT 'CSV' (DELIMITER ';' ESCAPE '''' QUOTE '"' HEADER)
       ENCODING 'UTF8'
       sql
@@ -49,9 +49,16 @@ describe Cranium::ExternalTable do
 
   describe "#destroy" do
     it "should drop the external table" do
-      connection.should_receive(:run).with(%Q[DROP EXTERNAL TABLE "products"])
+      connection.should_receive(:run).with(%Q[DROP EXTERNAL TABLE "external_products"])
 
       external_table.destroy
+    end
+  end
+
+
+  describe "#name" do
+    it "should return the name of the external table based on the source's name" do
+      external_table.name.should == "external_products"
     end
   end
 

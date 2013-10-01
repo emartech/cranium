@@ -8,7 +8,7 @@ class Cranium::ExternalTable
 
   def create
     @connection.run <<-sql
-      CREATE EXTERNAL TABLE "external_#{@source.name}" (
+      CREATE EXTERNAL TABLE "#{name}" (
           #{field_definitions}
       )
       LOCATION ('#{external_location}')
@@ -20,7 +20,13 @@ class Cranium::ExternalTable
 
 
   def destroy
-    @connection.run %Q[DROP EXTERNAL TABLE "#{@source.name}"]
+    @connection.run %Q[DROP EXTERNAL TABLE "#{name}"]
+  end
+
+
+
+  def name
+    "external_#{@source.name}"
   end
 
 
@@ -59,7 +65,7 @@ class Cranium::ExternalTable
 
 
   def external_location
-    "gpfdist://#{Cranium.configuration.gpfdist_url}#{Cranium.configuration.gpfdist_home_directory}/#{@source.file}"
+    "gpfdist://#{Cranium.configuration.gpfdist_url}/#{Cranium.configuration.upload_directory}/#{@source.file}"
   end
 
 end
