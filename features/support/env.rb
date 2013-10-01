@@ -2,11 +2,8 @@ require 'sequel'
 require 'yaml'
 require 'fileutils'
 require_relative "../../lib/cranium"
+require_relative "environments"
 
-environment = YAML.load_file("#{File.dirname(__FILE__)}/environment.yml")["environment"]
-require_relative "environments/#{environment}"
-
-raise "Configuration missing" if Cranium.configuration.gpfdist_home_directory.nil? or Cranium.configuration.upload_directory.nil?
 directory = File.join(Cranium.configuration.gpfdist_home_directory, Cranium.configuration.upload_directory)
 
 Before do
