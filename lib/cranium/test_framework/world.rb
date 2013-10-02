@@ -13,6 +13,12 @@ class Cranium::TestFramework::World
 
 
 
+  def file_system
+    @file_system ||= Cranium::TestFramework::FileSystem.new @directory
+  end
+
+
+
   def save_definition(definition)
     config = <<-config_string
       Cranium.configure do |config|
@@ -23,13 +29,7 @@ class Cranium::TestFramework::World
       end
     config_string
 
-    save_file DEFINITION_FILE, config + definition
-  end
-
-
-
-  def save_file(file_name, content)
-    File.open(File.join(@directory, file_name), "w:UTF-8") { |file| file.write content }
+    file_system.save_file DEFINITION_FILE, config + definition
   end
 
 
@@ -46,14 +46,6 @@ class Cranium::TestFramework::World
 
   def database_table(table_name)
     Cranium::TestFramework::DatabaseTable.new table_name, @greenplum_connection
-  end
-
-  def file_exists?(file_name)
-    File.exists? File.join(@directory, file_name)
-  end
-
-  def read_file(file_name)
-    File.read File.join(@directory, file_name)
   end
 
 end
