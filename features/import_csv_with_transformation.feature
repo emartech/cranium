@@ -12,8 +12,8 @@ Feature: Import a CSV file into the database with a split transformation
     And a "products.csv" data file containing:
     """
     id,name,category
-    JNI-123,Just a product name,Main category > Subcategory > Sub-subcategory
-    CDI-234,Another product name,Smart Insight > Cool stuff > Scripts
+    JNI-123,Just a product name,Main category > Subcategory > Sub-subcategory > Ultra-subcategory
+    CDI-234,Another product name,Smart Insight > Cool stuff | 3dim > 2dim > 1dim
     """
     And the following definition:
     """
@@ -34,6 +34,7 @@ Feature: Import a CSV file into the database with a split transformation
     end
 
     transform :products => :transformed_products do |record|
+      record.split_field! :category, into: [:category], by: "|"
       record.split_field! :category, into: [:main_category, :sub_category, :department], by: ">"
     end
 
@@ -50,4 +51,4 @@ Feature: Import a CSV file into the database with a split transformation
     Then the "dim_product" table should contain:
       | item    | title                | category1     | category2   | category3       |
       | JNI-123 | Just a product name  | Main category | Subcategory | Sub-subcategory |
-      | CDI-234 | Another product name | Smart Insight | Cool stuff  | Scripts         |
+      | CDI-234 | Another product name | Smart Insight | Cool stuff  | Cool stuff      |

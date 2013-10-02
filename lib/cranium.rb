@@ -5,6 +5,7 @@ module Cranium
   autoload :Application, 'cranium/application'
   autoload :AttributeDSL, 'cranium/attribute_dsl'
   autoload :Configuration, 'cranium/configuration'
+  autoload :CSVRecord, 'cranium/csv_record'
   autoload :DataImporter, 'cranium/data_importer'
   autoload :DataTransformer, 'cranium/data_transformer'
   autoload :ExternalTable, 'cranium/external_table'
