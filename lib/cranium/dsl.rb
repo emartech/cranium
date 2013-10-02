@@ -13,6 +13,13 @@ module Cranium
       Cranium::DataImporter.new.import(import_definition)
     end
 
+
+
+    def transform(names, &block)
+      transform_definition = Cranium::TransformDefinition.new(names)
+      Cranium::DataTransformer.new.transform(transform_definition, &block)
+    end
+
   end
 end
 

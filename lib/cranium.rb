@@ -6,12 +6,14 @@ module Cranium
   autoload :AttributeDSL, 'cranium/attribute_dsl'
   autoload :Configuration, 'cranium/configuration'
   autoload :DataImporter, 'cranium/data_importer'
+  autoload :DataTransformer, 'cranium/data_transformer'
   autoload :ExternalTable, 'cranium/external_table'
   autoload :ImportDefinition, 'cranium/import_definition'
   autoload :Logging, 'cranium/logging'
   autoload :Source, 'cranium/source'
   autoload :SourceRegistry, 'cranium/source_registry'
   autoload :TestFramework, 'cranium/test_framework'
+  autoload :TransformDefinition, 'cranium/transform_definition'
 
   class << self
 
