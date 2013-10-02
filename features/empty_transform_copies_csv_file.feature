@@ -11,7 +11,11 @@ Feature: When a csv is transformed by an empty transformation the copy has ident
     """
     source :products do end
 
-    source :transformed_products do end
+    source :transformed_products do
+      field :id, String
+      field :name, String
+      field :category, String
+    end
 
     transform :products => :transformed_products do end
     """
@@ -38,7 +42,11 @@ Feature: When a csv is transformed by an empty transformation the copy has ident
      quote "'"
     end
 
-    source :transformed_products do end
+    source :transformed_products do
+      field :id, String
+      field :name, String
+      field :category, String
+    end
 
     transform :products => :transformed_products do end
     """
