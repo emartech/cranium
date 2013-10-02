@@ -5,9 +5,11 @@ class Cranium::DataImporter
   def import(import_definition)
     external_table = Cranium::ExternalTable.new Cranium.application.sources[import_definition.name], database_connection
     external_table.create
-    database_connection.run insert_query(external_table, import_definition)
-  ensure
-    external_table.destroy
+    begin
+      database_connection.run insert_query(external_table, import_definition)
+    ensure
+      external_table.destroy
+    end
   end
 
 
