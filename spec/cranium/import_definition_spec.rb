@@ -1,8 +1,8 @@
 require_relative '../spec_helper'
 
-describe Cranium::Import do
+describe Cranium::ImportDefinition do
 
-  let(:import) { Cranium::Import.new "import_name" }
+  let(:import) { Cranium::ImportDefinition.new "import_name" }
 
   describe "#to" do
     it "should set the attribute to the specified value" do

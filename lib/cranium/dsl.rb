@@ -8,7 +8,7 @@ module Cranium
 
 
     def import(name, &block)
-      import_definition = Cranium::Import.new(name)
+      import_definition = Cranium::ImportDefinition.new(name)
       import_definition.instance_eval &block
       Cranium::DataImporter.new.import(import_definition)
     end

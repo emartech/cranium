@@ -7,7 +7,7 @@ module Cranium
   autoload :Configuration, 'cranium/configuration'
   autoload :DataImporter, 'cranium/data_importer'
   autoload :ExternalTable, 'cranium/external_table'
-  autoload :Import, 'cranium/import'
+  autoload :ImportDefinition, 'cranium/import_definition'
   autoload :Logging, 'cranium/logging'
   autoload :Source, 'cranium/source'
   autoload :SourceRegistry, 'cranium/source_registry'
