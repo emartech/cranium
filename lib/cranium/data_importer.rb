@@ -15,7 +15,7 @@ class Cranium::DataImporter
   private
 
   def database_connection
-    @connection ||= Sequel.connect Cranium.configuration.greenplum_connection_string
+    @connection ||= Sequel.connect Cranium.configuration.greenplum_connection_string, loggers: Cranium.configuration.loggers
   end
 
 
