@@ -8,6 +8,7 @@ module Cranium
   autoload :DataImporter, 'cranium/data_importer'
   autoload :ExternalTable, 'cranium/external_table'
   autoload :Import, 'cranium/import'
+  autoload :Logging, 'cranium/logging'
   autoload :Source, 'cranium/source'
   autoload :SourceRegistry, 'cranium/source_registry'
   autoload :TestFramework, 'cranium/test_framework'
