@@ -6,7 +6,9 @@ Feature: Import a CSV file into the database with a split transformation
       | field_name | field_type |
       | item       | TEXT       |
       | title      | TEXT       |
-      | category   | TEXT       |
+      | category1  | TEXT       |
+      | category2  | TEXT       |
+      | category3  | TEXT       |
     And a "products.csv" data file containing:
     """
     id,name,category
@@ -15,7 +17,7 @@ Feature: Import a CSV file into the database with a split transformation
     """
     And the following definition:
     """
-    source :original_products do
+    source :products do
       encoding "UTF-8"
       delimiter ','
       field :id, String
@@ -23,7 +25,7 @@ Feature: Import a CSV file into the database with a split transformation
       field :category, String
     end
 
-    source :products do
+    source :transformed_products do
       field :item, String
       field :title, String
       field :main_category, String
@@ -31,7 +33,7 @@ Feature: Import a CSV file into the database with a split transformation
       field :department, String
     end
 
-    transform :original_products => :products do |record|
+    transform :products => :transformed_products do |record|
       record.split_field! :category, into: [:main_category, :sub_category, :department], by: ">"
     end
 
@@ -46,6 +48,6 @@ Feature: Import a CSV file into the database with a split transformation
     """
     When I execute the definition
     Then the "dim_product" table should contain:
-      | item    | title                | category                                      |
-      | JNI-123 | Just a product name  | Main category > Subcategory > Sub-subcategory |
-      | CDI-234 | Another product name | Smart Insight > Cool stuff > Scripts          |
+      | item    | title                | category1     | category2   | category3       |
+      | JNI-123 | Just a product name  | Main category | Subcategory | Sub-subcategory |
+      | CDI-234 | Another product name | Smart Insight | Cool stuff  | Scripts         |
