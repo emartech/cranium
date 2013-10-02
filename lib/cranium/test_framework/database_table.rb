@@ -34,7 +34,7 @@ class Cranium::TestFramework::DatabaseTable
 
 
     def cleanup
-      @tables_created.each { |table| table.destroy }
+      tables_created.each { |table| table.destroy }
     end
 
   end

@@ -48,4 +48,12 @@ class Cranium::TestFramework::World
     Cranium::TestFramework::DatabaseTable.new table_name, @greenplum_connection
   end
 
+  def file_exists?(file_name)
+    File.exists? File.join(@directory, file_name)
+  end
+
+  def read_file(file_name)
+    File.read File.join(@directory, file_name)
+  end
+
 end
