@@ -12,8 +12,6 @@ module Cranium::Logging
 
 
 
-  private
-
   def log(level, message)
     Cranium.configuration.loggers.each do |logger|
       logger.send level, message

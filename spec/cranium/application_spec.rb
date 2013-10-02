@@ -7,6 +7,7 @@ describe Cranium::Application do
 
   describe "Application" do
     it "should include metrics logging capabilities" do
+      application.respond_to?(:log).should be_true
       application.respond_to?(:record_timer).should be_true
     end
   end
@@ -31,40 +32,86 @@ describe Cranium::Application do
 
 
   describe "#run" do
-    it "should exit with an error if no file was specified as a command line argument" do
-      expect { application.run [] }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
+    before(:each) do
+      @original_stderr = $stderr
+      $stderr = StringIO.new
     end
 
-    it "should load the first file specified as a command line parameter" do
-      application.should_receive(:load).with("definition1.rb")
-      application.should_not_receive(:load).with("definition2.rb")
-
-      application.run ["definition1.rb", "definition2.rb"]
+    after(:each) do
+      $stderr = @original_stderr
     end
 
-    it "should log the runtime of the full process" do
-      application.stub :load
-      Time.stub(:now).and_return("starting time", "ending time")
-
-      application.should_receive(:record_timer).with "products", "starting time", "ending time"
-
-      application.run ["products.rb"]
-    end
-
-    context "when the execution of the process raises an error" do
-
-      before(:each) { application.stub(:load).and_raise StandardError }
-
-      it "should propagate the error" do
-        expect { application.run ["products.rb"] }.to raise_error
+    context "when no files are specified as an argument" do
+      it "should exit with an error" do
+        expect { application.run [] }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
       end
 
-      it "should still log the runtime of the full process" do
+      it "should log an error to STDOUT" do
+        expect { application.run [] }.to raise_error
+
+        $stderr.string.chomp.should == "ERROR: No file specified"
+      end
+    end
+
+
+    context "when a non-existent file is specified as an argument" do
+      it "should exit with an error" do
+        expect { application.run ["no-such-file.exists"] }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
+      end
+
+      it "should log an error to STDOUT" do
+        expect { application.run ["no-such-file.exists"] }.to raise_error
+
+        $stderr.string.chomp.should == "ERROR: File 'no-such-file.exists' does not exist"
+      end
+    end
+
+
+    context "when called with an existing file" do
+      let(:file) { "products.rb" }
+
+      before(:each) do
+        File.stub(:exists?).with(file).and_return(true)
+      end
+
+      it "should load the first file specified as a command line parameter" do
+        application.should_receive(:load).with(file)
+        application.should_not_receive(:load).with("order_items.rb")
+
+        application.run [file, "order_items.rb"]
+      end
+
+      it "should log the runtime of the full process" do
+        application.stub :load
         Time.stub(:now).and_return("starting time", "ending time")
 
         application.should_receive(:record_timer).with "products", "starting time", "ending time"
 
-        expect { application.run ["products.rb"] }.to raise_error
+        application.run [file]
+      end
+
+      context "when the execution of the process raises an error" do
+
+        let(:error) { StandardError.new }
+        before(:each) { application.stub(:load).and_raise error }
+
+        it "should propagate the error" do
+          expect { application.run [file] }.to raise_error
+        end
+
+        it "should log an error" do
+          application.should_receive(:log).with(:error, error)
+
+          expect { application.run [file] }.to raise_error
+        end
+
+        it "should still log the runtime of the full process" do
+          Time.stub(:now).and_return("starting time", "ending time")
+
+          application.should_receive(:record_timer).with "products", "starting time", "ending time"
+
+          expect { application.run [file] }.to raise_error
+        end
       end
     end
   end
