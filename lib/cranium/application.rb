@@ -1,5 +1,7 @@
 class Cranium::Application
 
+  include Cranium::Logging
+
   attr_reader :sources
 
 
@@ -19,7 +21,20 @@ class Cranium::Application
   def run(args)
     exit 1 if args.empty?
 
-    load args.first
+    start_time = Time.now
+    begin
+      load args.first
+    ensure
+      record_timer process_name(args.first), start_time, Time.now
+    end
+  end
+
+
+
+  private
+
+  def process_name(file_name)
+    File.basename(file_name, File.extname(file_name))
   end
 
 end
