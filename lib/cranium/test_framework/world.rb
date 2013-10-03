@@ -36,10 +36,11 @@ class Cranium::TestFramework::World
 
   def execute_definition
     out, err, status = Open3.capture3("bundle exec cranium #{@directory}/#{DEFINITION_FILE}")
-  rescue
-    puts "output: #{out}"
-    puts "error: #{err}"
-    puts "exit status: #{status.exitstatus}"
+    unless out.empty? and err.empty? and status.exitstatus.zero?
+      puts "output: #{out}"
+      puts "error: #{err}"
+      puts "exit status: #{status.exitstatus}"
+    end
   end
 
 

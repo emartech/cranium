@@ -13,7 +13,7 @@ class Cranium::TransformationRecord
 
 
   def output_data
-    @data.keep_if { |key, _| @target_fields.include? key }.values
+    @data.keep_if { |key| @target_fields.include? key }.sort_by { |field, _| @target_fields.index(field) }.map { |item| item[1] }
   end
 
 

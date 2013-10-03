@@ -14,9 +14,16 @@ describe Cranium::TransformationRecord do
 
   describe "#output_data" do
     it "should return the data fields specified by the target structure" do
-      a_record = Cranium::TransformationRecord.new [:field1, :field2, :field3], [:field1, :field3]
-      a_record.input_data = ["one", "two", "three"]
-      a_record.output_data.should == ["one", "three"]
+      record = Cranium::TransformationRecord.new [:field1, :field2, :field3], [:field1, :field3]
+      record.input_data = ["one", "two", "three"]
+      record.output_data.should == ["one", "three"]
+    end
+
+    it "should return the data in the order specified by the target structure" do
+      record = Cranium::TransformationRecord.new [:field1, :field2], [:field3, :field2]
+      record.input_data = ["one", "two"]
+      record[:field3] = "three"
+      record.output_data.should == ["three", "two"]
     end
   end
 
