@@ -1,6 +1,6 @@
-Feature: When a csv is transformed by an empty transformation the copy has identical data
+Feature: When a CSV is transformed by an empty transformation the copy has identical data
 
-  Scenario: No transformation
+  Scenario: Empty transformation from the default CSV format simply copies the file
     Given a "products.csv" data file containing:
     """
     id,name,category
@@ -11,16 +11,16 @@ Feature: When a csv is transformed by an empty transformation the copy has ident
     """
     source :products do end
 
-    source :transformed_products do
+    source :products_copy do
       field :id, String
       field :name, String
       field :category, String
     end
 
-    transform :products => :transformed_products do end
+    transform :products => :products_copy do end
     """
     When I execute the definition
-    Then there is a "transformed_products.csv" data file containing:
+    Then there is a "products_copy.csv" data file containing:
     """
     id,name,category
     JNI-123,Just a product name,Main category > Subcategory > Sub-subcategory
@@ -28,12 +28,12 @@ Feature: When a csv is transformed by an empty transformation the copy has ident
     """
 
 
-  Scenario: Quote and delimiter transformation
+  Scenario: Empty transformation from custom CSV format converts quotes and delimiters to the default format
     Given a "products.csv" data file containing:
     """
     'id';'name';'category'
     'JNI-123';'Just a product name';'Main category > Subcategory > Sub-subcategory'
-    'CDI-234';'Another product name';'Smart Insight > Cool stuff > Scripts'
+    'CDI-234';'Another 12" product name';'Smart Insight > Cool stuff > Scripts'
     """
     And the following definition:
     """
@@ -42,19 +42,19 @@ Feature: When a csv is transformed by an empty transformation the copy has ident
      quote "'"
     end
 
-    source :transformed_products do
+    source :products_converted do
       field :id, String
       field :name, String
       field :category, String
     end
 
-    transform :products => :transformed_products do end
+    transform :products => :products_converted do end
     """
     When I execute the definition
-    Then there is a "transformed_products.csv" data file containing:
+    Then there is a "products_converted.csv" data file containing:
     """
     id,name,category
     JNI-123,Just a product name,Main category > Subcategory > Sub-subcategory
-    CDI-234,Another product name,Smart Insight > Cool stuff > Scripts
+    CDI-234,"Another 12"" product name",Smart Insight > Cool stuff > Scripts
     """
 
