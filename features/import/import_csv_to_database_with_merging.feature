@@ -31,7 +31,7 @@ Feature: Import a CSV file into the database with merging
       put :id => :item
       put :name => :title
 
-      merge_on :item
+      merge_on :id => :item
     end
     """
     When I execute the definition

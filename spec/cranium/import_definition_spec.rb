@@ -41,4 +41,26 @@ describe Cranium::ImportDefinition do
     end
   end
 
+
+  describe "#merge_fields" do
+    context "when no fields are set" do
+      it "should return empty hash" do
+        import.merge_fields.should == {}
+      end
+    end
+  end
+
+
+  describe "#merge_on" do
+    it "should add merge fields" do
+      import.merge_on :item => :id
+      import.merge_on :title => :name
+
+      import.merge_fields.should == {
+        :item => :id,
+        :title => :name
+      }
+    end
+  end
+
 end
