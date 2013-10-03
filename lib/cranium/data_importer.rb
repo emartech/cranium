@@ -3,18 +3,12 @@ require 'sequel'
 class Cranium::DataImporter
 
   def import(import_definition)
-    external_table = Cranium::ExternalTable.new Cranium.application.sources[import_definition.name], database_connection
-    external_table.create
-    begin
-      if import_definition.merge_fields.empty?
-        database_connection.run insert_query(external_table, import_definition)
-      else
-        database_connection.run merge_update_query(external_table, import_definition)
-        database_connection.run merge_insert_query(external_table, import_definition)
-      end
-    ensure
-      external_table.destroy
+    if import_definition.merge_fields.empty?
+      importer = Cranium::ImportStrategy::Delta.new(import_definition)
+    else
+      importer = Cranium::ImportStrategy::Merge.new(import_definition)
     end
+    importer.import
   end
 
 
