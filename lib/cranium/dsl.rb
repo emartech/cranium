@@ -17,7 +17,7 @@ module Cranium
 
     def transform(names, &block)
       transform_definition = Cranium::TransformDefinition.new(names)
-      Cranium::DataTransformer.new.transform(transform_definition, &block)
+      Cranium::DataTransformer.new(transform_definition).transform(&block)
     end
 
   end

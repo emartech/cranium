@@ -1,19 +1,23 @@
 require 'csv'
+require 'progressbar'
 
 class Cranium::DataTransformer
 
-  def transform(transform_definition)
-    dir = File.join(Cranium.configuration.gpfdist_home_directory, Cranium.configuration.upload_directory)
+  def initialize(transform_definition)
+    @transform_definition = transform_definition
+  end
 
-    source_definition = Cranium.application.sources[transform_definition.source_name]
-    target_definition = Cranium.application.sources[transform_definition.target_name]
 
-    record = Cranium::TransformationRecord.new source_definition.fields.keys, target_definition.fields.keys
+
+  def transform
+    record = Cranium::TransformationRecord.new source.fields.keys, target.fields.keys
 
     header = true
+    CSV.open "#{upload_directory}/#{target.file}", "w:#{target.encoding}", csv_write_options_for(target) do |target|
 
-    CSV.open "#{dir}/#{target_definition.file}", "w:#{target_definition.encoding}", csv_write_options_for(target_definition) do |target|
-      CSV.foreach "#{dir}/#{source_definition.file}", csv_read_options_for(source_definition) do |row|
+      progress_bar = ProgressBar.new(File.basename(source.file), File.stat("#{upload_directory}/#{source.file}").size, STDOUT) if STDOUT.tty?
+
+      CSV.foreach "#{upload_directory}/#{source.file}", csv_read_options_for(source) do |row|
         if header
           header = false
           next
@@ -21,14 +25,37 @@ class Cranium::DataTransformer
 
         record.input_data = row
         yield record
+
+        progress_bar.inc if progress_bar
         target << record.output_data
       end
+
+      progress_bar.finish if progress_bar
     end
   end
 
 
 
   private
+
+
+  def target
+    Cranium.application.sources[@transform_definition.target_name]
+  end
+
+
+
+  def source
+    Cranium.application.sources[@transform_definition.source_name]
+  end
+
+
+
+  def upload_directory
+    File.join(Cranium.configuration.gpfdist_home_directory, Cranium.configuration.upload_directory)
+  end
+
+
 
   def csv_write_options_for(source_definition)
     {
