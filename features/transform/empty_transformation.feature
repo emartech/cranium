@@ -1,6 +1,6 @@
-Feature: When a CSV is transformed by an empty transformation the copy has identical data
+Feature: Empty transformation
 
-  Scenario: Empty transformation from the default CSV format simply copies the file
+  Scenario: Empty transformation between the same structures from the default CSV format simply copies the file
     Given a "products.csv" data file containing:
     """
     id,name,category
@@ -9,7 +9,11 @@ Feature: When a CSV is transformed by an empty transformation the copy has ident
     """
     And the following definition:
     """
-    source :products do end
+    source :products do
+      field :id, String
+      field :name, String
+      field :category, String
+    end
 
     source :products_copy do
       field :id, String
@@ -28,7 +32,7 @@ Feature: When a CSV is transformed by an empty transformation the copy has ident
     """
 
 
-  Scenario: Empty transformation from custom CSV format converts quotes and delimiters to the default format
+  Scenario: Empty transformation between the same structures but from a custom CSV format converts quotes and delimiters to the default format
     Given a "products.csv" data file containing:
     """
     'id';'name';'category'
@@ -38,8 +42,11 @@ Feature: When a CSV is transformed by an empty transformation the copy has ident
     And the following definition:
     """
     source :products do
-     delimiter ';'
-     quote "'"
+      delimiter ';'
+      quote "'"
+      field :id, String
+      field :name, String
+      field :category, String
     end
 
     source :products_converted do
@@ -57,4 +64,3 @@ Feature: When a CSV is transformed by an empty transformation the copy has ident
     JNI-123,Just a product name,Main category > Subcategory > Sub-subcategory
     CDI-234,"Another 12"" product name",Smart Insight > Cool stuff > Scripts
     """
-
