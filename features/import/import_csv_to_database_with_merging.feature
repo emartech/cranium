@@ -1,4 +1,3 @@
-@wip
 Feature: Import a CSV file into the database with merging
 
   The merge_on property can be used to specify an id field that is used to detect duplicates while importing.
@@ -18,6 +17,7 @@ Feature: Import a CSV file into the database with merging
     id,name
     JNI-123,Just a product name
     CDI-234,Updated product name
+    KLM-987,Inserted product name
     """
     And the following definition:
     """
@@ -36,6 +36,7 @@ Feature: Import a CSV file into the database with merging
     """
     When I execute the definition
     Then the "dim_product" table should contain:
-      | item    | title                |
-      | JNI-123 | Just a product name  |
-      | CDI-234 | Updated product name |
+      | item    | title                 |
+      | JNI-123 | Just a product name   |
+      | CDI-234 | Updated product name  |
+      | KLM-987 | Inserted product name |
