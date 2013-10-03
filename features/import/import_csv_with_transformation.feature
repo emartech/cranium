@@ -1,4 +1,3 @@
-@wip
 Feature: Import a CSV file into the database with a split transformation
 
   Scenario: Successful import
@@ -26,22 +25,22 @@ Feature: Import a CSV file into the database with a split transformation
     end
 
     source :transformed_products do
-      field :item, String
-      field :title, String
+      field :id, String
+      field :name, String
       field :main_category, String
       field :sub_category, String
       field :department, String
     end
 
     transform :products => :transformed_products do |record|
-      record.split_field! :category, into: [:category], by: "|"
-      record.split_field! :category, into: [:main_category, :sub_category, :department], by: ">"
+      record.split_field :category, into: [:category], by: "|"
+      record.split_field :category, into: [:main_category, :sub_category, :department], by: ">"
     end
 
     import :transformed_products do
-      to :warehouse__dim_product
-      put :item => :id
-      put :title => :name
+      to :dim_product
+      put :id => :item
+      put :name => :title
       put :main_category => :category1
       put :sub_category => :category2
       put :department => :category3

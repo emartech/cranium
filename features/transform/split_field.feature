@@ -1,4 +1,3 @@
-@wip
 Feature: Split field
 
   Scenario: A single field can be split into multiple fields
@@ -11,8 +10,8 @@ Feature: Split field
     And the following definition:
     """
     source :products do
-      field :id, String
-      field :name, String
+      field :item, String
+      field :title, String
       field :category, String
     end
 
@@ -25,14 +24,14 @@ Feature: Split field
     end
 
     transform :products => :transformed_products do |record|
-      record.split_field! :category, into: [:category], by: "|"
-      record.split_field! :category, into: [:main_category, :sub_category, :department], by: ">"
+      record.split_field :category, into: [:category], by: "|"
+      record.split_field :category, into: [:main_category, :sub_category, :department], by: ">"
     end
     """
     When I execute the definition
     Then there is a "transformed_products.csv" data file containing:
     """
-    item,title,category1,category2,category3
+    item,title,main_category,sub_category,department
     JNI-123,Just a product name,Main category,Subcategory,Sub-subcategory
     CDI-234,Another product name,Smart Insight,Cool stuff,Cool stuff
     """

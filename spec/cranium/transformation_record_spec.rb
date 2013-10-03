@@ -44,4 +44,43 @@ describe Cranium::TransformationRecord do
     end
   end
 
+  describe "#split_field" do
+
+    let(:record) { Cranium::TransformationRecord.new [:source_field], [:target_field1, :target_field2] }
+
+    it "should store values into respective fields and drop extra values" do
+      record.input_data = ["first|second|third"]
+      record.split_field :source_field, into: [:target_field1, :target_field2], by: "|"
+      record[:target_field1].should == "first"
+      record[:target_field2].should == "second"
+    end
+
+    context "when default value is not set" do
+      it "should repeat last value when there are not enough values" do
+        record.input_data = ["first"]
+        record.split_field :source_field, into: [:target_field1, :target_field2], by: "|"
+        record[:target_field1].should == "first"
+        record[:target_field2].should == "first"
+      end
+    end
+
+    context "when default value is specified" do
+      it "should use default value when there are not enough values" do
+        record.input_data = ["first"]
+        record.split_field :source_field, into: [:target_field1, :target_field2], by: "|", default_value: "--"
+        record[:target_field1].should == "first"
+        record[:target_field2].should == "--"
+      end
+    end
+
+    it "should strip spaces from values" do
+      record.input_data = ["  first > second  >  third   "]
+      record.split_field :source_field, into: [:target_field1, :target_field2, :target_field3], by: ">"
+      record[:target_field1].should == "first"
+      record[:target_field2].should == "second"
+      record[:target_field3].should == "third"
+    end
+
+  end
 end
+
