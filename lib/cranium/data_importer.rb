@@ -6,7 +6,11 @@ class Cranium::DataImporter
     external_table = Cranium::ExternalTable.new Cranium.application.sources[import_definition.name], database_connection
     external_table.create
     begin
-      database_connection.run insert_query(external_table, import_definition)
+      if import_definition.merge_fields.empty?
+        database_connection.run insert_query(external_table, import_definition)
+      else
+        database_connection.run merge_update_query(external_table, import_definition)
+      end
     ensure
       external_table.destroy
     end
@@ -28,6 +32,30 @@ class Cranium::DataImporter
           SELECT #{import_definition.field_associations.keys.join ", "}
           FROM #{external_table.name}
     sql
+  end
+
+
+  def merge_update_query(external_table, import_definition)
+    p <<-sql
+      UPDATE #{import_definition.to} AS target SET #{copy_expressions(import_definition)}
+      FROM #{external_table.name} AS source WHERE #{join_fields(import_definition)}
+    sql
+  end
+
+
+  def join_fields import_definition
+    import_definition.merge_fields.map { |from, to| "target.#{to} = source.#{from}" }.join " AND "
+  end
+
+  def copy_expressions import_definition
+
+    fields_to_set(import_definition).map { |from, to| "#{to} = source.#{from}" }.join ", "
+  end
+
+
+
+  def fields_to_set(import_definition)
+    import_definition.field_associations.reject { |key, _| import_definition.merge_fields.keys.include? key }
   end
 
 end
