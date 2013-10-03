@@ -1,4 +1,4 @@
-Feature: Import a CSV file into the database without any transformations
+Feature: Import a CSV file into the database as a delta
 
   Scenario: Successful import
     Given a database table called "dim_product" with the following fields:

@@ -24,6 +24,12 @@ class Cranium::TestFramework::DatabaseTable
   end
 
 
+  def insert(data)
+    data.each do |row|
+      @db[@table_name].insert row
+    end
+  end
+
 
   class << self
 
