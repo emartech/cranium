@@ -15,7 +15,7 @@ class Cranium::DataTransformer
     header = true
     CSV.open "#{upload_directory}/#{target.file}", "w:#{target.encoding}", csv_write_options_for(target) do |target|
 
-      progress_bar = ProgressBar.new(File.basename(source.file), File.stat("#{upload_directory}/#{source.file}").size, STDOUT) if STDOUT.tty?
+      progress_bar = ProgressBar.new(File.basename(source.file), file_line_count("#{upload_directory}/#{source.file}"), STDOUT) if STDOUT.tty?
 
       CSV.foreach "#{upload_directory}/#{source.file}", csv_read_options_for(source) do |row|
         if header
@@ -75,6 +75,12 @@ class Cranium::DataTransformer
       quote_char: source_definition.quote,
       return_headers: false
     }
+  end
+
+
+
+  def file_line_count(file)
+    (`wc -l #{file}`.match /^\s*(?<line_count>\d+).*/)["line_count"].to_i
   end
 
 end
