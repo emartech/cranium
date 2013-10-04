@@ -5,6 +5,7 @@ class Cranium::DataTransformer
 
   def initialize(transform_definition)
     @transform_definition = transform_definition
+    @index = Cranium::Transformation::Index.new
   end
 
 
@@ -32,6 +33,12 @@ class Cranium::DataTransformer
 
       progress_bar.finish if progress_bar
     end
+  end
+
+
+
+  def lookup(field_name, settings)
+    @index.lookup field_name, settings
   end
 
 

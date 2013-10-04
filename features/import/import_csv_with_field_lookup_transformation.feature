@@ -1,20 +1,19 @@
-@wip
 Feature: Import a CSV file into the database with IDs looked up from the database
 
   Scenario: Successful import
     Given a database table called "dim_contact" with the following fields:
       | field_name  | field_type |
-      | contact_key | INTEGER    |
-      | user_id     | INTEGER    |
+      | contact_key | TEXT    |
+      | user_id     | TEXT    |
       | name        | TEXT       |
     And only the following rows in the "dim_contact" database table:
       | contact_key | user_id | name  |
-      | 1           | 10      | Alma  |
-      | 2           | 20      | Korte |
+      | 10          | 1       | Alma  |
+      | 20          | 2       | Korte |
     And a database table called "fct_purchases" with the following fields:
       | field_name  | field_type |
-      | contact_key | INTEGER    |
-      | amount      | INTEGER    |
+      | contact_key | TEXT    |
+      | amount      | TEXT    |
     And a "purchases.csv" data file containing:
     """
     user_id,amount
@@ -24,16 +23,13 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
     And the following definition:
     """
     source :purchases do
-      encoding "UTF-8"
-      delimiter ','
-      field :user_id, Integer
-      field :amount, Integer
+      field :user_id, String
+      field :amount, String
     end
 
     source :transformed_purchases do
-      field :contact_key, Integer
-      field :user_id, Integer
-      field :amount, Integer
+      field :contact_key, String
+      field :amount, String
     end
 
     transform :purchases => :transformed_purchases do |record|
@@ -44,7 +40,7 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
     end
 
     import :transformed_purchases do
-      to :dim_contact
+      to :fct_purchases
       put :contact_key => :contact_key
       put :amount => :amount
     end

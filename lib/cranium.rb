@@ -17,6 +17,7 @@ module Cranium
   autoload :TestFramework, 'cranium/test_framework'
   autoload :TransformDefinition, 'cranium/transform_definition'
   autoload :TransformationRecord, 'cranium/transformation_record'
+  autoload :Transformation, 'cranium/transformation'
 
   class << self
 
