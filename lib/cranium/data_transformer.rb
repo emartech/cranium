@@ -9,7 +9,7 @@ class Cranium::DataTransformer
 
 
 
-  def transform
+  def transform(&block)
     record = Cranium::TransformationRecord.new source.fields.keys, target.fields.keys
 
     header = true
@@ -24,7 +24,7 @@ class Cranium::DataTransformer
         end
 
         record.input_data = row
-        yield record
+        self.instance_exec record, &block
 
         progress_bar.inc if progress_bar
         target << record.output_data
@@ -37,7 +37,6 @@ class Cranium::DataTransformer
 
 
   private
-
 
   def target
     Cranium.application.sources[@transform_definition.target_name]
