@@ -2,4 +2,8 @@
 
 require 'cranium'
 
+if ENV["PROFILING"] == "yes"
+  require 'cranium/profiling'
+end
+
 Cranium.application.run ARGV
