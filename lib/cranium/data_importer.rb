@@ -1,5 +1,3 @@
-require 'sequel'
-
 class Cranium::DataImporter
 
   def import(import_definition)

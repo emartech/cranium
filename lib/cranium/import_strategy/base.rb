@@ -11,7 +11,7 @@ class Cranium::ImportStrategy::Base
 
 
   def import
-    external_table = Cranium::ExternalTable.new Cranium.application.sources[import_definition.name], database_connection
+    external_table = Cranium::ExternalTable.new Cranium.application.sources[import_definition.name], Cranium::Database.connection
     external_table.create
 
     begin
@@ -25,12 +25,6 @@ class Cranium::ImportStrategy::Base
 
   def import_from(external_table)
     raise StandardError "Not implemented"
-  end
-
-
-
-  def database_connection
-    @connection ||= Sequel.connect Cranium.configuration.greenplum_connection_string, loggers: Cranium.configuration.loggers
   end
 
 end

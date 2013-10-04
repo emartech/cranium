@@ -15,7 +15,6 @@ After do
   Cranium::TestFramework::DatabaseTable.cleanup
 end
 
-greenplum_connection = Sequel.connect Cranium.configuration.greenplum_connection_string
 World do
-  Cranium::TestFramework::World.new directory, greenplum_connection
+  Cranium::TestFramework::World.new directory, Cranium::Database.connection
 end

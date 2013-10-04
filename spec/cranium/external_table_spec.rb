@@ -22,10 +22,10 @@ describe Cranium::ExternalTable do
 
   describe "#create" do
     it "should create an external table from the specified source" do
-      Cranium.stub :configuration => OpenStruct.new(
-        :gpfdist_url => "gpfdist-url",
-        :gpfdist_home_directory => "/gpfdist-home",
-        :upload_directory => "upload-dir"
+      Cranium.stub configuration: OpenStruct.new(
+        gpfdist_url: "gpfdist-url",
+        gpfdist_home_directory: "/gpfdist-home",
+        upload_directory: "upload-dir"
       )
 
       connection.should_receive(:run).with(<<-sql
