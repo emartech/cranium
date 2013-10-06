@@ -1,26 +1,26 @@
-module Cranium
-  module DSL
+module Cranium::DSL
 
-    def source(name, &block)
-      Cranium.application.register_source name, &block
-    end
+  autoload :ImportDefinition, 'cranium/dsl/import_definition'
 
 
 
-    def import(name, &block)
-      import_definition = Cranium::ImportDefinition.new(name)
-      import_definition.instance_eval &block
-      Cranium::DataImporter.new.import(import_definition)
-    end
-
-
-
-    def transform(names, &block)
-      transform_definition = Cranium::TransformDefinition.new(names)
-      Cranium::DataTransformer.new(transform_definition).transform(&block)
-    end
-
+  def source(name, &block)
+    Cranium.application.register_source name, &block
   end
-end
 
-self.extend Cranium::DSL
+
+
+  def import(name, &block)
+    import_definition = ImportDefinition.new(name)
+    import_definition.instance_eval &block
+    Cranium::DataImporter.new.import(import_definition)
+  end
+
+
+
+  def transform(names, &block)
+    transform_definition = Cranium::TransformDefinition.new(names)
+    Cranium::DataTransformer.new(transform_definition).transform(&block)
+  end
+
+end

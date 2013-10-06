@@ -1,5 +1,3 @@
-require 'cranium/dsl'
-
 module Cranium
 
   autoload :Application, 'cranium/application'
@@ -8,8 +6,8 @@ module Cranium
   autoload :Database, 'cranium/database'
   autoload :DataImporter, 'cranium/data_importer'
   autoload :DataTransformer, 'cranium/data_transformer'
+  autoload :DSL, 'cranium/dsl'
   autoload :ExternalTable, 'cranium/external_table'
-  autoload :ImportDefinition, 'cranium/import_definition'
   autoload :ImportStrategy, 'cranium/import_strategy'
   autoload :Logging, 'cranium/logging'
   autoload :Source, 'cranium/source'
@@ -43,3 +41,5 @@ module Cranium
   end
 
 end
+
+self.extend Cranium::DSL
