@@ -12,7 +12,6 @@ module Cranium
   autoload :Logging, 'cranium/logging'
   autoload :SourceRegistry, 'cranium/source_registry'
   autoload :TestFramework, 'cranium/test_framework'
-  autoload :TransformDefinition, 'cranium/transform_definition'
   autoload :TransformationRecord, 'cranium/transformation_record'
   autoload :Transformation, 'cranium/transformation'
 

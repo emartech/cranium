@@ -1,8 +1,8 @@
-require_relative '../spec_helper'
+require_relative '../../spec_helper'
 
-describe Cranium::TransformDefinition do
+describe Cranium::DSL::TransformDefinition do
 
-  let(:transform) { Cranium::TransformDefinition.new :source => :target }
+  let(:transform) { Cranium::DSL::TransformDefinition.new :source => :target }
 
   describe "#source_name" do
     it "should return the name of the source of the transformation" do
