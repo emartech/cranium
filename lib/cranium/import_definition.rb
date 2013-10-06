@@ -20,11 +20,29 @@ class Cranium::ImportDefinition
 
 
 
-  def put(field_associations)
-    @field_associations.merge! field_associations
+  def put(fields)
+    @field_associations.merge! fields_hash(fields)
   end
 
+
+
   def merge_on(merge_fields)
-    @merge_fields.merge! merge_fields
+    @merge_fields = fields_hash(merge_fields)
   end
+
+
+
+  private
+
+  def fields_hash(fields)
+    case fields
+      when Hash
+        return fields
+      when Symbol
+        return { fields => fields }
+      else
+        raise ArgumentError, "Unsupported argument for Import::#{caller[0][/`.*'/][1..-2]}"
+    end
+  end
+
 end
