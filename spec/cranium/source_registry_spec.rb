@@ -13,7 +13,7 @@ describe Cranium::SourceRegistry do
 
   describe "#register_source" do
     it "should register a new source and configure it through the block passed" do
-      source = Cranium::Source.new :test_source
+      source = Cranium::DSL::SourceDefinition.new :test_source
       source.field :test_field, String
 
       registry.register_source :test_source do

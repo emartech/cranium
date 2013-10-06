@@ -1,4 +1,4 @@
-class Cranium::Source
+class Cranium::DSL::SourceDefinition
 
   class << self
     include Cranium::AttributeDSL

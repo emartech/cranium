@@ -1,8 +1,8 @@
-require_relative '../spec_helper'
+require_relative '../../spec_helper'
 
-describe Cranium::Source do
+describe Cranium::DSL::SourceDefinition do
 
-  let(:source) { Cranium::Source.new "name" }
+  let(:source) { Cranium::DSL::SourceDefinition.new "name" }
 
 
   { file: "name.csv",

@@ -1,6 +1,7 @@
 module Cranium::DSL
 
   autoload :ImportDefinition, 'cranium/dsl/import_definition'
+  autoload :SourceDefinition, 'cranium/dsl/source_definition'
 
 
 

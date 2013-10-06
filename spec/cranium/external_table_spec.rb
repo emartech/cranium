@@ -5,7 +5,7 @@ describe Cranium::ExternalTable do
 
   let(:connection) { double "Greenplum connection" }
   let(:source) do
-    Cranium::Source.new(:products).tap do |source|
+    Cranium::DSL::SourceDefinition.new(:products).tap do |source|
       source.file "test_products.csv"
       source.field :text_field, String
       source.field :integer_field, Integer
