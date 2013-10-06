@@ -25,6 +25,11 @@ describe Cranium::TransformationRecord do
       record[:field3] = "three"
       record.output_data.should == ["three", "two"]
     end
+
+    it "should strip whitespaces from the beginning and end of all data values" do
+      record.input_data = ["  one", "two  ", "   three   "]
+      record.output_data.should == ["one", "two", "three"]
+    end
   end
 
 
@@ -43,6 +48,7 @@ describe Cranium::TransformationRecord do
       record[:field2].should == "four"
     end
   end
+
 
   describe "#split_field" do
 
@@ -73,14 +79,7 @@ describe Cranium::TransformationRecord do
       end
     end
 
-    it "should strip spaces from values" do
-      record.input_data = ["  first > second  >  third   "]
-      record.split_field :source_field, into: [:target_field1, :target_field2, :target_field3], by: ">"
-      record[:target_field1].should == "first"
-      record[:target_field2].should == "second"
-      record[:target_field3].should == "third"
-    end
-
   end
+
 end
 

@@ -13,7 +13,11 @@ class Cranium::TransformationRecord
 
 
   def output_data
-    @data.keep_if { |key| @target_fields.include? key }.sort_by { |field, _| @target_fields.index(field) }.map { |item| item[1] }
+    @data.
+      keep_if { |key| @target_fields.include? key }.
+      sort_by { |field, _| @target_fields.index(field) }.
+      map { |item| item[1] }.
+      map { |value| value.strip }
   end
 
 
@@ -31,9 +35,7 @@ class Cranium::TransformationRecord
 
 
   def split_field(field, options)
-    values = @data[field]
-    .split(options[:by])
-    .map { |value| value.strip }
+    values = @data[field].split(options[:by])
 
     options[:into].each_with_index do |target_field, index|
       @data[target_field] = values[index] || options[:default_value] || values.last
