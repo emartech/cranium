@@ -29,13 +29,15 @@ class Cranium::TransformationRecord
   end
 
 
+
   def split_field(field, options)
     values = @data[field]
-      .split(options[:by])
-      .map { |value| value.strip }
+    .split(options[:by])
+    .map { |value| value.strip }
 
     options[:into].each_with_index do |target_field, index|
       @data[target_field] = values[index] || options[:default_value] || values.last
     end
   end
+
 end
