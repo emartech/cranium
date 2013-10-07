@@ -55,8 +55,6 @@ module Cranium::TestFramework
           @table_data = [{
                            "integer_column (i)" => "one",
                            "string_column (s)" => "two",
-                           "date_column (d)" => "three",
-                           "time_column (t)" => "four",
                            "numeric_column (n)" => "five",
                            "some_column" => "else"
                          }]
@@ -64,16 +62,12 @@ module Cranium::TestFramework
             [{
                integer_column: "one",
                string_column: "two",
-               date_column: "three",
-               time_column: "four",
                numeric_column: "five",
                some_column: "else"
              }],
             {
               integer_column: :integer,
               string_column: :string,
-              date_column: :date,
-              time_column: :time,
               numeric_column: :numeric,
               some_column: :string
             }
