@@ -5,7 +5,7 @@ class Cranium::DataTransformer
 
   def initialize(transform_definition)
     @transform_definition = transform_definition
-    @index = Cranium::Transformation::Index.new
+    @index = Cranium::Transformation::AmendDimension.new(Cranium::Transformation::Index.new)
   end
 
 
