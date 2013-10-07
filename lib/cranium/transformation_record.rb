@@ -17,7 +17,17 @@ class Cranium::TransformationRecord
       keep_if { |key| @target_fields.include? key }.
       sort_by { |field, _| @target_fields.index(field) }.
       map { |item| item[1] }.
-      map { |value| value.strip }
+      map { |value| strip(value) }
+  end
+
+
+
+  def strip(value)
+    if value.respond_to? :strip
+      value.strip
+    else
+      value
+    end
   end
 
 
@@ -41,5 +51,6 @@ class Cranium::TransformationRecord
       @data[target_field] = values[index] || options[:default_value] || values.last
     end
   end
+
 
 end

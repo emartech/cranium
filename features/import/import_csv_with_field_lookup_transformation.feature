@@ -3,17 +3,17 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
   Scenario: Successful import
     Given a database table called "dim_contact" with the following fields:
       | field_name  | field_type |
-      | contact_key | TEXT    |
-      | user_id     | TEXT    |
+      | contact_key | SERIAL     |
+      | user_id     | TEXT       |
       | name        | TEXT       |
     And only the following rows in the "dim_contact" database table:
-      | contact_key | user_id | name  |
-      | 10          | 1       | Alma  |
-      | 20          | 2       | Korte |
+      | contact_key (i) | user_id | name  |
+      | 10              | 1       | Alma  |
+      | 20              | 2       | Korte |
     And a database table called "fct_purchases" with the following fields:
       | field_name  | field_type |
-      | contact_key | TEXT    |
-      | amount      | TEXT    |
+      | contact_key | INTEGER    |
+      | amount      | TEXT       |
     And a "purchases.csv" data file containing:
     """
     user_id,amount
@@ -28,7 +28,7 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
     end
 
     source :transformed_purchases do
-      field :contact_key, String
+      field :contact_key, Integer
       field :amount, String
     end
 
@@ -47,6 +47,6 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
     """
     When I execute the definition
     Then the "fct_purchases" table should contain:
-      | contact_key | amount |
-      | 10          | 100    |
-      | 20          | 200    |
+      | contact_key (i) | amount |
+      | 10              | 100    |
+      | 20              | 200    |

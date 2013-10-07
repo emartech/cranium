@@ -7,7 +7,7 @@ class Cranium::TestFramework::DatabaseTable
 
 
   def create(fields)
-    @db.run "CREATE TABLE #{@table_name} (#{fields.map { |field| "#{field["field_name"]} #{field["field_type"]}" }.join ", " })"
+    @db.run "CREATE TABLE #{@table_name} (#{fields.map { |field| "#{field[:field_name]} #{field[:field_type]}" }.join ", " })"
     self.class.tables_created << self
   end
 
