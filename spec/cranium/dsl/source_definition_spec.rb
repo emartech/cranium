@@ -46,4 +46,14 @@ describe Cranium::DSL::SourceDefinition do
     end
   end
 
+
+  describe "#file_name_overriden?" do
+    it "should signal if the file name parameter of the source definition has been set to something other than the default" do
+      source.file_name_overriden?.should be_false
+
+      source.file "overriden.csv"
+      source.file_name_overriden?.should be_true
+    end
+  end
+
 end

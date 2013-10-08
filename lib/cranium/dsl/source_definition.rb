@@ -17,7 +17,7 @@ class Cranium::DSL::SourceDefinition
 
   def initialize(name)
     @name = name
-    @file = "#{name}.csv"
+    @file = default_file_name
     @fields = {}
     @delimiter = ","
     @escape = '"'
@@ -33,6 +33,12 @@ class Cranium::DSL::SourceDefinition
 
 
 
+  def file_name_overriden?
+    @file != default_file_name
+  end
+
+
+
   def ==(other)
     name == other.name and
       file == other.file and
@@ -41,6 +47,14 @@ class Cranium::DSL::SourceDefinition
       quote == other.quote and
       encoding == other.encoding and
       fields == other.fields
+  end
+
+
+
+  private
+
+  def default_file_name
+    "#{@name}.csv"
   end
 
 end
