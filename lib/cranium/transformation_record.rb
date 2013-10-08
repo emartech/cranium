@@ -22,16 +22,6 @@ class Cranium::TransformationRecord
 
 
 
-  def strip(value)
-    if value.respond_to? :strip
-      value.strip
-    else
-      value
-    end
-  end
-
-
-
   def [](field)
     @data[field]
   end
@@ -52,5 +42,13 @@ class Cranium::TransformationRecord
     end
   end
 
+
+
+  private
+
+  def strip(value)
+    return value unless value.respond_to? :strip
+    value.strip
+  end
 
 end
