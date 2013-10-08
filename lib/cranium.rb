@@ -6,6 +6,7 @@ module Cranium
   autoload :Database, 'cranium/database'
   autoload :DataImporter, 'cranium/data_importer'
   autoload :DataTransformer, 'cranium/data_transformer'
+  autoload :DimensionManager, 'cranium/dimension_manager'
   autoload :DSL, 'cranium/dsl'
   autoload :ExternalTable, 'cranium/external_table'
   autoload :ImportStrategy, 'cranium/import_strategy'

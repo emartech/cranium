@@ -116,4 +116,21 @@ describe Cranium::Application do
     end
   end
 
+
+  describe "#after_import" do
+
+    it "should register the given block" do
+      block_called = false
+
+      application.after_import do
+        block_called = true
+      end
+
+      application.apply_hook(:after_import)
+
+      block_called.should be_true
+    end
+
+  end
+
 end

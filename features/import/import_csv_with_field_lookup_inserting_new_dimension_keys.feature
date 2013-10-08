@@ -38,7 +38,7 @@ Feature: Import a CSV file into the database with new dimension values inserted 
                                     from_table: :dim_contact,
                                     match_column: :user_id,
                                     to_value: record[:user_id],
-                                    if_missing_insert: { name: "Missing contact #{record[:user_id]}", user_id: record[:user_id] }
+                                    if_missing_insert: { name: "Missing contact #{record[:user_id]}" }
     end
 
     import :transformed_purchases do

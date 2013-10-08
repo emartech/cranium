@@ -8,6 +8,7 @@ class Cranium::Application
 
   def initialize
     @sources = Cranium::SourceRegistry.new
+    @hooks = {}
   end
 
 
@@ -29,6 +30,23 @@ class Cranium::Application
       raise
     ensure
       record_timer process_name(process_file), start_time, Time.now
+    end
+  end
+
+
+
+  def after_import(&block)
+    @hooks[:after_import] ||= []
+    @hooks[:after_import] << block
+  end
+
+
+
+  def apply_hook(name)
+    unless @hooks[name].nil?
+      @hooks[name].each do |block|
+        block.call
+      end
     end
   end
 
