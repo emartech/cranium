@@ -21,8 +21,9 @@ class Cranium::DataTransformer
   def transform(&block)
     raise StandardError, "Source definition '#{@target.name}' cannot overrride the file name because it is a transformation target" if @target.file_name_overriden?
 
+    input_files = Dir[File.join upload_directory, @source.file]
     CSV.open "#{upload_directory}/#{@target.file}", "w:#{@target.encoding}", csv_write_options_for(@target) do |target_file|
-      transform_input_file target_file, block
+      input_files.each { |input_file| transform_input_file input_file, target_file, block }
     end
   end
 
@@ -30,10 +31,10 @@ class Cranium::DataTransformer
 
   private
 
-  def transform_input_file(target_file, transformation_block)
-    Cranium::ProgressOutput.show_progress File.basename(@source.file), file_line_count("#{upload_directory}/#{@source.file}") do |progress_bar|
+  def transform_input_file(input_file, target_file, transformation_block)
+    Cranium::ProgressOutput.show_progress File.basename(input_file), file_line_count(input_file) do |progress_bar|
       header = true
-      CSV.foreach "#{upload_directory}/#{@source.file}", csv_read_options_for(@source) do |row|
+      CSV.foreach input_file, csv_read_options_for(@source) do |row|
         if header
           header = false
           next
