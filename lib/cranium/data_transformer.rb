@@ -1,5 +1,4 @@
 require 'csv'
-require 'progressbar'
 
 class Cranium::DataTransformer
 
@@ -32,7 +31,7 @@ class Cranium::DataTransformer
   private
 
   def transform_input_file(target_file, transformation_block)
-    show_progress File.basename(@source.file), file_line_count("#{upload_directory}/#{@source.file}") do |progress_bar|
+    Cranium::ProgressOutput.show_progress File.basename(@source.file), file_line_count("#{upload_directory}/#{@source.file}") do |progress_bar|
       header = true
       CSV.foreach "#{upload_directory}/#{@source.file}", csv_read_options_for(@source) do |row|
         if header
@@ -43,20 +42,11 @@ class Cranium::DataTransformer
         @record.input_data = row
         self.instance_exec @record, &transformation_block
 
-        progress_bar.inc if progress_bar
         target_file << @record.output_data
+
+        progress_bar.inc
       end
     end
-  end
-
-
-
-  def show_progress(title, total)
-    progress_bar = ProgressBar.new(title, total, STDOUT) if STDOUT.tty?
-
-    yield progress_bar
-
-    progress_bar.finish if progress_bar
   end
 
 

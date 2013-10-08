@@ -10,6 +10,7 @@ module Cranium
   autoload :ExternalTable, 'cranium/external_table'
   autoload :ImportStrategy, 'cranium/import_strategy'
   autoload :Logging, 'cranium/logging'
+  autoload :ProgressOutput, 'cranium/progress_output'
   autoload :SourceRegistry, 'cranium/source_registry'
   autoload :TestFramework, 'cranium/test_framework'
   autoload :TransformationRecord, 'cranium/transformation_record'
