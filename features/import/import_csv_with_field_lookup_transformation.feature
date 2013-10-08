@@ -40,7 +40,7 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
     end
 
     import :transformed_purchases do
-      to :fct_purchases
+      into :fct_purchases
       put :contact_key => :contact_key
       put :amount => :amount
     end

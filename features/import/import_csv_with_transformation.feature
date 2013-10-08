@@ -38,7 +38,7 @@ Feature: Import a CSV file into the database with a split transformation
     end
 
     import :transformed_products do
-      to :dim_product
+      into :dim_product
       put :id => :item
       put :name => :title
       put :main_category => :category1

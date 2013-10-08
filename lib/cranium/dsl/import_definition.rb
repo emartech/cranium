@@ -8,7 +8,7 @@ class Cranium::DSL::ImportDefinition
   attr_reader :name
   attr_reader :field_associations
   attr_reader :merge_fields
-  define_attribute :to
+  define_attribute :into
 
 
 

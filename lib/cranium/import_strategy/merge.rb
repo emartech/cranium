@@ -11,7 +11,7 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
 
   def merge_update_query(source_table)
     <<-sql
-      UPDATE #{import_definition.to} AS target
+      UPDATE #{import_definition.into} AS target
       SET #{setters}
       FROM #{source_table} AS source
       WHERE #{join_fields}
@@ -22,10 +22,10 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
 
   def merge_insert_query(source_table)
     <<-sql
-      INSERT INTO #{import_definition.to} (#{target_field_list})
+      INSERT INTO #{import_definition.into} (#{target_field_list})
           SELECT #{source_field_list}
           FROM #{source_table} AS source
-              LEFT JOIN #{import_definition.to} AS target
+              LEFT JOIN #{import_definition.into} AS target
               ON (#{join_fields})
           WHERE #{not_in_target?}
     sql

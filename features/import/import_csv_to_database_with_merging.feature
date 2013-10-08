@@ -27,7 +27,7 @@ Feature: Import a CSV file into the database with merging
     end
 
     import :products do
-      to :dim_product
+      into :dim_product
       put :id => :item
       put :name => :title
 

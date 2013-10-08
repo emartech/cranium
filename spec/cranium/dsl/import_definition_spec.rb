@@ -4,11 +4,11 @@ describe Cranium::DSL::ImportDefinition do
 
   let(:import) { Cranium::DSL::ImportDefinition.new "import_name" }
 
-  describe "#to" do
+  describe "#into" do
     it "should set the attribute to the specified value" do
-      import.to "new value"
+      import.into "new value"
 
-      import.to.should == "new value"
+      import.into.should == "new value"
     end
   end
 
