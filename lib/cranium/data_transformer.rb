@@ -6,35 +6,9 @@ class Cranium::DataTransformer
   def initialize(transform_definition)
     @transform_definition = transform_definition
     @index = Cranium::Transformation::Index.new
-  end
-
-
-
-  def transform(&block)
-    raise StandardError, "Source definition '#{target.name}' cannot overrride the file name because it is a transformation target" if target.file_name_overriden?
-
-    record = Cranium::TransformationRecord.new source.fields.keys, target.fields.keys
-
-    header = true
-    CSV.open "#{upload_directory}/#{target.file}", "w:#{target.encoding}", csv_write_options_for(target) do |target|
-
-      progress_bar = ProgressBar.new(File.basename(source.file), file_line_count("#{upload_directory}/#{source.file}"), STDOUT) if STDOUT.tty?
-
-      CSV.foreach "#{upload_directory}/#{source.file}", csv_read_options_for(source) do |row|
-        if header
-          header = false
-          next
-        end
-
-        record.input_data = row
-        self.instance_exec record, &block
-
-        progress_bar.inc if progress_bar
-        target << record.output_data
-      end
-
-      progress_bar.finish if progress_bar
-    end
+    @source = Cranium.application.sources[@transform_definition.source_name]
+    @target = Cranium.application.sources[@transform_definition.target_name]
+    @record = Cranium::TransformationRecord.new @source.fields.keys, @target.fields.keys
   end
 
 
@@ -45,16 +19,44 @@ class Cranium::DataTransformer
 
 
 
-  private
+  def transform(&block)
+    raise StandardError, "Source definition '#{@target.name}' cannot overrride the file name because it is a transformation target" if @target.file_name_overriden?
 
-  def target
-    Cranium.application.sources[@transform_definition.target_name]
+    CSV.open "#{upload_directory}/#{@target.file}", "w:#{@target.encoding}", csv_write_options_for(@target) do |target_file|
+      transform_input_file target_file, block
+    end
   end
 
 
 
-  def source
-    Cranium.application.sources[@transform_definition.source_name]
+  private
+
+  def transform_input_file(target_file, transformation_block)
+    show_progress File.basename(@source.file), file_line_count("#{upload_directory}/#{@source.file}") do |progress_bar|
+      header = true
+      CSV.foreach "#{upload_directory}/#{@source.file}", csv_read_options_for(@source) do |row|
+        if header
+          header = false
+          next
+        end
+
+        @record.input_data = row
+        self.instance_exec @record, &transformation_block
+
+        progress_bar.inc if progress_bar
+        target_file << @record.output_data
+      end
+    end
+  end
+
+
+
+  def show_progress(title, total)
+    progress_bar = ProgressBar.new(title, total, STDOUT) if STDOUT.tty?
+
+    yield progress_bar
+
+    progress_bar.finish if progress_bar
   end
 
 
