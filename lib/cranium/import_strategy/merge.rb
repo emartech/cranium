@@ -6,7 +6,6 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
   end
 
 
-
   private
 
   def merge_update_query(source_table)
@@ -17,7 +16,6 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
       WHERE #{join_fields}
     sql
   end
-
 
 
   def merge_insert_query(source_table)
@@ -32,11 +30,9 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
   end
 
 
-
   def source_field_list
-    import_definition.field_associations.keys.join ", "
+    (import_definition.field_associations.keys.map { |field| "source.#{field}" }).join ", "
   end
-
 
 
   def target_field_list
@@ -44,11 +40,9 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
   end
 
 
-
   def not_in_target?
     import_definition.merge_fields.map { |_, to| "target.#{to} IS NULL" }.join " AND "
   end
-
 
 
   def join_fields
@@ -56,11 +50,9 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
   end
 
 
-
   def setters
     fields_to_set.map { |from, to| "#{to} = source.#{from}" }.join ", "
   end
-
 
 
   def fields_to_set
