@@ -11,6 +11,8 @@ class Cranium::DataTransformer
 
 
   def transform(&block)
+    raise StandardError, "Source definition '#{target.name}' cannot overrride the file name because it is a transformation target" if target.file_name_overriden?
+
     record = Cranium::TransformationRecord.new source.fields.keys, target.fields.keys
 
     header = true
