@@ -6,6 +6,7 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
   end
 
 
+
   private
 
   def merge_update_query(source_table)
@@ -30,29 +31,35 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
   end
 
 
+
   def source_field_list
-    (import_definition.field_associations.keys.map { |field| "source.#{field}" }).join ", "
+    import_definition.field_associations.keys.map { |field| %Q["source"."#{field}"] }.join ", "
   end
+
 
 
   def target_field_list
-    import_definition.field_associations.values.join ", "
+    import_definition.field_associations.values.map { |field| %Q["#{field}"] }.join ", "
   end
+
 
 
   def not_in_target?
-    import_definition.merge_fields.map { |_, to| "target.#{to} IS NULL" }.join " AND "
+    import_definition.merge_fields.map { |_, to| %Q["target"."#{to}" IS NULL] }.join " AND "
   end
+
 
 
   def join_fields
-    import_definition.merge_fields.map { |from, to| "target.#{to} = source.#{from}" }.join " AND "
+    import_definition.merge_fields.map { |from, to| %Q["target"."#{to}" = "source"."#{from}"] }.join " AND "
   end
+
 
 
   def setters
-    fields_to_set.map { |from, to| "#{to} = source.#{from}" }.join ", "
+    fields_to_set.map { |from, to| %Q["#{to}" = "source"."#{from}"] }.join ", "
   end
+
 
 
   def fields_to_set

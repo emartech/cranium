@@ -10,8 +10,8 @@ class Cranium::ImportStrategy::Delta < Cranium::ImportStrategy::Base
 
   def insert_query(source_table, import_definition)
     <<-sql
-      INSERT INTO #{import_definition.into} (#{import_definition.field_associations.values.join ", "})
-          SELECT #{import_definition.field_associations.keys.join ", "}
+      INSERT INTO #{import_definition.into} (#{import_definition.field_associations.values.map { |field| %Q["#{field}"] }.join ", "})
+          SELECT #{import_definition.field_associations.keys.map { |field| %Q["#{field}"] }.join ", "}
           FROM #{source_table}
     sql
   end
