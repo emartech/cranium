@@ -1,4 +1,5 @@
 require 'csv'
+require 'cranium/extensions/file'
 
 class Cranium::DataTransformer
 
@@ -32,7 +33,7 @@ class Cranium::DataTransformer
   private
 
   def transform_input_file(input_file, target_file, transformation_block)
-    Cranium::ProgressOutput.show_progress File.basename(input_file), file_line_count(input_file) do |progress_bar|
+    Cranium::ProgressOutput.show_progress File.basename(input_file), File.line_count(input_file) do |progress_bar|
       line_number = 0
       CSV.foreach input_file, csv_read_options_for(@source) do |row|
         next if 1 == (line_number += 1)
@@ -73,12 +74,6 @@ class Cranium::DataTransformer
       quote_char: source_definition.quote,
       return_headers: false
     }
-  end
-
-
-
-  def file_line_count(file)
-    (`wc -l #{file}`.match /^\s*(?<line_count>\d+).*/)["line_count"].to_i
   end
 
 end
