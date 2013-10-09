@@ -11,14 +11,12 @@ Feature: Import multiple CSV files into the database without any transformations
     id,name,category
     PROD-1,product name 1,Main category > Subcategory > Sub-subcategory
     PROD-2,product name 2,Main category > Subcategory > Sub-subcategory
-
     """
     And a "products2.csv" data file containing:
     """
     id,name,category
     PROD-3,product name 3,Main category > Subcategory > Sub-subcategory
     PROD-4,product name 4,Main category > Subcategory > Sub-subcategory
-
     """
     And the following definition:
     """
