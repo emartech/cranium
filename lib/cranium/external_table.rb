@@ -11,7 +11,7 @@ class Cranium::ExternalTable
       CREATE EXTERNAL TABLE "#{name}" (
           #{field_definitions}
       )
-      LOCATION ('#{external_location}')
+      LOCATION (#{external_location})
       FORMAT 'CSV' (DELIMITER '#{quote @source.delimiter}' ESCAPE '#{quote @source.escape}' QUOTE '#{quote @source.quote}' HEADER)
       ENCODING 'UTF8'
     sql
@@ -65,7 +65,9 @@ class Cranium::ExternalTable
 
 
   def external_location
-    "gpfdist://#{Cranium.configuration.gpfdist_url}/#{Cranium.configuration.upload_directory}/#{@source.file}"
+    @source.files.map do |file_name|
+      "'gpfdist://#{Cranium.configuration.gpfdist_url}/#{Cranium.configuration.upload_directory}/#{file_name}'"
+    end.join(', ')
   end
 
 end

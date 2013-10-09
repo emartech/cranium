@@ -28,6 +28,8 @@ describe Cranium::ExternalTable do
         upload_directory: "upload-dir"
       )
 
+      source.stub files: %w(test_products_a.csv test_products_b.csv)
+
       connection.should_receive(:run).with(<<-sql
       CREATE EXTERNAL TABLE "external_products" (
           text_field TEXT,
@@ -36,7 +38,7 @@ describe Cranium::ExternalTable do
           date_field DATE,
           timestamp_field TIMESTAMP WITHOUT TIME ZONE
       )
-      LOCATION ('gpfdist://gpfdist-url/upload-dir/test_products.csv')
+      LOCATION ('gpfdist://gpfdist-url/upload-dir/test_products_a.csv', 'gpfdist://gpfdist-url/upload-dir/test_products_b.csv')
       FORMAT 'CSV' (DELIMITER ';' ESCAPE '''' QUOTE '"' HEADER)
       ENCODING 'UTF8'
       sql
