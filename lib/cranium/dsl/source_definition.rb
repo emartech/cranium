@@ -5,6 +5,7 @@ class Cranium::DSL::SourceDefinition
   end
 
   attr_reader :name
+  attr_reader :files
   attr_reader :fields
 
   define_attribute :file
