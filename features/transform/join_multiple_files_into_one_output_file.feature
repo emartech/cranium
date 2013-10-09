@@ -34,7 +34,7 @@ Feature: Join multiple files into one output file
     end
     """
     When I execute the definition
-    Then there is a "transformed_products.csv" data file containing:
+    Then there is a "transformed_products.csv" data file in the upload directory containing:
     """
     item,title,category
     PROD-1,product name 1,Main category > Subcategory > Sub-subcategory

@@ -1,5 +1,6 @@
 class Cranium::Configuration
 
+  attr_accessor :archive_directory
   attr_accessor :greenplum_connection_string
   attr_accessor :mysql_connection_string
   attr_accessor :upload_directory

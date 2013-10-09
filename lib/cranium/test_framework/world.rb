@@ -13,8 +13,8 @@ class Cranium::TestFramework::World
 
 
 
-  def file_system
-    @file_system ||= Cranium::TestFramework::FileSystem.new @directory
+  def upload_directory
+    @upload_directory ||= Cranium::TestFramework::UploadDirectory.new @directory
   end
 
 
@@ -29,7 +29,7 @@ class Cranium::TestFramework::World
       end
     config_string
 
-    file_system.save_file DEFINITION_FILE, config + definition
+    upload_directory.save_file DEFINITION_FILE, config + definition
   end
 
 
