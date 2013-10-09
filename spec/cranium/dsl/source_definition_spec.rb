@@ -1,4 +1,5 @@
 require_relative '../../spec_helper'
+require 'ostruct'
 
 describe Cranium::DSL::SourceDefinition do
 
@@ -27,6 +28,30 @@ describe Cranium::DSL::SourceDefinition do
       end
     end
 
+  end
+
+
+  describe "#files" do
+    before(:each) do
+      Cranium.stub configuration: OpenStruct.new(gpfdist_home_directory: "/home/gpfdist",
+                                                 upload_directory: "customer")
+    end
+
+    it "should return the file names of all files matching the file patterns" do
+      source.file "product*.csv"
+
+      Dir.stub(:[]).with("/home/gpfdist/customer/product*.csv").and_return(["/home/gpfdist/customer/product1.csv",
+                                                                            "/home/gpfdist/customer/product2.csv"])
+
+      source.files.should == ["product1.csv", "product2.csv"]
+    end
+
+    it "should return the result of the first call on every subsequent call" do
+      Dir.stub(:[]).and_return(["first file list"], ["second file list"])
+
+      source.files.should == ["first file list"]
+      source.files.should == ["first file list"]
+    end
   end
 
 

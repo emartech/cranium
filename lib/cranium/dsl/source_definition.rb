@@ -5,7 +5,6 @@ class Cranium::DSL::SourceDefinition
   end
 
   attr_reader :name
-  attr_reader :files
   attr_reader :fields
 
   define_attribute :file
@@ -24,6 +23,12 @@ class Cranium::DSL::SourceDefinition
     @escape = '"'
     @quote = '"'
     @encoding = "UTF-8"
+  end
+
+
+
+  def files
+    @files ||= Dir[File.join upload_directory, @file].map { |file| File.basename file }
   end
 
 
@@ -56,6 +61,12 @@ class Cranium::DSL::SourceDefinition
 
   def default_file_name
     "#{@name}.csv"
+  end
+
+
+
+  def upload_directory
+    File.join Cranium.configuration.gpfdist_home_directory, Cranium.configuration.upload_directory
   end
 
 end
