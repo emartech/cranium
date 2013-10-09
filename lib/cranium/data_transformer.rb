@@ -40,7 +40,6 @@ class Cranium::DataTransformer
 
         @record.input_data = row
         self.instance_exec @record, &transformation_block
-
         target_file << @record.output_data
 
         progress_bar.inc
