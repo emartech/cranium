@@ -33,12 +33,9 @@ class Cranium::DataTransformer
 
   def transform_input_file(input_file, target_file, transformation_block)
     Cranium::ProgressOutput.show_progress File.basename(input_file), file_line_count(input_file) do |progress_bar|
-      header = true
+      line_number = 0
       CSV.foreach input_file, csv_read_options_for(@source) do |row|
-        if header
-          header = false
-          next
-        end
+        next if 1 == (line_number += 1)
 
         @record.input_data = row
         self.instance_exec @record, &transformation_block
