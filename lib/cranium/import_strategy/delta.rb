@@ -1,6 +1,6 @@
 class Cranium::ImportStrategy::Delta < Cranium::ImportStrategy::Base
 
-  def import_from source_table
+  def import_from(source_table)
     Cranium::Database.connection.run insert_query(source_table, import_definition)
   end
 

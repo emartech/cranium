@@ -1,6 +1,6 @@
 class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
 
-  def import_from source_table
+  def import_from(source_table)
     Cranium::Database.connection.run merge_update_query(source_table)
     Cranium::Database.connection.run merge_insert_query(source_table)
   end
