@@ -28,7 +28,7 @@ class Cranium::DSL::SourceDefinition
 
 
   def files
-    @files ||= Dir[File.join upload_directory, @file].map { |file| File.basename file }
+    @files ||= Dir[File.join upload_directory, @file].map { |file| File.basename file }.sort
   end
 
 

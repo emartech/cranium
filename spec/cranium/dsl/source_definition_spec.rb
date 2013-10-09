@@ -40,8 +40,8 @@ describe Cranium::DSL::SourceDefinition do
     it "should return the file names of all files matching the file patterns" do
       source.file "product*.csv"
 
-      Dir.stub(:[]).with("/home/gpfdist/customer/product*.csv").and_return(["/home/gpfdist/customer/product1.csv",
-                                                                            "/home/gpfdist/customer/product2.csv"])
+      Dir.stub(:[]).with("/home/gpfdist/customer/product*.csv").and_return(["/home/gpfdist/customer/product2.csv",
+                                                                            "/home/gpfdist/customer/product1.csv"])
 
       source.files.should == ["product1.csv", "product2.csv"]
     end
