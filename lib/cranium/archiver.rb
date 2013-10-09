@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'time'
 
 module Cranium::Archiver
 
@@ -8,8 +9,10 @@ module Cranium::Archiver
 
     create_archive unless File.exists? archive_path
 
+    archive_datetime = Time.now.strftime("%Y-%m-%d_%Hh%Mm%Ss")
+
     files.each do |file_name|
-      FileUtils.mv File.join(upload_path, file_name), archive_path
+      FileUtils.mv File.join(upload_path, file_name), File.join(archive_path, "#{archive_datetime}_#{file_name}")
     end
   end
 

@@ -26,8 +26,10 @@ describe Cranium::Archiver do
   describe ".archive" do
 
     it "should move files to the archive directory" do
-      FileUtils.should_receive(:mv).with "gpfdist_home/upload_dir/file.txt", "path/to/archive"
-      FileUtils.should_receive(:mv).with "gpfdist_home/upload_dir/another_file.txt", "path/to/archive"
+      Time.stub(:now).and_return Time.new(2000, 1, 1, 1, 2, 3)
+
+      FileUtils.should_receive(:mv).with "gpfdist_home/upload_dir/file.txt", "path/to/archive/2000-01-01_01h02m03s_file.txt"
+      FileUtils.should_receive(:mv).with "gpfdist_home/upload_dir/another_file.txt", "path/to/archive/2000-01-01_01h02m03s_another_file.txt"
 
       Cranium::Archiver.archive "file.txt", "another_file.txt"
     end

@@ -3,11 +3,9 @@ Given(/^no "([^"]*)" directory/) do |dir_path|
 end
 
 
-
 When(/^a "([^"]*)" data file containing:$/) do |file_name, content|
   upload_directory.save_file file_name, content
 end
-
 
 
 Then(/^there is a "([^"]*)" data file in the upload directory containing:$/) do |file_name, content|
@@ -16,8 +14,6 @@ Then(/^there is a "([^"]*)" data file in the upload directory containing:$/) do 
 end
 
 
-
-Then(/^there is a "([^"]*)" data file containing:$/) do |file_name, content|
-  File.exists?(file_name).should be_true, "expected #{file_name} to exist"
-  File.read(file_name).chomp.should == content
+Then(/^the "([^"]*)" directory should contain (\d+) files$/) do |directory_path, amount|
+  Dir["#{directory_path}/*"].count.should == amount.to_i
 end

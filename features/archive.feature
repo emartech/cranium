@@ -54,21 +54,4 @@ Feature: Archive source files
     archive :products, :contacts
     """
     When I execute the definition
-    Then there is a "/tmp/cranium_archive/products_1.csv" data file containing:
-    """
-    id,name,category
-    PROD-1,product name 1,Main category > Subcategory > Sub-subcategory
-    PROD-2,product name 2,Main category > Subcategory > Sub-subcategory
-    """
-    And there is a "/tmp/cranium_archive/products_2.csv" data file containing:
-    """
-    id,name,category
-    PROD-3,product name 3,Main category > Subcategory > Sub-subcategory
-    PROD-4,product name 4,Main category > Subcategory > Sub-subcategory
-    """
-    And there is a "/tmp/cranium_archive/contacts.csv" data file containing:
-    """
-    id,name
-    CON-1,Contact Alpha
-    CON-2,Contact Beta
-    """
+    Then the "/tmp/cranium_archive/" directory should contain 3 files
