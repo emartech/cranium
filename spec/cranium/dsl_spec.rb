@@ -14,26 +14,16 @@ describe Cranium::DSL do
 
 
   describe "#archive" do
-
     it "should archive files for the specified sources" do
-      source_mocks = {
-          first_source: double,
-          second_source: double,
-          third_source: double
-      }
-
-      source_mocks[:first_source].stub(:files).and_return ["file1", "file2"]
-      source_mocks[:second_source].stub(:files).and_return ["file3"]
-      source_mocks[:third_source].stub(:files).and_return ["file4"]
-
-      Cranium.application.stub(:sources).and_return source_mocks
+      Cranium.application.stub sources: { first_source: double(files: ["file1", "file2"]),
+                                          second_source: double(files: ["file3"]),
+                                          third_source: double(files: ["file4"]) }
 
       Cranium::Archiver.should_receive(:archive).with "file1", "file2"
       Cranium::Archiver.should_receive(:archive).with "file3"
 
       dsl_object.archive :first_source, :second_source
     end
-
   end
 
 end
