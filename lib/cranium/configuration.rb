@@ -14,4 +14,10 @@ class Cranium::Configuration
     @loggers = []
   end
 
+
+
+  def upload_path
+    File.join gpfdist_home_directory, upload_directory
+  end
+
 end
