@@ -58,7 +58,7 @@ Feature: Raw Ruby transformation
     end
     """
     When I execute the definition
-    Then there is a "transformed_products.csv" data file containing:
+    Then there is a "transformed_products.csv" data file in the upload directory containing:
     """
     id
     1
