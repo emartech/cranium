@@ -33,3 +33,34 @@ Feature: Raw Ruby transformation
     *JNI-123*,J,Main category > Subcategory > Sub-subcategory
     *CDI-234*,A,Smart Insight > Cool stuff > Scripts
     """
+
+
+  Scenario: Records can be skipped
+    Given a "products.csv" data file containing:
+    """
+    id
+    1
+    2
+    3
+    """
+    And the following definition:
+    """
+    source :products do
+      field :id, Integer
+    end
+
+    source :transformed_products do
+      field :id, Integer
+    end
+
+    transform :products => :transformed_products do |record|
+      record.skip if "2" == record[:id]
+    end
+    """
+    When I execute the definition
+    Then there is a "transformed_products.csv" data file containing:
+    """
+    id
+    1
+    3
+    """

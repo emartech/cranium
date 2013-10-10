@@ -81,5 +81,32 @@ describe Cranium::TransformationRecord do
 
   end
 
-end
 
+  describe "#should_skip?" do
+    it "should be false by default" do
+      record.should_skip?.should be_false
+    end
+  end
+
+
+  describe "#skip" do
+    context "without an argument" do
+      it "should set #should_skip? to true" do
+        record.skip
+
+        record.should_skip?.should be_true
+      end
+    end
+
+    context "with an argument" do
+      [true, false].each do |should_skip|
+        it "should be set #should_skip? to the value specified in the argument" do
+          record.skip(should_skip)
+
+          record.should_skip?.should == should_skip
+        end
+      end
+    end
+  end
+
+end
