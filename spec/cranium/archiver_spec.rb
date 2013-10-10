@@ -1,31 +1,27 @@
 require_relative '../spec_helper'
 
-require 'ostruct'
-
 describe Cranium::Archiver do
 
   before(:each) do
-    Cranium.stub configuration: OpenStruct.new(
-        gpfdist_home_directory: "gpfdist_home",
-        upload_directory: "upload_dir",
-        archive_directory: "path/to/archive"
-    )
-  end
-
-  describe ".create_archive" do
-
-    it "should create archive directory" do
-      FileUtils.should_receive(:mkpath).with "path/to/archive"
-
-      Cranium::Archiver.create_archive
-    end
-
+    Cranium.stub(configuration: Cranium::Configuration.new.tap do |config|
+      config.gpfdist_home_directory = "gpfdist_home"
+      config.upload_directory = "upload_dir"
+      config.archive_directory = "path/to/archive"
+    end)
   end
 
 
   describe ".archive" do
+    it "should create the archive directory if it doesn't exist" do
+      Dir.stub(:exists?).with("path/to/archive").and_return(false)
+
+      FileUtils.should_receive(:mkpath).with "path/to/archive"
+
+      Cranium::Archiver.archive
+    end
 
     it "should move files to the archive directory" do
+      Dir.stub(:exists?).with("path/to/archive").and_return(true)
       Time.stub(:now).and_return Time.new(2000, 1, 1, 1, 2, 3)
 
       FileUtils.should_receive(:mv).with "gpfdist_home/upload_dir/file.txt", "path/to/archive/2000-01-01_01h02m03s_file.txt"
@@ -33,7 +29,6 @@ describe Cranium::Archiver do
 
       Cranium::Archiver.archive "file.txt", "another_file.txt"
     end
-
   end
 
 end
