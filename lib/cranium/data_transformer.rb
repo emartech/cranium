@@ -22,9 +22,9 @@ class Cranium::DataTransformer
   def transform(&block)
     raise StandardError, "Source definition '#{@target.name}' cannot overrride the file name because it is a transformation target" if @target.file_name_overriden?
 
-    CSV.open "#{upload_directory}/#{@target.file}", "w:#{@target.encoding}", csv_write_options_for(@target) do |target_file|
+    CSV.open "#{Cranium.configuration.upload_path}/#{@target.file}", "w:#{@target.encoding}", csv_write_options_for(@target) do |target_file|
       @source.files.each do |input_file|
-        transform_input_file File.join(upload_directory, input_file), target_file, block
+        transform_input_file File.join(Cranium.configuration.upload_path, input_file), target_file, block
       end
     end
 
@@ -49,12 +49,6 @@ class Cranium::DataTransformer
         progress_bar.inc
       end
     end
-  end
-
-
-
-  def upload_directory
-    File.join(Cranium.configuration.gpfdist_home_directory, Cranium.configuration.upload_directory)
   end
 
 
