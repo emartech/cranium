@@ -35,7 +35,7 @@ class Cranium::ExternalTable
 
   def field_definitions
     @source.fields.map do |name, type|
-      "#{name} #{sql_type_for_ruby_type(type)}"
+      %Q("#{name}" #{sql_type_for_ruby_type(type)})
     end.join ",\n          "
   end
 
@@ -45,7 +45,7 @@ class Cranium::ExternalTable
     case type.to_s
       when "Integer" then
         "INTEGER"
-      when "Fixnum" then
+      when "Float" then
         "NUMERIC"
       when "Date" then
         "DATE"

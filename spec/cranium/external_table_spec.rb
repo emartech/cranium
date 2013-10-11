@@ -9,7 +9,7 @@ describe Cranium::ExternalTable do
       source.file "test_products.csv"
       source.field :text_field, String
       source.field :integer_field, Integer
-      source.field :numeric_field, Fixnum
+      source.field :numeric_field, Float
       source.field :date_field, Date
       source.field :timestamp_field, Time
       source.delimiter ';'
@@ -32,11 +32,11 @@ describe Cranium::ExternalTable do
 
       connection.should_receive(:run).with(<<-sql
       CREATE EXTERNAL TABLE "external_products" (
-          text_field TEXT,
-          integer_field INTEGER,
-          numeric_field NUMERIC,
-          date_field DATE,
-          timestamp_field TIMESTAMP WITHOUT TIME ZONE
+          "text_field" TEXT,
+          "integer_field" INTEGER,
+          "numeric_field" NUMERIC,
+          "date_field" DATE,
+          "timestamp_field" TIMESTAMP WITHOUT TIME ZONE
       )
       LOCATION ('gpfdist://gpfdist-url/upload-dir/test_products_a.csv', 'gpfdist://gpfdist-url/upload-dir/test_products_b.csv')
       FORMAT 'CSV' (DELIMITER ';' ESCAPE '''' QUOTE '"' HEADER)
