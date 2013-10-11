@@ -4,11 +4,9 @@ require 'fileutils'
 require_relative "../../lib/cranium"
 require_relative "environments"
 
-directory = File.join(Cranium.configuration.gpfdist_home_directory, Cranium.configuration.upload_directory)
-
 Before do
-  FileUtils.rm_rf directory
-  FileUtils.mkdir_p directory
+  FileUtils.rm_rf Cranium.configuration.upload_path
+  FileUtils.mkdir_p Cranium.configuration.upload_path
 end
 
 After do
@@ -16,5 +14,5 @@ After do
 end
 
 World do
-  Cranium::TestFramework::World.new directory, Cranium::Database.connection
+  Cranium::TestFramework::World.new Cranium.configuration.upload_path, Cranium::Database.connection
 end
