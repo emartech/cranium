@@ -13,8 +13,8 @@ describe Cranium::Transformation::Index do
 
   def stub_cache_query(table_name, key_field, value_field, result)
     dimension_manager = double "DimensionManager"
-    Cranium::DimensionManager.stub(:for).with(table_name, key_field).and_return(dimension_manager)
     dimension_manager.stub(:create_cache_for_field).with(value_field).and_return(result)
+    Cranium::DimensionManager.stub(:for).with(table_name, key_field).and_return(dimension_manager)
   end
 
 
@@ -30,6 +30,7 @@ describe Cranium::Transformation::Index do
       end
     end
 
+
     context "on subsequent calls" do
       it "should look up the requested value from an internal cache" do
         stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact 1" }
@@ -40,25 +41,60 @@ describe Cranium::Transformation::Index do
       end
     end
 
+
     it "should return :not_found if the key value was not found" do
       stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact 2" }
 
       index.lookup(:contact_key, from_table: :dim_contact, match_column: :customer_id, to_value: 2345).should == :not_found
     end
 
-    context "when :if_not_found_then_insert is specified" do
-      it "should insert a new record into the specified table" do
-        stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact 2" }
 
-        dimension_manager = double "DimensionManager"
+    context "when :if_not_found_then_insert is specified" do
+      let(:dimension_manager) { dimension_manager = double "DimensionManager" }
+
+      before(:each) do
         Cranium::DimensionManager.stub(:for).with(:dim_contact, :contact_key).and_return(dimension_manager)
-        dimension_manager.should_receive(:insert).with({ name: "test name", customer_id: 2345 })
+        stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact 2" }
+      end
+
+      it "should insert a new record into the specified table" do
+        dimension_manager.should_receive(:insert).with(customer_id: 2345)
+
+        index.lookup :contact_key,
+                     from_table: :dim_contact,
+                     match_column: :customer_id,
+                     to_value: 2345,
+                     if_not_found_then_insert: { customer_id: 2345 }
+      end
+
+      it "should fill out the new record's lookup key automatically" do
+        dimension_manager.should_receive(:insert).with(name: "new contact", customer_id: 2345)
+
+        index.lookup :contact_key,
+                     from_table: :dim_contact,
+                     match_column: :customer_id,
+                     to_value: 2345,
+                     if_not_found_then_insert: { name: "new contact" }
+      end
+
+      it "should overwrite the new record's lookup key if specified" do
+        dimension_manager.should_receive(:insert).with(customer_id: 2345)
+
+        index.lookup :contact_key,
+                     from_table: :dim_contact,
+                     match_column: :customer_id,
+                     to_value: 2345,
+                     if_not_found_then_insert: { customer_id: 4567 }
+      end
+
+      it "should return the new record's lookup value" do
+        dimension_manager.stub insert: 98765
 
         index.lookup(:contact_key,
                      from_table: :dim_contact,
                      match_column: :customer_id,
                      to_value: 2345,
-                     if_not_found_then_insert: { name: "test name", customer_id: 4567 })
+                     if_not_found_then_insert: { contact_key: 98765 }).should == 98765
       end
     end
   end

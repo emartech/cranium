@@ -6,14 +6,13 @@ class Cranium::Transformation::Index
 
 
 
-  def lookup(field_name, settings)
-    cache = cache_for(settings[:from_table], settings[:match_column], field_name)
+  def lookup(field_name, options)
+    cache = cache_for(options[:from_table], options[:match_column], field_name)
 
-    if cache.has_key? settings[:to_value]
-      cache[settings[:to_value]]
-    elsif settings.has_key? :if_not_found_then_insert
-      key = Cranium::DimensionManager.for(settings[:from_table], field_name).insert default_value_record(settings)
-      cache[settings[:to_value]] = key
+    if cache.has_key? options[:to_value]
+      cache[options[:to_value]]
+    elsif options.has_key? :if_not_found_then_insert
+      cache[options[:to_value]] = Cranium::DimensionManager.for(options[:from_table], field_name).insert default_value_record(options)
     else
       :not_found
     end
@@ -23,8 +22,8 @@ class Cranium::Transformation::Index
 
   private
 
-  def default_value_record(settings)
-    settings[:if_not_found_then_insert].merge(settings[:match_column] => settings[:to_value])
+  def default_value_record(options)
+    options[:if_not_found_then_insert].merge(options[:match_column] => options[:to_value])
   end
 
 
