@@ -1,5 +1,9 @@
 class Cranium::DimensionManager
 
+  attr_reader :rows
+
+
+
   def self.for(table_name, field_name)
     @instances ||= {}
     @instances[[table_name, field_name]] ||= self.new table_name, field_name
@@ -7,37 +11,32 @@ class Cranium::DimensionManager
 
 
 
-  def initialize(table_name, field_name)
-    @table_name, @field_name = table_name, field_name
-
+  def initialize(table_name, key_field)
+    @table_name, @key_field = table_name, key_field
     @rows = []
-    @current_key = nil
 
-    Cranium.application.after_import do
-      flush
-    end
+    Cranium.application.after_import { flush }
   end
 
 
 
-  def insert(default_values)
-    key = next_key
-    @rows << default_values.merge(@field_name => key)
+  def insert(row)
+    raise ArgumentError, "Required attribute '#{@key_field}' missing" unless row.has_key? @key_field
 
-    key
+    @rows << resolve_sequence_values(row)
+    row[@key_field]
   end
 
 
 
   def create_cache_for_field(value_field)
-    Hash[Cranium::Database.connection[@table_name].select_map([@field_name, value_field])]
+    Hash[db.select_map([@key_field, value_field])]
   end
 
 
 
   def flush
-    Cranium::Database.connection[@table_name].multi_insert(@rows) unless @rows.empty?
-    Cranium::Database.connection["SELECT setval('#{@table_name}_#{@field_name}_seq', #{@current_key}) AS key"]
+    db.multi_insert(@rows) unless @rows.empty?
     @rows = []
   end
 
@@ -45,12 +44,16 @@ class Cranium::DimensionManager
 
   private
 
-
-  def next_key
-    if @current_key.nil?
-      @current_key = Cranium::Database.connection["SELECT nextval('#{@table_name}_#{@field_name}_seq') AS key"].first[:key]
-    else
-      @current_key += 1
+  def resolve_sequence_values(row)
+    row.each do |key, value|
+      row[key] = value.next_value if value.is_a? Cranium::Transformation::Sequence
     end
   end
+
+
+
+  def db
+    Cranium::Database.connection[@table_name]
+  end
+
 end
