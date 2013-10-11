@@ -19,6 +19,7 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
     user_id,amount
     1,100
     2,200
+    3,300
     """
     And the following definition:
     """
@@ -36,7 +37,8 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
       record[:contact_key] = lookup :contact_key,
                                     from_table: :dim_contact,
                                     match_column: :user_id,
-                                    to_value: record[:user_id]
+                                    to_value: record[:user_id],
+                                    if_not_found_then: -1
     end
 
     import :transformed_purchases do
@@ -50,3 +52,4 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
       | contact_key (i) | amount |
       | 10              | 100    |
       | 20              | 200    |
+      | -1              | 300    |

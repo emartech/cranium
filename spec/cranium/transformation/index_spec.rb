@@ -49,12 +49,32 @@ describe Cranium::Transformation::Index do
     end
 
 
+    it "should raise an error if both :if_not_found_then_insert and :if_not_found_then are specified" do
+      expect do
+        index.lookup(:contact_key, if_not_found_then: -1, if_not_found_then_insert: {})
+      end.to raise_error ArgumentError, "Cannot specify both :if_not_found_then and :if_not_found_then_insert options"
+    end
+
+
+    context "when :if_not_found_then is specified" do
+      it "should return the specified value if the lookup failed" do
+        stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact" }
+
+        index.lookup(:contact_key,
+                     from_table: :dim_contact,
+                     match_column: :customer_id,
+                     to_value: 2345,
+                     if_not_found_then: -1).should == -1
+      end
+    end
+
+
     context "when :if_not_found_then_insert is specified" do
       let(:dimension_manager) { dimension_manager = double "DimensionManager" }
 
       before(:each) do
         Cranium::DimensionManager.stub(:for).with(:dim_contact, :contact_key).and_return(dimension_manager)
-        stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact 2" }
+        stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact" }
       end
 
       it "should insert a new record into the specified table" do
