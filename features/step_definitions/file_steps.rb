@@ -14,7 +14,11 @@ Then(/^there is a "([^"]*)" data file in the upload directory containing:$/) do 
 end
 
 
-Then(/^the "([^"]*)" directory should contain (\d+) files$/) do |directory_path, amount|
+Then(/^the "([^"]*)" directory should contain the following files:$/) do |directory_path, files|
   Dir.exists?(directory_path).should be_true, "expected directory '#{directory_path}' to exist"
-  Dir["#{directory_path}/*"].count.should == amount.to_i
+  files_in_dir = Dir["#{directory_path}/*"].map { |file_name| File.basename file_name }.sort
+  files_in_dir.count.should == files.data.count
+  0.upto files.data.count-1 do |index|
+    files_in_dir[index].should =~ Regexp.new(files.data[index][:filename])
+  end
 end

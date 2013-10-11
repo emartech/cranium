@@ -21,12 +21,13 @@ describe Cranium::Application do
 
 
   describe "#register_source" do
-    it "should register a source in the source registry" do
-      block_called = false
-      application.register_source(:source1) { block_called = true }
+    it "should register a source in the source registry and resolve its files" do
+      source = double "SourceDefinition"
 
-      application.sources[:source1].should_not be_nil
-      block_called.should be_true
+      application.sources.should_receive(:register_source).with(:source1).and_return(source)
+      source.should_receive :resolve_files
+
+      application.register_source(:source1) { file "test*.csv" }
     end
   end
 

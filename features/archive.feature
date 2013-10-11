@@ -21,18 +21,26 @@ Feature: Archive source files
     end
 
     source :products do
-      file "products*.csv"
+      file "products_*.csv"
     end
 
+    source :products_transformed do end
+
     source :contacts do
-      file "contacts*.csv"
+      file "contacts.csv"
     end
 
     source :purchases do
-      file "purchases*.csv"
+      file "purchases.csv"
     end
+
+    transform :products => :products_transformed do end
 
     archive :products, :contacts
     """
     When I execute the definition
-    Then the "/tmp/cranium_archive/" directory should contain 3 files
+    Then the "/tmp/cranium_archive/" directory should contain the following files:
+      | filename         |
+      | .*contacts.csv   |
+      | .*products_1.csv |
+      | .*products_2.csv |

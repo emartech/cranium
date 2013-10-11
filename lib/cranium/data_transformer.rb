@@ -23,8 +23,12 @@ class Cranium::DataTransformer
     raise StandardError, "Source definition '#{@target.name}' cannot overrride the file name because it is a transformation target" if @target.file_name_overriden?
 
     CSV.open "#{upload_directory}/#{@target.file}", "w:#{@target.encoding}", csv_write_options_for(@target) do |target_file|
-      @source.files.each { |input_file| transform_input_file File.join(upload_directory, input_file), target_file, block }
+      @source.files.each do |input_file|
+        transform_input_file File.join(upload_directory, input_file), target_file, block
+      end
     end
+
+    @target.resolve_files
   end
 
 

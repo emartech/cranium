@@ -31,30 +31,6 @@ describe Cranium::DSL::SourceDefinition do
   end
 
 
-  describe "#files" do
-    before(:each) do
-      Cranium.stub configuration: OpenStruct.new(gpfdist_home_directory: "/home/gpfdist",
-                                                 upload_directory: "customer")
-    end
-
-    it "should return the file names of all files matching the file patterns" do
-      source.file "product*.csv"
-
-      Dir.stub(:[]).with("/home/gpfdist/customer/product*.csv").and_return(["/home/gpfdist/customer/product2.csv",
-                                                                            "/home/gpfdist/customer/product1.csv"])
-
-      source.files.should == ["product1.csv", "product2.csv"]
-    end
-
-    it "should return the result of the first call on every subsequent call" do
-      Dir.stub(:[]).and_return(["first file list"], ["second file list"])
-
-      source.files.should == ["first file list"]
-      source.files.should == ["first file list"]
-    end
-  end
-
-
   describe "#fields" do
     it "should return an empty Hash if no fields are set" do
       source.fields.should == {}
@@ -78,6 +54,30 @@ describe Cranium::DSL::SourceDefinition do
 
       source.file "overriden.csv"
       source.file_name_overriden?.should be_true
+    end
+  end
+
+
+  describe "#files" do
+    it "should return nil by default" do
+      source.files.should be_nil
+    end
+  end
+
+
+  describe "#resolve_files" do
+    it "should store the file names of all files matching the file pattern" do
+      Cranium.stub configuration: (Cranium::Configuration.new.tap do |config|
+        config.gpfdist_home_directory = "/home/gpfdist"
+        config.upload_directory = "customer"
+      end)
+      source.file "product*.csv"
+      Dir.stub(:[]).with("/home/gpfdist/customer/product*.csv").and_return(["/home/gpfdist/customer/product2.csv",
+                                                                            "/home/gpfdist/customer/product1.csv"])
+
+      source.resolve_files
+
+      source.files.should == ["product1.csv", "product2.csv"]
     end
   end
 

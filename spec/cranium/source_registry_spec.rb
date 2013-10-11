@@ -22,6 +22,10 @@ describe Cranium::SourceRegistry do
 
       registry[:test_source].should == source
     end
+
+    it "should return the newly registered source" do
+      registry.register_source :test_source do end.should be_a Cranium::DSL::SourceDefinition
+    end
   end
 
 end

@@ -14,7 +14,7 @@ class Cranium::Application
 
 
   def register_source(name, &block)
-    @sources.register_source name, &block
+    @sources.register_source(name, &block).resolve_files
   end
 
 
