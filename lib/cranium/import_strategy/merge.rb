@@ -1,69 +1,42 @@
 class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
 
   def import_from(source_table)
-    Cranium::Database.connection.run merge_update_query(source_table)
-    Cranium::Database.connection.run merge_insert_query(source_table)
+    database[import_definition.into].
+      from(Sequel.as(import_definition.into, "target"), Sequel.as(source_table, "source")).
+      where(qualify_fields(import_definition.merge_fields, :source, :target)).
+      update(qualify_fields(fields_without_merge_fields.invert, nil, :source))
+
+    database[import_definition.into].insert target_fields,
+                                            database[source_table].
+                                              left_outer_join(import_definition.into, import_definition.merge_fields.invert).
+                                              where(merge_fields_are_null).
+                                              select(*source_fields).qualify
+    database[source_table].count
   end
 
 
 
   private
 
-  def merge_update_query(source_table)
-    <<-sql
-      UPDATE #{import_definition.into} AS target
-      SET #{setters}
-      FROM #{source_table} AS source
-      WHERE #{join_fields}
-    sql
-  end
-
-
-  def merge_insert_query(source_table)
-    <<-sql
-      INSERT INTO #{import_definition.into} (#{target_field_list})
-          SELECT #{source_field_list}
-          FROM #{source_table} AS source
-              LEFT JOIN #{import_definition.into} AS target
-              ON (#{join_fields})
-          WHERE #{not_in_target?}
-    sql
+  def qualify_fields(fields_hash, key_qualifier, value_qualifier)
+    Hash[
+      fields_hash.map do |key_field, value_field|
+        [key_qualifier.nil? ? key_field : Sequel.qualify(key_qualifier, key_field),
+         value_qualifier.nil? ? value_field : Sequel.qualify(value_qualifier, value_field)]
+      end
+    ]
   end
 
 
 
-  def source_field_list
-    import_definition.field_associations.keys.map { |field| %Q["source"."#{field}"] }.join ", "
-  end
-
-
-
-  def target_field_list
-    import_definition.field_associations.values.map { |field| %Q["#{field}"] }.join ", "
-  end
-
-
-
-  def not_in_target?
-    import_definition.merge_fields.map { |_, to| %Q["target"."#{to}" IS NULL] }.join " AND "
-  end
-
-
-
-  def join_fields
-    import_definition.merge_fields.map { |from, to| %Q["target"."#{to}" = "source"."#{from}"] }.join " AND "
-  end
-
-
-
-  def setters
-    fields_to_set.map { |from, to| %Q["#{to}" = "source"."#{from}"] }.join ", "
-  end
-
-
-
-  def fields_to_set
+  def fields_without_merge_fields
     import_definition.field_associations.reject { |key, _| import_definition.merge_fields.keys.include? key }
+  end
+
+
+
+  def merge_fields_are_null
+    Hash[import_definition.merge_fields.values.map { |field| [Sequel.qualify(import_definition.into, field), nil] }]
   end
 
 end

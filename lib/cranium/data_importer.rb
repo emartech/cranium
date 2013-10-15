@@ -1,10 +1,17 @@
 class Cranium::DataImporter
 
+  include Cranium::Logging
+
+
+
   def import(import_definition)
+    number_of_items_imported = 0
     Cranium::Database.connection.transaction do
-      importer_for_definition(import_definition).import
+      number_of_items_imported = importer_for_definition(import_definition).import
       Cranium.application.apply_hook(:after_import)
     end
+
+    record_metric import_definition.name, number_of_items_imported.to_s
   end
 
 
