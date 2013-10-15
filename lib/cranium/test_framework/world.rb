@@ -21,11 +21,14 @@ class Cranium::TestFramework::World
 
   def save_definition(definition)
     config = <<-config_string
+      require 'logger'
+
       Cranium.configure do |config|
         config.greenplum_connection_string = "#{Cranium.configuration.greenplum_connection_string}"
         config.gpfdist_url = "#{Cranium.configuration.gpfdist_url}"
         config.gpfdist_home_directory = "#{Cranium.configuration.gpfdist_home_directory}"
         config.upload_directory = "#{Cranium.configuration.upload_directory}"
+        config.loggers << Logger.new("log/application.log")
       end
     config_string
 
