@@ -44,8 +44,8 @@ Feature: Import a CSV file into the database with new dimension values inserted 
 
     import :transformed_purchases do
       into :fct_purchases
-      put :contact_key => :contact_key
-      put :amount => :amount
+      put :contact_key
+      put :amount
     end
     """
     When I execute the definition
