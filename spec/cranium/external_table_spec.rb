@@ -60,7 +60,7 @@ describe Cranium::ExternalTable do
 
   describe "#name" do
     it "should return the name of the external table based on the source's name" do
-      external_table.name.should == "external_products"
+      external_table.name.should == :external_products
     end
   end
 

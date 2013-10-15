@@ -26,7 +26,7 @@ class Cranium::ExternalTable
 
 
   def name
-    "external_#{@source.name}"
+    :"external_#{@source.name}"
   end
 
 
