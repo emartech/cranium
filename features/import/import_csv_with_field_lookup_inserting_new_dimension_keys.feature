@@ -39,7 +39,7 @@ Feature: Import a CSV file into the database with new dimension values inserted 
                                     match_column: :user_id,
                                     to_value: record[:user_id],
                                     if_not_found_then_insert: { contact_key: next_value_in_sequence("dim_contact_contact_key_seq"),
-                                                                name: "Missing contact #{record[:user_id]}" }
+                                                                name: "Unknown contact #{record[:user_id]}" }
     end
 
     import :transformed_purchases do
@@ -57,4 +57,4 @@ Feature: Import a CSV file into the database with new dimension values inserted 
     And the "dim_contact" table should contain:
       | contact_key (i) | user_id | name              |
       | 10              | 1       | Alma              |
-      | 11              | 2       | Missing contact 2 |
+      | 11              | 2       | Unknown contact 2 |
