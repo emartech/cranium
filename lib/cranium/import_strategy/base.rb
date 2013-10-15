@@ -12,13 +12,10 @@ class Cranium::ImportStrategy::Base
 
   def import
     external_table = Cranium::ExternalTable.new Cranium.application.sources[import_definition.name], Cranium::Database.connection
-    external_table.create
 
-    begin
-      import_from external_table.name
-    ensure
-      external_table.destroy
-    end
+    external_table.create
+    import_from external_table.name
+    external_table.destroy
   end
 
 
