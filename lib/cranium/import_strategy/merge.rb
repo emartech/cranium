@@ -4,12 +4,12 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
     database[import_definition.into].
       from(Sequel.as(import_definition.into, "target"), Sequel.as(source_table, "source")).
       where(qualify_fields(import_definition.merge_fields, :source, :target)).
-      update(qualify_fields(fields_without_merge_fields.invert, nil, :source))
+      update(qualify_fields(not_merge_fields.invert, nil, :source))
 
     database[import_definition.into].insert target_fields,
                                             database[source_table].
                                               left_outer_join(import_definition.into, import_definition.merge_fields.invert).
-                                              where(merge_fields_are_null).
+                                              where(merge_fields_are_empty).
                                               select(*source_fields).qualify
     database[source_table].count
   end
@@ -29,13 +29,13 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
 
 
 
-  def fields_without_merge_fields
+  def not_merge_fields
     import_definition.field_associations.reject { |key, _| import_definition.merge_fields.keys.include? key }
   end
 
 
 
-  def merge_fields_are_null
+  def merge_fields_are_empty
     Hash[import_definition.merge_fields.values.map { |field| [Sequel.qualify(import_definition.into, field), nil] }]
   end
 
