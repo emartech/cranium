@@ -22,7 +22,7 @@ class Cranium::ImportStrategy::Base
 
 
 
-  private
+  protected
 
   def import_from(external_table)
     raise StandardError "Not implemented"
@@ -32,6 +32,12 @@ class Cranium::ImportStrategy::Base
 
   def database
     Cranium::Database.connection
+  end
+
+
+
+  def target_table
+    import_definition.into
   end
 
 
