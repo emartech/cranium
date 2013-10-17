@@ -38,7 +38,7 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
 
 
   def not_merge_fields
-    Cranium::Sequel::Hash[import_definition.field_associations.reject { |key, _| import_definition.merge_fields.keys.include? key }]
+    Cranium::Sequel::Hash[import_definition.field_associations.reject { |key, _| merge_fields.keys.include? key }]
   end
 
 
