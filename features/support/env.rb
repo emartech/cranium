@@ -1,5 +1,3 @@
-require 'sequel_greenplum'
-require 'yaml'
 require 'fileutils'
 require_relative "../../lib/cranium"
 require_relative "environments"
