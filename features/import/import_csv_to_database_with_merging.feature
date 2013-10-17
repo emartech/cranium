@@ -39,7 +39,7 @@ Feature: Import a CSV file into the database with merging
     """
     When I execute the definition
     Then the "dim_product" table should contain:
-      | item    | title                 | description                          |
+      | item    | title                 | description                           |
       | JNI-123 | Just a product name   | Very interesting description, updated |
-      | CDI-234 | Updated product name  | Yet another cool description         |
-      | KLM-987 | Inserted product name | This is the best product             |
+      | CDI-234 | Updated product name  | Yet another cool description          |
+      | KLM-987 | Inserted product name | This is the best product              |
