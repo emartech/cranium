@@ -52,4 +52,9 @@ class Cranium::TestFramework::World
     Cranium::TestFramework::DatabaseTable.new table_name, @greenplum_connection
   end
 
+
+  def database_sequence(sequence_name)
+    Cranium::TestFramework::DatabaseSequence.new sequence_name, @greenplum_connection
+  end
+
 end

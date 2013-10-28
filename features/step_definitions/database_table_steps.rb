@@ -13,6 +13,11 @@ Given(/^the current value in sequence "([^"]*)" is (\d+)$/) do |sequence_name, c
 end
 
 
+Given(/^a sequence called "([^"]*)" starting from (\d+)$/) do |sequence_name, current_value|
+  database_sequence(sequence_name).create(current_value)
+end
+
+
 Then(/^the "([^"]*)" table should contain:$/) do |table_name, data|
   expected_data, hashes = [], data.data
   hashes.map do |hash|

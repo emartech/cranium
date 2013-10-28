@@ -24,6 +24,9 @@ class Cranium::DataTransformer
   end
 
 
+  alias_method :sequence, :next_value_in_sequence
+
+
 
   def transform(&block)
     raise StandardError, "Source definition '#{@target.name}' cannot overrride the file name because it is a transformation target" if @target.file_name_overriden?

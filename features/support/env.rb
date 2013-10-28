@@ -11,6 +11,7 @@ end
 
 After do
   Cranium::TestFramework::DatabaseTable.cleanup
+  Cranium::TestFramework::DatabaseSequence.cleanup
 end
 
 World do
