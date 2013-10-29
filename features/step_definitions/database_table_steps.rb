@@ -13,8 +13,10 @@ Given(/^the current value in sequence "([^"]*)" is (\d+)$/) do |sequence_name, c
 end
 
 
-Given(/^a sequence called "([^"]*)" starting from (\d+)$/) do |sequence_name, current_value|
-  database_sequence(sequence_name).create(current_value)
+Given(/^a sequence called "([^"]*)" starting from (\d+)$/) do |sequence_name, start_value|
+  database_sequence(sequence_name).create
+
+  step %Q[the current value in sequence "#{sequence_name}" is #{start_value}]
 end
 
 

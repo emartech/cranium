@@ -46,5 +46,5 @@ Feature: Import a CSV file into the database with a split transformation
     When I execute the definition
     Then the "dim_product" table should contain:
       | dwh_load_id (i) | item    | title                |
-      | 33              | JNI-123 | Just a product name  |
-      | 33              | CDI-234 | Another product name |
+      | 34              | JNI-123 | Just a product name  |
+      | 34              | CDI-234 | Another product name |

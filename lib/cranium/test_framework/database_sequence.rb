@@ -1,8 +1,8 @@
 class Cranium::TestFramework::DatabaseSequence < Cranium::TestFramework::DatabaseEntity
 
 
-  def create(start_value = 1)
-    connection.run "CREATE sequence #{entity_name} START WITH #{start_value}"
+  def create
+    connection.run "CREATE sequence #{entity_name}"
     self.class.entities_created << self
   end
 
