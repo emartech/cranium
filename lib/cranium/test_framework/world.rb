@@ -4,6 +4,8 @@ class Cranium::TestFramework::World
 
   DEFINITION_FILE = "import_csv.rb"
 
+  attr_reader :result_code
+
 
 
   def initialize(working_directory, greenplum_connection)
@@ -44,6 +46,7 @@ class Cranium::TestFramework::World
       puts "error: #{err}"
       puts "exit status: #{status.exitstatus}"
     end
+    @result_code = status.exitstatus
   end
 
 
