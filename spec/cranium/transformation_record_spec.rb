@@ -109,4 +109,19 @@ describe Cranium::TransformationRecord do
     end
   end
 
+
+  describe "#has_key?" do
+    it "should return true if the record contains data for the specified key" do
+      record.input_data = ["one", "two", "three"]
+
+      record.has_key?(:field1).should be_true
+    end
+
+    it "should return false if the record doesn't contain data for the specified key" do
+      record.input_data = ["one", "two", "three"]
+
+      record.has_key?(:field4).should be_false
+    end
+  end
+
 end

@@ -23,13 +23,4 @@ describe Cranium::DataTransformer do
     end
   end
 
-
-  describe "#next_value_in_sequence" do
-    it "should return a named sequence" do
-      Cranium::Transformation::Sequence.should_receive(:by_name).with(:id_seq)
-
-      Cranium::DataTransformer.new(@transform_definition).next_value_in_sequence(:id_seq)
-    end
-  end
-
 end

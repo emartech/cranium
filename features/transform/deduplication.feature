@@ -1,4 +1,3 @@
-@wip
 Feature: Deduplicate data in CSV file
 
   Scenario: Singe file transformation
@@ -25,7 +24,7 @@ Feature: Deduplicate data in CSV file
       field :item_name, String
     end
 
-    deduplicate :sales_items => :products, by: [:item]
+    deduplicate :sales_items, into: :products, by: [:item]
     """
     When I execute the definition
     Then the process should be successful

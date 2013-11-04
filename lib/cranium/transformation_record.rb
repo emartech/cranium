@@ -57,6 +57,12 @@ class Cranium::TransformationRecord
 
 
 
+  def has_key?(key)
+    @data.has_key? key
+  end
+
+
+
   private
 
   def strip(value)

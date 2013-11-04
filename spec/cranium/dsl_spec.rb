@@ -26,4 +26,12 @@ describe Cranium::DSL do
     end
   end
 
+
+  describe "#deduplicate" do
+    it "should call transform with correct source and target arguments" do
+      dsl_object.should_receive(:transform).with(:sales_items => :products)
+      dsl_object.deduplicate :sales_items, into: :products, by: [:item]
+    end
+  end
+
 end

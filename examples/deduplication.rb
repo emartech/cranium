@@ -17,10 +17,11 @@ source :products do
 end
 
 
-deduplicate :sales_items => :products, by: [:item]
+deduplicate :sales_items, into: :products, by: [:item]
 
 # Equivalent to
-#
-#transform :sales_items => :products do |record|
-#  deduplicate by: [:item]
-#end
+
+transform :sales_items => :products do |record|
+  deduplicate_by :item
+end
+

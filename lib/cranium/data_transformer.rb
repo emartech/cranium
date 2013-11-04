@@ -13,21 +13,6 @@ class Cranium::DataTransformer
 
 
 
-  def lookup(field_name, settings)
-    @index.lookup field_name, settings
-  end
-
-
-
-  def next_value_in_sequence(name)
-    Cranium::Transformation::Sequence.by_name name
-  end
-
-
-  alias_method :sequence, :next_value_in_sequence
-
-
-
   def transform(&block)
     raise StandardError, "Source definition '#{@target.name}' cannot overrride the file name because it is a transformation target" if @target.file_name_overriden?
 
@@ -81,5 +66,27 @@ class Cranium::DataTransformer
       return_headers: false
     }
   end
+
+
+
+  def deduplicate_by(*fields)
+    @record.skip if Cranium::Transformation::DuplicationIndex[*fields].duplicate? @record
+  end
+
+
+
+  def lookup(field_name, settings)
+    @index.lookup field_name, settings
+  end
+
+
+
+  def next_value_in_sequence(name)
+    Cranium::Transformation::Sequence.by_name name
+  end
+
+
+
+  alias_method :sequence, :next_value_in_sequence
 
 end

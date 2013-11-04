@@ -24,7 +24,15 @@ module Cranium::DSL
     Cranium::DataTransformer.new(transform_definition).transform(&block)
   end
 
-  
+
+
+  def deduplicate(source, options)
+    transform source => options[:into] do
+      deduplicate_by *options[:by]
+    end
+  end
+
+
 
   def archive(*sources)
     sources.each do |source_name|
