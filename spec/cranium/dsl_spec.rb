@@ -4,6 +4,15 @@ describe Cranium::DSL do
 
   let(:dsl_object) { Object.new.tap { |object| object.extend Cranium::DSL } }
 
+  describe "#database" do
+    it "should register a database connection in the application" do
+      Cranium.application.should_receive(:register_database).with(:name)
+
+      dsl_object.database(:name)
+    end
+  end
+
+
   describe "#source" do
     it "should register a source in the application" do
       Cranium.application.should_receive(:register_source).with(:name)
@@ -33,5 +42,6 @@ describe Cranium::DSL do
       dsl_object.deduplicate :sales_items, into: :products, by: [:item]
     end
   end
+
 
 end

@@ -13,6 +13,24 @@ describe Cranium::Application do
   end
 
 
+  describe "#databases" do
+    it "should return a DatabaseRegistry" do
+      application.databases.should be_a Cranium::DatabaseRegistry
+    end
+  end
+
+
+  describe "#register_database" do
+    it "should register a database definition in the database registry" do
+      database = double "DatabaseDefinition"
+
+      application.databases.should_receive(:register_database).with(:db1).and_return(database)
+
+      application.register_database(:db1)
+    end
+  end
+
+
   describe "#sources" do
     it "should return a SourceRegistry" do
       application.sources.should be_a Cranium::SourceRegistry

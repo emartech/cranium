@@ -2,13 +2,21 @@ class Cranium::Application
 
   include Cranium::Logging
 
+  attr_reader :databases
   attr_reader :sources
 
 
 
   def initialize
+    @databases = Cranium::DatabaseRegistry.new
     @sources = Cranium::SourceRegistry.new
     @hooks = {}
+  end
+
+
+
+  def register_database(name, &block)
+    @databases.register_database(name, &block)
   end
 
 

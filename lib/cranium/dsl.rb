@@ -1,8 +1,16 @@
 module Cranium::DSL
 
+  autoload :DatabaseDefinition, 'cranium/dsl/database_definition'
   autoload :ImportDefinition, 'cranium/dsl/import_definition'
   autoload :SourceDefinition, 'cranium/dsl/source_definition'
   autoload :TransformDefinition, 'cranium/dsl/transform_definition'
+
+
+
+  def database(name, &block)
+    Cranium.application.register_database name, &block
+  end
+
 
 
   def source(name, &block)
