@@ -4,7 +4,6 @@ module Cranium::DSL
   autoload :ExtractDefinition, 'cranium/dsl/extract_definition'
   autoload :ImportDefinition, 'cranium/dsl/import_definition'
   autoload :SourceDefinition, 'cranium/dsl/source_definition'
-  autoload :TransformDefinition, 'cranium/dsl/transform_definition'
 
 
 
@@ -29,9 +28,8 @@ module Cranium::DSL
 
 
   def transform(names, &block)
-    transform_definition = Cranium::DSL::TransformDefinition.new(names)
-    source = Cranium.application.sources[transform_definition.source_name]
-    target = Cranium.application.sources[transform_definition.target_name]
+    source = Cranium.application.sources[names.keys.first]
+    target = Cranium.application.sources[names.values.first]
 
     Cranium::DataTransformer.new(source, target).transform(&block)
   end
