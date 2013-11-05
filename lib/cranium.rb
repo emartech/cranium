@@ -9,6 +9,7 @@ module Cranium
   autoload :DataExtractor, 'cranium/data_extractor'
   autoload :DataImporter, 'cranium/data_importer'
   autoload :DataTransformer, 'cranium/data_transformer'
+  autoload :DefinitionRegistry, 'cranium/definition_registry'
   autoload :DimensionManager, 'cranium/dimension_manager'
   autoload :DSL, 'cranium/dsl'
   autoload :ExternalTable, 'cranium/external_table'
