@@ -28,7 +28,7 @@ Feature: Deduplicate data in CSV file
     """
     When I execute the definition
     Then the process should be successful
-    And there is a "products.csv" data file in the upload directory containing:
+    And there should be a "products.csv" data file in the upload directory containing:
     """
     item,item_name
     Item1,Item name 1
@@ -37,4 +37,5 @@ Feature: Deduplicate data in CSV file
     """
 
 
+  @wip
   Scenario: Multiple files are deduplicated into one

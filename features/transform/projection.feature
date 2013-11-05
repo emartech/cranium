@@ -23,7 +23,7 @@ Feature: Projection
     transform :products => :products_projected do end
     """
     When I execute the definition
-    Then there is a "products_projected.csv" data file in the upload directory containing:
+    Then there should be a "products_projected.csv" data file in the upload directory containing:
     """
     id,category
     JNI-123,Main category > Subcategory > Sub-subcategory

@@ -24,7 +24,7 @@ Feature: Empty transformation
     transform :products => :products_copy do end
     """
     When I execute the definition
-    Then there is a "products_copy.csv" data file in the upload directory containing:
+    Then there should be a "products_copy.csv" data file in the upload directory containing:
     """
     id,name,category
     JNI-123,Just a product name,Main category > Subcategory > Sub-subcategory
@@ -58,7 +58,7 @@ Feature: Empty transformation
     transform :products => :products_converted do end
     """
     When I execute the definition
-    Then there is a "products_converted.csv" data file in the upload directory containing:
+    Then there should be a "products_converted.csv" data file in the upload directory containing:
     """
     id,name,category
     JNI-123,Just a product name,Main category > Subcategory > Sub-subcategory
