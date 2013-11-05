@@ -6,9 +6,11 @@ describe Cranium::DSL do
 
   describe "#database" do
     it "should register a database connection in the application" do
-      Cranium.application.should_receive(:register_database).with(:name)
+      block = lambda {}
 
-      dsl_object.database(:name)
+      Cranium::Database.should_receive(:register_database).with(:name, &block)
+
+      dsl_object.database(:name, &block)
     end
   end
 

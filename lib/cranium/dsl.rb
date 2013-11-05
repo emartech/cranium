@@ -6,9 +6,8 @@ module Cranium::DSL
   autoload :SourceDefinition, 'cranium/dsl/source_definition'
 
 
-
   def database(name, &block)
-    Cranium.application.register_database name, &block
+    Cranium::Database.register_database name, &block
   end
 
 

@@ -5,7 +5,6 @@ module Cranium
   autoload :AttributeDSL, 'cranium/attribute_dsl'
   autoload :Configuration, 'cranium/configuration'
   autoload :Database, 'cranium/database'
-  autoload :DatabaseRegistry, 'cranium/database_registry'
   autoload :DataExtractor, 'cranium/data_extractor'
   autoload :DataImporter, 'cranium/data_importer'
   autoload :DataTransformer, 'cranium/data_transformer'
