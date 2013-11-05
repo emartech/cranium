@@ -1,6 +1,7 @@
 module Cranium::DSL
 
   autoload :DatabaseDefinition, 'cranium/dsl/database_definition'
+  autoload :ExtractDefinition, 'cranium/dsl/extract_definition'
   autoload :ImportDefinition, 'cranium/dsl/import_definition'
   autoload :SourceDefinition, 'cranium/dsl/source_definition'
   autoload :TransformDefinition, 'cranium/dsl/transform_definition'
@@ -19,10 +20,10 @@ module Cranium::DSL
 
 
 
-  def import(name, &block)
-    import_definition = ImportDefinition.new(name)
-    import_definition.instance_eval &block
-    Cranium::DataImporter.new.import(import_definition)
+  def extract(name, &block)
+    extract_definition = ExtractDefinition.new name
+    extract_definition.instance_eval &block
+    Cranium::DataExtractor.new.execute extract_definition
   end
 
 
@@ -41,6 +42,14 @@ module Cranium::DSL
     transform source => options[:into] do
       deduplicate_by *options[:by]
     end
+  end
+
+
+
+  def import(name, &block)
+    import_definition = ImportDefinition.new(name)
+    import_definition.instance_eval &block
+    Cranium::DataImporter.new.import import_definition
   end
 
 
