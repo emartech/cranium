@@ -8,3 +8,7 @@ Cranium.configure do |config|
   config.archive_directory = "cranium_archive"
   config.loggers << Logger.new("log/application.log")
 end
+
+database :suite do
+  connect_to "postgres://cranium:cranium@192.168.56.42:5432/cranium"
+end
