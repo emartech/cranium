@@ -17,7 +17,7 @@ Feature: Extracting data from a database table to CSV
     And the following definition:
     """
     database :suite do
-      connect_to "postgres://cranium:cranium@192.168.56.42:5432/cranium"
+      connect_to Cranium.configuration.greenplum_connection_string
     end
 
     extract :contacts do
