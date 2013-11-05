@@ -21,7 +21,10 @@ module Cranium::DSL
 
   def transform(names, &block)
     transform_definition = Cranium::DSL::TransformDefinition.new(names)
-    Cranium::DataTransformer.new(transform_definition).transform(&block)
+    source = Cranium.application.sources[transform_definition.source_name]
+    target = Cranium.application.sources[transform_definition.target_name]
+
+    Cranium::DataTransformer.new(source, target).transform(&block)
   end
 
 

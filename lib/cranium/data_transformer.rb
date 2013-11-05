@@ -3,11 +3,9 @@ require 'cranium/extensions/file'
 
 class Cranium::DataTransformer
 
-  def initialize(transform_definition)
-    @transform_definition = transform_definition
+  def initialize(source, target)
+    @source, @target = source, target
     @index = Cranium::Transformation::Index.new
-    @source = Cranium.application.sources[@transform_definition.source_name]
-    @target = Cranium.application.sources[@transform_definition.target_name]
     @record = Cranium::TransformationRecord.new @source.fields.keys, @target.fields.keys
   end
 
