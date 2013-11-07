@@ -6,15 +6,11 @@ class Cranium::Extract::Strategy::Incremental < Cranium::Extract::Strategy::Base
     incremental_field, max_value = extract_definition.incrementally_by, nil
 
     dataset.each do |row|
-      unless incremental_field.nil?
-        max_value = row[incremental_field] if max_value.nil? or row[incremental_field] > max_value
-      end
+      max_value = row[incremental_field] if max_value.nil? or row[incremental_field] > max_value
       target_file << row.values
     end
 
-    unless incremental_field.nil?
-      extract_definition.storage.save_last_value_of incremental_field, max_value
-    end
+    extract_definition.storage.save_last_value_of incremental_field, max_value
   end
 
 end
