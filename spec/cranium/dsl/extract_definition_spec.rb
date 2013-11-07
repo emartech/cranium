@@ -12,6 +12,13 @@ describe Cranium::DSL::ExtractDefinition do
   end
 
 
+  describe "#storage" do
+    it "should return the persistent storage corresponding to the extract" do
+      extract.storage.should be_a Cranium::Extract::Storage
+    end
+  end
+
+
   describe "#from" do
     it "should set the attribute to the specified value" do
       extract.from :database

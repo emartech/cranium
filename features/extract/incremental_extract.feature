@@ -1,4 +1,3 @@
-@wip
 Feature: Extracting data incrementally from a database table to CSV
 
   Incremental extracts work by indicating that a field (or fields) should be used to detect new data rows
@@ -16,7 +15,7 @@ Feature: Extracting data incrementally from a database table to CSV
     extract :contacts do
       from :suite
       incrementally_by :id
-      query "SELECT id, name FROM contacts WHERE id > #{last_extracted_value_of :id, 0} ORDER BY id"
+      query "SELECT id, name FROM contacts WHERE id > #{last_extracted_value_of :id, 0} ORDER BY id DESC"
     end
     """
     And a database table called "contacts" with the following fields:
@@ -37,6 +36,6 @@ Feature: Extracting data incrementally from a database table to CSV
     And there should be a "contacts.csv" data file in the upload directory containing:
     """
     id,name
-    3,John Smith
     4,Jane Smith
+    3,John Smith
     """

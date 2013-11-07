@@ -5,6 +5,7 @@ class Cranium::DSL::ExtractDefinition
   end
 
   attr_reader :name
+  attr_reader :storage
 
   define_attribute :from
   define_attribute :query
