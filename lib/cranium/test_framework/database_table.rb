@@ -27,4 +27,9 @@ class Cranium::TestFramework::DatabaseTable < Cranium::TestFramework::DatabaseEn
   end
 
 
+
+  def clear
+    connection[entity_name].truncate
+  end
+
 end

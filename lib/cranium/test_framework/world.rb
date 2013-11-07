@@ -52,7 +52,7 @@ class Cranium::TestFramework::World
 
 
   def database_table(table_name)
-    Cranium::TestFramework::DatabaseTable.new table_name, @greenplum_connection
+    Cranium::TestFramework::DatabaseTable.new table_name.to_sym, @greenplum_connection
   end
 
 

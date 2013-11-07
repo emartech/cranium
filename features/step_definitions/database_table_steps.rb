@@ -1,10 +1,16 @@
 Given(/^a database table called "([^"]*)" with the following fields:$/) do |table_name, fields|
-  database_table(table_name.to_sym).create(fields.data)
+  database_table(table_name).create(fields.data)
 end
 
 
-Given (/^only the following rows in the "([^"]*)" database table:$/) do |table_name, table|
-  database_table(table_name.to_sym).insert table.data
+Given (/^only the following rows in the "([^"]*)" database table:$/) do |table_name, rows|
+  database_table(table_name).clear
+  step %Q(the following new rows in the "#{table_name}" database table:), rows
+end
+
+
+Given (/^the following new rows in the "([^"]*)" database table:$/) do |table_name, rows|
+  database_table(table_name).insert rows.data
 end
 
 
@@ -30,5 +36,5 @@ Then(/^the "([^"]*)" table should contain:$/) do |table_name, data|
     expected_data << new_row
   end
 
-  database_table(table_name.to_sym).content(data.fields).should =~ expected_data
+  database_table(table_name).content(data.fields).should =~ expected_data
 end

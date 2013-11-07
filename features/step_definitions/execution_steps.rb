@@ -1,4 +1,9 @@
-When(/^I execute the definition$/) do
+Given(/^the definition is executed$/) do
+  step "I execute the definition"
+end
+
+
+When(/^I execute the definition(?: again)?$/) do
   execute_definition
 end
 
