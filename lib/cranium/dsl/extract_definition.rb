@@ -8,6 +8,7 @@ class Cranium::DSL::ExtractDefinition
 
   define_attribute :from
   define_attribute :query
+  define_attribute :incrementally_by
 
 
 

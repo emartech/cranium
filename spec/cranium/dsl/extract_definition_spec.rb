@@ -27,4 +27,12 @@ describe Cranium::DSL::ExtractDefinition do
     end
   end
 
+
+  describe "#incrementally_by" do
+    it "should set the attribute to the specified value" do
+      extract.incrementally_by :id
+      extract.incrementally_by.should == :id
+    end
+  end
+
 end
