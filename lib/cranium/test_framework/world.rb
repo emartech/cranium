@@ -2,7 +2,7 @@ require 'open3'
 
 class Cranium::TestFramework::World
 
-  DEFINITION_FILE = "import_csv.rb"
+  DEFINITION_FILE = "definition.rb"
 
   attr_reader :result_code
 
