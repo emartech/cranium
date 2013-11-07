@@ -1,5 +1,8 @@
 class Cranium::Configuration
 
+  STORAGE_DIRECTORY_NAME = ".cranium"
+
+  attr_writer :storage_directory
   attr_accessor :archive_directory
   attr_accessor :greenplum_connection_string
   attr_accessor :mysql_connection_string
@@ -22,8 +25,9 @@ class Cranium::Configuration
 
 
 
-  def working_directory
-    File.join upload_path, ".cranium"
+  def storage_directory
+    return @storage_directory unless @storage_directory.nil?
+    File.join upload_path, STORAGE_DIRECTORY_NAME
   end
 
 end

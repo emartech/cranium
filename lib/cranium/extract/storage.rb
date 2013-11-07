@@ -1,4 +1,5 @@
 require 'yaml'
+require 'fileutils'
 
 class Cranium::Extract::Storage
 
@@ -27,12 +28,6 @@ class Cranium::Extract::Storage
 
   private
 
-  def storage_file
-    File.join Cranium.configuration.working_directory, STORAGE_FILE_NAME
-  end
-
-
-
   def stored_values
     return @stored_values unless @stored_values.nil?
     @stored_values = (File.exists? storage_file) ? YAML.load(File.read storage_file) : { @extract_name => { last_values: {} } }
@@ -40,7 +35,20 @@ class Cranium::Extract::Storage
 
 
 
+  def storage_file
+    File.join storage_dir, STORAGE_FILE_NAME
+  end
+
+
+
+  def storage_dir
+    Cranium.configuration.storage_directory
+  end
+
+
+
   def save_stored_values
+    FileUtils.mkdir_p storage_dir unless Dir.exists? storage_dir
     File.write storage_file, YAML.dump(stored_values)
   end
 

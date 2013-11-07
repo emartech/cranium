@@ -1,12 +1,12 @@
 require_relative '../../spec_helper'
-require 'ostruct'
 
 describe Cranium::Extract::Storage do
 
-  before { Cranium.stub configuration: OpenStruct.new(working_directory: "/working/directory/.cranium") }
-
   let(:storage) { Cranium::Extract::Storage.new :extract_name }
-  let(:storage_file) { "#{Cranium.configuration.working_directory}/extracts" }
+  let(:storage_dir) { "/storage/directory/.cranium" }
+  let(:storage_file) { "#{storage_dir}/extracts" }
+
+  before { Cranium.stub configuration: Cranium::Configuration.new.tap { |config| config.storage_directory = storage_dir } }
 
   describe "#last_value_of" do
     context "when storage file doesn't exist" do
@@ -34,17 +34,31 @@ describe Cranium::Extract::Storage do
 
   describe "#save_last_value_of" do
     context "when storage file doesn't exist" do
-      it "should create the storage file and save the specified value" do
-        File.stub(:exists?).with(storage_file).and_return(false)
+      before { File.stub(:exists?).with(storage_file).and_return(false) }
+
+      it "should create the storage file and save the specified value if the storage directory already exists" do
+        Dir.stub(:exists?).with(storage_dir).and_return(true)
 
         File.should_receive(:write).with(storage_file, YAML.dump(extract_name: { last_values: { field: 15 } }))
+
+        storage.save_last_value_of(:field, 15)
+      end
+
+      it "should create the storage directory if it doesn't exist yet" do
+        Dir.stub(:exists?).with(storage_dir).and_return(false)
+        File.stub :write
+
+        FileUtils.should_receive(:mkdir_p).with(storage_dir)
 
         storage.save_last_value_of(:field, 15)
       end
     end
 
     context "when there are previously saved values" do
-      before { File.stub(:exists?).with(storage_file).and_return(true) }
+      before do
+        Dir.stub(:exists?).with(storage_dir).and_return(true)
+        File.stub(:exists?).with(storage_file).and_return(true)
+      end
 
       it "should overwrite the specified field's value and preserve all others" do
         File.stub(:read).with(storage_file).and_return(YAML.dump({

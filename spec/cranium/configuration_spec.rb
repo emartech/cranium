@@ -14,12 +14,17 @@ describe Cranium::Configuration do
   end
 
 
-  describe "#working_directory" do
-    it "should return the full path of the working directory" do
+  describe "#storage_directory" do
+    it "should return the previously set value" do
+      config.storage_directory = "/some/path"
+      config.storage_directory.should == "/some/path"
+    end
+
+    it "should return the default storage directory if one wasn't explicitly set" do
       config.gpfdist_home_directory = "/gpfdist/home/dir"
       config.upload_directory = "uploads/customer"
 
-      config.working_directory.should == "/gpfdist/home/dir/uploads/customer/.cranium"
+      config.storage_directory.should == "/gpfdist/home/dir/uploads/customer/.cranium"
     end
   end
 
