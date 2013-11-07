@@ -1,6 +1,6 @@
 require 'csv'
 
-class Cranium::DataExtractor
+class Cranium::Extract::DataExtractor
 
   def execute(extract_definition)
     CSV.open "#{Cranium.configuration.upload_path}/#{extract_definition.name}.csv", "w:UTF-8" do |target_file|

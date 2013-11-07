@@ -21,7 +21,7 @@ module Cranium::DSL
   def extract(name, &block)
     extract_definition = ExtractDefinition.new name
     extract_definition.instance_eval &block
-    Cranium::DataExtractor.new.execute extract_definition
+    Cranium::Extract::DataExtractor.new.execute extract_definition
   end
 
 

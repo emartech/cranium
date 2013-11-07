@@ -33,7 +33,7 @@ describe Cranium::DSL do
       extract_definition.should_receive(:instance_eval).with(&block)
 
       extractor = double "DataExtractor"
-      Cranium::DataExtractor.stub new: extractor
+      Cranium::Extract::DataExtractor.stub new: extractor
       extractor.should_receive(:execute).with(extract_definition)
 
       dsl_object.extract :contacts, &block
