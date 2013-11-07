@@ -20,4 +20,10 @@ class Cranium::Configuration
     File.join gpfdist_home_directory, upload_directory
   end
 
+
+
+  def working_directory
+    File.join upload_path, ".cranium"
+  end
+
 end

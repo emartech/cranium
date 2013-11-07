@@ -14,6 +14,14 @@ class Cranium::DSL::ExtractDefinition
 
   def initialize(name)
     @name = name
+    @storage = Cranium::Extract::Storage.new name
+  end
+
+
+
+  def last_extracted_value_of(field, default = nil)
+    stored_value = @storage.last_value_of field
+    stored_value.nil? ? default : stored_value
   end
 
 end

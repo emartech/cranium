@@ -12,6 +12,7 @@ module Cranium
   autoload :DimensionManager, 'cranium/dimension_manager'
   autoload :DSL, 'cranium/dsl'
   autoload :ExternalTable, 'cranium/external_table'
+  autoload :Extract, 'cranium/extract'
   autoload :ImportStrategy, 'cranium/import_strategy'
   autoload :Logging, 'cranium/logging'
   autoload :ProgressOutput, 'cranium/progress_output'
