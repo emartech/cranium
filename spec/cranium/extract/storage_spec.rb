@@ -67,25 +67,52 @@ describe Cranium::Extract::Storage do
 
       it "should overwrite the specified field's value and preserve all others" do
         File.stub(:read).with(storage_file).and_return(YAML.dump({
-                                                                   extract_name:
-                                                                     {
-                                                                       last_values: {
-                                                                         field1: 1,
-                                                                         field2: 2,
-                                                                         field3: 3
-                                                                       }
+                                                                   extract_name: {
+                                                                     last_values: {
+                                                                       field1: 1,
+                                                                       field2: 2,
+                                                                       field3: 3
                                                                      }
+                                                                   }
                                                                  }))
 
         File.should_receive(:write).with(storage_file, YAML.dump({
-                                                                   extract_name:
-                                                                     {
-                                                                       last_values: {
-                                                                         field1: 1,
-                                                                         field2: 5,
-                                                                         field3: 3
-                                                                       }
+                                                                   extract_name: {
+                                                                     last_values: {
+                                                                       field1: 1,
+                                                                       field2: 5,
+                                                                       field3: 3
                                                                      }
+                                                                   }
+                                                                 }))
+
+        storage.save_last_value_of(:field2, 5)
+      end
+
+      it "should create the new entry if it doesn't exist yet" do
+        File.stub(:read).with(storage_file).and_return(YAML.dump({
+                                                                   other_extract_name: {
+                                                                     last_values: {
+                                                                       field1: 1,
+                                                                       field2: 2,
+                                                                       field3: 3
+                                                                     }
+                                                                   }
+                                                                 }))
+
+        File.should_receive(:write).with(storage_file, YAML.dump({
+                                                                   other_extract_name: {
+                                                                     last_values: {
+                                                                       field1: 1,
+                                                                       field2: 2,
+                                                                       field3: 3
+                                                                     }
+                                                                   },
+                                                                   extract_name: {
+                                                                     last_values: {
+                                                                       field2: 5
+                                                                     }
+                                                                   }
                                                                  }))
 
         storage.save_last_value_of(:field2, 5)
