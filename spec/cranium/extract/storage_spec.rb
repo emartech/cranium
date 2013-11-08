@@ -19,6 +19,11 @@ describe Cranium::Extract::Storage do
     context "when storage file already exists" do
       before { File.stub(:exists?).with(storage_file).and_return(true) }
 
+      it "should return nil if no value was saved for this extract yet" do
+        File.stub(:read).with(storage_file).and_return(YAML.dump(other_extract_name: { last_values: {} }))
+        storage.last_value_of(:field).should == nil
+      end
+
       it "should return nil if no value was saved for the field" do
         File.stub(:read).with(storage_file).and_return(YAML.dump(extract_name: { last_values: {} }))
         storage.last_value_of(:field).should == nil

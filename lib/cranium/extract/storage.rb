@@ -14,6 +14,7 @@ class Cranium::Extract::Storage
 
 
   def last_value_of(field)
+    return nil unless stored_values.has_key? @extract_name and stored_values[@extract_name].has_key? :last_values
     stored_values[@extract_name][:last_values][field]
   end
 
