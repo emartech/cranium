@@ -11,7 +11,7 @@ class Cranium::DimensionManager
 
 
 
-  def initialize(table_name, *key_fields)
+  def initialize(table_name, key_fields)
     @table_name, @key_fields = table_name, key_fields
     @rows = []
 
@@ -29,7 +29,7 @@ class Cranium::DimensionManager
 
 
   def create_cache_for_field(value_field)
-    Hash[db.select_map([@key_fields.first, value_field])]
+    to_multi_key_cache(db.select_map(@key_fields.concat [value_field]))
   end
 
 
@@ -43,8 +43,12 @@ class Cranium::DimensionManager
 
   private
 
+  def to_multi_key_cache(table_data)
+    Hash[table_data.map { |row| [row[0..-2], row.last] }]
+  end
+
   def missing_keys(row)
-    (@key_fields-row.keys)
+    @key_fields-row.keys
   end
 
   def resolve_sequence_values(row)

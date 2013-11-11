@@ -3,8 +3,8 @@ require_relative '../spec_helper'
 describe Cranium::DimensionManager do
   describe "#insert" do
 
-    context "single key" do
-      let(:manager) { Cranium::DimensionManager.new :table, :key }
+    context "with single key" do
+      let(:manager) { Cranium::DimensionManager.new :table, [:key] }
 
       it "should store a new record for insertion" do
         manager.insert key: 123, name: "John"
@@ -32,8 +32,8 @@ describe Cranium::DimensionManager do
       end
     end
 
-    context "multiple keys" do
-      let(:manager) { Cranium::DimensionManager.new :table, :key_1, :key_2 }
+    context "with multiple keys" do
+      let(:manager) { Cranium::DimensionManager.new :table, [:key_1, :key_2] }
 
       it "should store a new record for insertion" do
         manager.insert key_1: 12, key_2: 34, name: "Joe"
@@ -60,6 +60,34 @@ describe Cranium::DimensionManager do
 
           manager.rows.should == [{key_1: 456, key_2: 123 }]
         end
+      end
+    end
+  end
+
+  describe "#create_cache_for_field" do
+    context "with single key" do
+      let(:manager) { Cranium::DimensionManager.new :table, [:key] }
+
+      it "should load key-value pairs into a hash" do
+        database = double("Database connection")
+        manager.stub(:db).and_return database
+
+        database.should_receive(:select_map).with([:key, :value_field]).and_return([ [1, 10], [2, 20] ])
+
+        manager.create_cache_for_field(:value_field).should == { [1] => 10, [2] => 20}
+      end
+    end
+
+    context "with multiple keys" do
+      let(:manager) { Cranium::DimensionManager.new :table, [:key_1, :key_2] }
+
+      it "should load key-value pairs into a hash" do
+        database = double("Database connection")
+        manager.stub(:db).and_return database
+
+        database.should_receive(:select_map).with([:key_1, :key_2, :value_field]).and_return([ [1, 1, 11], [1, 2, 12], [2, 1, 21] ])
+
+        manager.create_cache_for_field(:value_field).should == { [1, 1] => 11, [1, 2] => 12, [2, 1] => 21}
       end
     end
   end

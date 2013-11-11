@@ -9,14 +9,22 @@ class Cranium::Transformation::Index
   def lookup(field_name, options)
     validate options
 
-    cache = cache_for(options[:from_table], options[:match_column], field_name)
+    if options.has_key? :match
+      keys = options[:match].values
+      key_fields = options[:match].keys
+    else
+      keys = [options[:to_value]]
+      key_fields = [options[:match_column]]
+    end
 
-    if cache.has_key? options[:to_value]
-      cache[options[:to_value]]
+    cache = cache_for(options[:from_table], key_fields, field_name)
+
+    if cache.has_key? keys
+      cache[keys]
     elsif options.has_key? :if_not_found_then
       options[:if_not_found_then]
     elsif options.has_key? :if_not_found_then_insert
-      cache[options[:to_value]] = Cranium::DimensionManager.for(options[:from_table], field_name).insert default_value_record(options)
+      cache[keys] = Cranium::DimensionManager.for(options[:from_table], field_name).insert default_value_record(options)
     else
       :not_found
     end

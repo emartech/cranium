@@ -11,10 +11,10 @@ describe Cranium::Transformation::Index do
 
 
 
-  def stub_cache_query(table_name, key_field, value_field, result)
+  def stub_cache_query(table_name, key_fields, value_field, result)
     dimension_manager = double "DimensionManager"
     dimension_manager.stub(:create_cache_for_field).with(value_field).and_return(result)
-    Cranium::DimensionManager.stub(:for).with(table_name, key_field).and_return(dimension_manager)
+    Cranium::DimensionManager.stub(:for).with(table_name, key_fields).and_return(dimension_manager)
   end
 
 
@@ -22,28 +22,36 @@ describe Cranium::Transformation::Index do
   describe "#lookup" do
     context "the first time it's called" do
       it "should query the requested key value from the database" do
-        stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact 1",
-                                                                     2345 => "contact 2",
-                                                                     3456 => "contact 3" }
+        stub_cache_query :dim_contact, [:customer_id], :contact_key, { [1234] => "contact 1",
+                                                                     [2345] => "contact 2",
+                                                                     [3456] => "contact 3" }
 
         index.lookup(:contact_key, from_table: :dim_contact, match_column: :customer_id, to_value: 2345).should == "contact 2"
+      end
+
+      it "should query the requested multi-key value from the database" do
+        stub_cache_query :dim_contact, [:key_1, :key_2], :contact_key, { [12,34] => "contact 1",
+                                                                       [23,45] => "contact 2",
+                                                                       [34,56] => "contact 3" }
+
+        index.lookup(:contact_key, from_table: :dim_contact, match: {key_1: 23, key_2: 45 }).should == "contact 2"
       end
     end
 
 
     context "on subsequent calls" do
       it "should look up the requested value from an internal cache" do
-        stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact 1" }
+        stub_cache_query :dim_contact, [:customer_id], :contact_key, { [1234] => "contact 1" }
         index.lookup(:contact_key, from_table: :dim_contact, match_column: :customer_id, to_value: 1234)
 
-        stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact 2" }
+        stub_cache_query :dim_contact, [:customer_id], :contact_key, { [1234] => "contact 2" }
         index.lookup(:contact_key, from_table: :dim_contact, match_column: :customer_id, to_value: 1234).should == "contact 1"
       end
     end
 
 
     it "should return :not_found if the key value was not found" do
-      stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact 2" }
+      stub_cache_query :dim_contact, [:customer_id], :contact_key, { [1234] => "contact 2" }
 
       index.lookup(:contact_key, from_table: :dim_contact, match_column: :customer_id, to_value: 2345).should == :not_found
     end
@@ -58,7 +66,7 @@ describe Cranium::Transformation::Index do
 
     context "when :if_not_found_then is specified" do
       it "should return the specified value if the lookup failed" do
-        stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact" }
+        stub_cache_query :dim_contact, [:customer_id], :contact_key, { [1234] => "contact" }
 
         index.lookup(:contact_key,
                      from_table: :dim_contact,
@@ -70,11 +78,11 @@ describe Cranium::Transformation::Index do
 
 
     context "when :if_not_found_then_insert is specified" do
-      let(:dimension_manager) { dimension_manager = double "DimensionManager" }
+      let(:dimension_manager) { double "DimensionManager" }
 
       before(:each) do
         Cranium::DimensionManager.stub(:for).with(:dim_contact, :contact_key).and_return(dimension_manager)
-        stub_cache_query :dim_contact, :customer_id, :contact_key, { 1234 => "contact" }
+        stub_cache_query :dim_contact, [:customer_id], :contact_key, { [1234] => "contact" }
       end
 
       it "should insert a new record into the specified table" do
