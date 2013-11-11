@@ -13,7 +13,7 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
   private
 
   def update_existing_records
-    database[target_table].
+    database.
       from(Sequel.as(target_table, "target"), Sequel.as(@source_table, "source")).
       where(merge_fields.qualify keys_with: :source, values_with: :target).
       update(not_merge_fields.qualify(keys_with: :source).invert)
