@@ -85,14 +85,29 @@ describe Cranium::Transformation::Index do
         stub_cache_query :dim_contact, [:customer_id], :contact_key, { [1234] => "contact" }
       end
 
-      it "should insert a new record into the specified table" do
-        dimension_manager.should_receive(:insert).with(customer_id: 2345)
+      context "when a single key is used" do
+        it "should insert a new record into the specified table" do
+          dimension_manager.should_receive(:insert).with(customer_id: 2345)
 
-        index.lookup :contact_key,
-                     from_table: :dim_contact,
-                     match_column: :customer_id,
-                     to_value: 2345,
-                     if_not_found_then_insert: { customer_id: 2345 }
+          index.lookup :contact_key,
+                       from_table: :dim_contact,
+                       match_column: :customer_id,
+                       to_value: 2345,
+                       if_not_found_then_insert: { customer_id: 2345 }
+        end
+      end
+
+      context "when multiple keys are used" do
+        it "should insert a new record into the specified table" do
+          stub_cache_query :dim_contact, [:key_1, :key_2], :contact_key, { [12,34] => "contact" }
+
+          dimension_manager.should_receive(:insert).with(key_1: 23, key_2: 45)
+
+          index.lookup :contact_key,
+                       from_table: :dim_contact,
+                       match: {key_1: 23, key_2: 45},
+                       if_not_found_then_insert: { key_1: 23, key_2: 45 }
+        end
       end
 
       it "should fill out the new record's lookup key automatically" do

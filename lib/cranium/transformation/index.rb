@@ -24,7 +24,7 @@ class Cranium::Transformation::Index
     elsif options.has_key? :if_not_found_then
       options[:if_not_found_then]
     elsif options.has_key? :if_not_found_then_insert
-      cache[keys] = Cranium::DimensionManager.for(options[:from_table], field_name).insert default_value_record(options)
+      cache[keys] = Cranium::DimensionManager.for(options[:from_table], field_name).insert(default_value_record(options))
     else
       :not_found
     end
@@ -42,12 +42,17 @@ class Cranium::Transformation::Index
   private
 
   def default_value_record(options)
-    options[:if_not_found_then_insert].merge(options[:match_column] => options[:to_value])
+    if options.has_key? :match
+      key_values = options[:match]
+    else
+      key_values = {options[:match_column] => options[:to_value]}
+    end
+    options[:if_not_found_then_insert].merge(key_values)
   end
 
 
 
-  def cache_for(table_name, key_field, value_field)
-    @indexes[[table_name, key_field, value_field]] ||= Cranium::DimensionManager.for(table_name, key_field).create_cache_for_field(value_field)
+  def cache_for(table_name, key_fields, value_field)
+    @indexes[[table_name, key_fields, value_field]] ||= Cranium::DimensionManager.for(table_name, key_fields).create_cache_for_field(value_field)
   end
 end

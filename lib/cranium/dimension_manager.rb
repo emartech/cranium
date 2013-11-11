@@ -21,11 +21,12 @@ class Cranium::DimensionManager
 
 
   def insert(row)
-    raise ArgumentError, "Required attribute '#{missing_keys(row).join('\', \'')}' missing" unless missing_keys(row).empty?
+    raise ArgumentError, "Required attribute '#{@key_fields}' missing" unless row.has_key? @key_fields
 
     @rows << resolve_sequence_values(row)
-    @key_fields.map { |key_field| row[key_field] }
+    row[@key_fields]
   end
+
 
 
   def create_cache_for_field(value_field)
@@ -47,9 +48,7 @@ class Cranium::DimensionManager
     Hash[table_data.map { |row| [row[0..-2], row.last] }]
   end
 
-  def missing_keys(row)
-    @key_fields-row.keys
-  end
+
 
   def resolve_sequence_values(row)
     row.each do |key, value|

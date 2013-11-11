@@ -1,4 +1,3 @@
-@wip
 Feature: Import a CSV file into the database with IDs looked up from multiple columns of the database
 
   Scenario: Successful import
@@ -43,7 +42,7 @@ Feature: Import a CSV file into the database with IDs looked up from multiple co
     transform :purchases => :transformed_purchases do |record|
       record[:contact_key] = lookup :contact_key,
                                     from_table: :dim_contact,
-                                    match: { :user_id_part_1 => record[:user_id_1], :user_id_part_2 => record[:user_id_2] }
+                                    match: { :user_id_part_1 => record[:user_id_1], :user_id_part_2 => record[:user_id_2] },
                                     if_not_found_then: -1
     end
 
