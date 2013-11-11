@@ -11,8 +11,8 @@ class Cranium::DimensionManager
 
 
 
-  def initialize(table_name, key_field)
-    @table_name, @key_field = table_name, key_field
+  def initialize(table_name, *key_fields)
+    @table_name, @key_fields = table_name, key_fields
     @rows = []
 
     Cranium.application.after_import { flush }
@@ -21,16 +21,15 @@ class Cranium::DimensionManager
 
 
   def insert(row)
-    raise ArgumentError, "Required attribute '#{@key_field}' missing" unless row.has_key? @key_field
+    raise ArgumentError, "Required attribute '#{missing_keys(row).join('\', \'')}' missing" unless missing_keys(row).empty?
 
     @rows << resolve_sequence_values(row)
-    row[@key_field]
+    @key_fields.map { |key_field| row[key_field] }
   end
 
 
-
   def create_cache_for_field(value_field)
-    Hash[db.select_map([@key_field, value_field])]
+    Hash[db.select_map([@key_fields.first, value_field])]
   end
 
 
@@ -43,6 +42,10 @@ class Cranium::DimensionManager
 
 
   private
+
+  def missing_keys(row)
+    (@key_fields-row.keys)
+  end
 
   def resolve_sequence_values(row)
     row.each do |key, value|
