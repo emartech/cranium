@@ -8,8 +8,9 @@ class Cranium::DSL::ImportDefinition
   attr_reader :name
   attr_reader :field_associations
   attr_reader :merge_fields
-  define_attribute :into
 
+  define_attribute :into
+  define_array_attribute :delete_insert_on
 
 
   def initialize(name)

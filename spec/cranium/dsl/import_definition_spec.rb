@@ -34,7 +34,7 @@ describe Cranium::DSL::ImportDefinition do
       it "should store the field associations" do
         import.put :item => :id, :title => :name
 
-        import.field_associations.should == { :item => :id, :title => :name }
+        import.field_associations.should == {:item => :id, :title => :name}
       end
     end
 
@@ -42,7 +42,7 @@ describe Cranium::DSL::ImportDefinition do
       it "should store a field association between fields with the same name" do
         import.put :item
 
-        import.field_associations.should == { :item => :item }
+        import.field_associations.should == {:item => :item}
       end
     end
 
@@ -59,10 +59,10 @@ describe Cranium::DSL::ImportDefinition do
         import.put :category => :category, :brand => :brand
 
         import.field_associations.should == {
-          :item => :id,
-          :title => :name,
-          :category => :category,
-          :brand => :brand
+            :item => :id,
+            :title => :name,
+            :category => :category,
+            :brand => :brand
         }
       end
     end
@@ -83,7 +83,7 @@ describe Cranium::DSL::ImportDefinition do
       it "should set merge field associations" do
         import.merge_on :item => :id, :title => :name
 
-        import.merge_fields.should == { :item => :id, :title => :name }
+        import.merge_fields.should == {:item => :id, :title => :name}
       end
     end
 
@@ -91,7 +91,7 @@ describe Cranium::DSL::ImportDefinition do
       it "should store a merge field association between fields with the same name" do
         import.merge_on :item
 
-        import.merge_fields.should == { :item => :item }
+        import.merge_fields.should == {:item => :item}
       end
     end
 
@@ -106,9 +106,32 @@ describe Cranium::DSL::ImportDefinition do
         import.merge_on :item => :id
         import.merge_on :title => :name
 
-        import.merge_fields.should == { :title => :name }
+        import.merge_fields.should == {:title => :name}
       end
     end
+  end
+
+
+  describe "#delete_insert_on" do
+
+    it "should return an empty array when no value was set" do
+      import.delete_insert_on.should == []
+    end
+
+
+    it "should store and return the value passed" do
+      import.delete_insert_on :some_field
+
+      import.delete_insert_on.should == [:some_field]
+    end
+
+
+    it "should handle multiple arguments" do
+      import.delete_insert_on :some_field, :another_field
+
+      import.delete_insert_on.should == [:some_field, :another_field]
+    end
+
   end
 
 end
