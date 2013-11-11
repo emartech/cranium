@@ -30,7 +30,7 @@ class Cranium::DimensionManager
 
 
   def create_cache_for_field(value_field)
-    to_multi_key_cache(db.select_map(@key_fields.concat [value_field]))
+    to_multi_key_cache(db.select_map(@key_fields + [value_field]))
   end
 
 
