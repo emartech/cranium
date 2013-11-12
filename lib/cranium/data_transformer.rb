@@ -34,7 +34,6 @@ class Cranium::DataTransformer
       CSV.foreach input_file, csv_read_options_for(@source) do |row|
         next if 1 == (line_number += 1)
 
-        @record.skip false
         @record.input_data = row
         self.instance_exec @record, &transformation_block
 

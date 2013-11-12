@@ -2,7 +2,6 @@ class Cranium::TransformationRecord
 
   def initialize(source_fields, target_fields)
     @source_fields, @target_fields = source_fields, target_fields
-    @should_skip = false
   end
 
 
@@ -41,18 +40,6 @@ class Cranium::TransformationRecord
     options[:into].each_with_index do |target_field, index|
       @data[target_field] = values[index] || options[:default_value] || values.last
     end
-  end
-
-
-
-  def should_skip?
-    @should_skip
-  end
-
-
-
-  def skip(should_skip = true)
-    @should_skip = should_skip
   end
 
 
