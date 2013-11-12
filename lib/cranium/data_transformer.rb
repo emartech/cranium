@@ -6,7 +6,8 @@ class Cranium::DataTransformer
   def initialize(source, target)
     @source, @target = source, target
     @index = Cranium::Transformation::Index.new
-    @record = Cranium::TransformationRecord.new @source.fields.keys, @target.fields.keys
+    @target_fields = @target.fields.keys
+    @record = Cranium::TransformationRecord.new @source.fields.keys, @target_fields
   end
 
 
@@ -67,7 +68,31 @@ class Cranium::DataTransformer
 
 
   def output(record)
-    @target_file << record.output_data
+    @target_file << prepare_for_output(case record
+                                         when Cranium::TransformationRecord
+                                           record.data
+                                         when Hash
+                                           record
+                                         else
+                                           raise ArgumentError, "Cannot write '#{record.class}' to file as CSV record"
+                                       end)
+  end
+
+
+
+  def prepare_for_output(hash)
+    hash.
+      keep_if { |key| @target_fields.include? key }.
+      sort_by { |field, _| @target_fields.index(field) }.
+      map { |item| item[1] }.
+      map { |value| strip(value) }
+  end
+
+
+
+  def strip(value)
+    return value unless value.respond_to? :strip
+    value.strip
   end
 
 

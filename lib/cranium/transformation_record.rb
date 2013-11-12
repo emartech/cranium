@@ -1,5 +1,9 @@
 class Cranium::TransformationRecord
 
+  attr_reader :data
+
+
+
   def initialize(source_fields, target_fields)
     @source_fields, @target_fields = source_fields, target_fields
   end
@@ -8,16 +12,6 @@ class Cranium::TransformationRecord
 
   def input_data=(values)
     @data = Hash[@source_fields.zip values]
-  end
-
-
-
-  def output_data
-    @data.
-      keep_if { |key| @target_fields.include? key }.
-      sort_by { |field, _| @target_fields.index(field) }.
-      map { |item| item[1] }.
-      map { |value| strip(value) }
   end
 
 
@@ -46,15 +40,6 @@ class Cranium::TransformationRecord
 
   def has_key?(key)
     @data.has_key? key
-  end
-
-
-
-  private
-
-  def strip(value)
-    return value unless value.respond_to? :strip
-    value.strip
   end
 
 end
