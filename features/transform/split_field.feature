@@ -26,6 +26,7 @@ Feature: Split field
     transform :products => :transformed_products do |record|
       record.split_field :category, into: [:category], by: "|"
       record.split_field :category, into: [:main_category, :sub_category, :department], by: ">"
+      output record
     end
     """
     When I execute the definition

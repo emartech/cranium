@@ -35,6 +35,7 @@ Feature: Import a CSV file into the database with a split transformation
     transform :products => :transformed_products do |record|
       record.split_field :category, into: [:category], by: "|"
       record.split_field :category, into: [:main_category, :sub_category, :department], by: ">"
+      output record
     end
 
     import :transformed_products do

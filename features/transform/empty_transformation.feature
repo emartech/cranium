@@ -21,7 +21,9 @@ Feature: Empty transformation
       field :category, String
     end
 
-    transform :products => :products_copy do end
+    transform :products => :products_copy do |record|
+      output record
+    end
     """
     When I execute the definition
     Then there should be a "products_copy.csv" data file in the upload directory containing:
@@ -55,7 +57,9 @@ Feature: Empty transformation
       field :category, String
     end
 
-    transform :products => :products_converted do end
+    transform :products => :products_converted do |record|
+      output record
+    end
     """
     When I execute the definition
     Then there should be a "products_converted.csv" data file in the upload directory containing:

@@ -33,6 +33,7 @@ Feature: Import a CSV file into the database with a split transformation
     transform :products => :transformed_products do |record|
       @load_id ||= sequence("some_sequence").next_value
       record[:dwh_load_id] = @load_id
+      output record
     end
 
     import :transformed_products do

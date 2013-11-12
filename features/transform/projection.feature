@@ -20,7 +20,9 @@ Feature: Projection
       field :category, String
     end
 
-    transform :products => :products_projected do end
+    transform :products => :products_projected do |record|
+      output record
+    end
     """
     When I execute the definition
     Then there should be a "products_projected.csv" data file in the upload directory containing:

@@ -36,8 +36,8 @@ module Cranium::DSL
 
 
   def deduplicate(source, options)
-    transform source => options[:into] do
-      deduplicate_by *options[:by]
+    transform source => options[:into] do |record|
+      output record if unique_on_fields? *options[:by]
     end
   end
 

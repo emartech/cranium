@@ -24,6 +24,7 @@ Feature: Raw Ruby transformation
     transform :products => :transformed_products do |record|
       record[:item] = "*#{record[:id]}*"
       record[:title] = record[:name].chars.first
+      output record
     end
     """
     When I execute the definition
@@ -54,7 +55,7 @@ Feature: Raw Ruby transformation
     end
 
     transform :products => :transformed_products do |record|
-      record.skip if "2" == record[:id]
+      output record unless "2" == record[:id]
     end
     """
     When I execute the definition

@@ -44,6 +44,7 @@ Feature: Import a CSV file into the database with IDs looked up from multiple co
                                     from_table: :dim_contact,
                                     match: { :user_id_part_1 => record[:user_id_1], :user_id_part_2 => record[:user_id_2] },
                                     if_not_found_then: -1
+      output record
     end
 
     import :transformed_purchases do

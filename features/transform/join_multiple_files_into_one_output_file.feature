@@ -31,6 +31,7 @@ Feature: Join multiple files into one output file
     transform :products => :transformed_products do |record|
       record[:item] = record[:id]
       record[:title] = record[:name]
+      output record
     end
     """
     When I execute the definition

@@ -39,6 +39,7 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
                                     match_column: :user_id,
                                     to_value: record[:user_id],
                                     if_not_found_then: -1
+      output record
     end
 
     import :transformed_purchases do
@@ -103,6 +104,8 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
                                     match_column: :user_id,
                                     to_value: record[:user_id],
                                     if_not_found_then: -2
+
+      output record
     end
 
     import :transformed_purchases do

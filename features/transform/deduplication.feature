@@ -35,7 +35,3 @@ Feature: Deduplicate data in CSV file
     Item2,Item name 2
     Item3,Item name 3
     """
-
-
-  @wip
-  Scenario: Multiple files are deduplicated into one

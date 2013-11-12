@@ -40,6 +40,7 @@ Feature: Import a CSV file into the database with new dimension values inserted 
                                     to_value: record[:user_id],
                                     if_not_found_then_insert: { contact_key: next_value_in_sequence("dim_contact_contact_key_seq"),
                                                                 name: "Unknown contact #{record[:user_id]}" }
+      output record
     end
 
     import :transformed_purchases do

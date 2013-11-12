@@ -34,7 +34,9 @@ Feature: Archive source files
       file "purchases.csv"
     end
 
-    transform :products => :products_transformed do end
+    transform :products => :products_transformed do |record|
+      output record
+    end
 
     archive :products, :contacts
     """
