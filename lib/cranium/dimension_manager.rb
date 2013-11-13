@@ -4,9 +4,9 @@ class Cranium::DimensionManager
 
 
 
-  def self.for(table_name, field_name)
+  def self.for(table_name, key_fields)
     @instances ||= {}
-    @instances[[table_name, field_name]] ||= self.new table_name, field_name
+    @instances[[table_name, key_fields]] ||= self.new table_name, key_fields
   end
 
 
@@ -20,11 +20,11 @@ class Cranium::DimensionManager
 
 
 
-  def insert(row)
-    raise ArgumentError, "Required attribute '#{@key_fields}' missing" unless row.has_key? @key_fields
+  def insert(target_key, row)
+    raise ArgumentError, "Required attribute '#{target_key}' missing" unless row.has_key? target_key
 
     @rows << resolve_sequence_values(row)
-    row[@key_fields]
+    row[target_key]
   end
 
 

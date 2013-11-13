@@ -16,7 +16,7 @@ class Cranium::Transformation::Index
     elsif options.has_key? :if_not_found_then
       options[:if_not_found_then]
     elsif options.has_key? :if_not_found_then_insert
-      cache[keys(options)] = Cranium::DimensionManager.for(options[:from_table], field_name).insert(default_value_record(options))
+      cache[keys(options)] = Cranium::DimensionManager.for(options[:from_table], key_fields(options)).insert(field_name, default_value_record(options))
     else
       :not_found
     end

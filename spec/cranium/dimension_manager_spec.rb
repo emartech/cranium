@@ -4,20 +4,20 @@ describe Cranium::DimensionManager do
   describe "#insert" do
 
     context "with single key" do
-      let(:manager) { Cranium::DimensionManager.new :table, :key }
+      let(:manager) { Cranium::DimensionManager.new :table, :source_key }
 
       it "should store a new record for insertion" do
-        manager.insert key: 123, name: "John"
+        manager.insert :target_key, target_key: 123, name: "John"
 
-        manager.rows.should == [{key: 123, name: "John"}]
+        manager.rows.should == [{target_key: 123, name: "John"}]
       end
 
       it "should raise an error if the key field's value isn't specified in the record" do
-        expect { manager.insert name: "John" }.to raise_error ArgumentError, "Required attribute 'key' missing"
+        expect { manager.insert :target_key, name: "John" }.to raise_error ArgumentError, "Required attribute 'target_key' missing"
       end
 
       it "should return the key field's value in an array" do
-        manager.insert(key: 123, name: "John").should == 123
+        manager.insert(:target_key, target_key: 123, name: "John").should == 123
       end
 
       context "if one of the values in the record is a sequence" do
@@ -25,9 +25,9 @@ describe Cranium::DimensionManager do
           sequence = Cranium::Transformation::Sequence.new :id_seq
           sequence.stub next_value: 123
 
-          manager.insert key: sequence
+          manager.insert :target_key, target_key: sequence
 
-          manager.rows.should == [{key: 123}]
+          manager.rows.should == [{target_key: 123}]
         end
       end
     end

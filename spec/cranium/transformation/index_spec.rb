@@ -4,6 +4,7 @@ describe Cranium::Transformation::Index do
 
   let(:index) { Cranium::Transformation::Index.new }
   let(:connection) { double "Greenplum connection" }
+  let(:dimension_manager) { double "DimensionManager" }
 
   before(:each) do
     Cranium::Database.stub connection: connection
@@ -12,7 +13,6 @@ describe Cranium::Transformation::Index do
 
 
   def stub_cache_query(table_name, key_fields, value_field, result)
-    dimension_manager = double "DimensionManager"
     dimension_manager.stub(:create_cache_for_field).with(value_field).and_return(result)
     Cranium::DimensionManager.stub(:for).with(table_name, key_fields).and_return(dimension_manager)
   end
@@ -78,22 +78,20 @@ describe Cranium::Transformation::Index do
 
 
     context "when :if_not_found_then_insert is specified" do
-      let(:dimension_manager) { double "DimensionManager" }
 
       before(:each) do
-        Cranium::DimensionManager.stub(:for).with(:dim_contact, :contact_key).and_return(dimension_manager)
         stub_cache_query :dim_contact, [:customer_id], :contact_key, { [1234] => "contact" }
       end
 
       context "when a single key is used" do
         it "should insert a new record into the specified table" do
-          dimension_manager.should_receive(:insert).with(customer_id: 2345)
+          dimension_manager.should_receive(:insert).with(:contact_key, {contact_key: 1, customer_id: 2345})
 
           index.lookup :contact_key,
                        from_table: :dim_contact,
                        match_column: :customer_id,
                        to_value: 2345,
-                       if_not_found_then_insert: { customer_id: 2345 }
+                       if_not_found_then_insert: { contact_key: 1, customer_id: 2345 }
         end
       end
 
@@ -101,17 +99,17 @@ describe Cranium::Transformation::Index do
         it "should insert a new record into the specified table" do
           stub_cache_query :dim_contact, [:key_1, :key_2], :contact_key, { [12,34] => "contact" }
 
-          dimension_manager.should_receive(:insert).with(key_1: 23, key_2: 45)
+          dimension_manager.should_receive(:insert).with(:contact_key, contact_key: 1, key_1: 23, key_2: 45)
 
           index.lookup :contact_key,
                        from_table: :dim_contact,
                        match: {key_1: 23, key_2: 45},
-                       if_not_found_then_insert: { key_1: 23, key_2: 45 }
+                       if_not_found_then_insert: { contact_key: 1, key_1: 23, key_2: 45 }
         end
       end
 
       it "should fill out the new record's lookup key automatically" do
-        dimension_manager.should_receive(:insert).with(name: "new contact", customer_id: 2345)
+        dimension_manager.should_receive(:insert).with(:contact_key, name: "new contact", customer_id: 2345)
 
         index.lookup :contact_key,
                      from_table: :dim_contact,
@@ -121,7 +119,7 @@ describe Cranium::Transformation::Index do
       end
 
       it "should overwrite the new record's lookup key if specified" do
-        dimension_manager.should_receive(:insert).with(customer_id: 2345)
+        dimension_manager.should_receive(:insert).with(:contact_key, customer_id: 2345)
 
         index.lookup :contact_key,
                      from_table: :dim_contact,
