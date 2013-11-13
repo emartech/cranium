@@ -51,22 +51,22 @@ class Cranium::Transformation::Index
 
   def key_fields(options)
     if options.has_key? :match
-      key_fields_tmp = options[:match].keys
+      key_fields = options[:match].keys
     else
-      key_fields_tmp = [options[:match_column]]
+      key_fields = [options[:match_column]]
     end
-    key_fields_tmp
+    key_fields
   end
 
 
 
   def keys(options)
     if options.has_key? :match
-      keys_tmp = options[:match].values
+      keys = options[:match].values
     else
-      keys_tmp = [options[:to_value]]
+      keys = [options[:to_value]]
     end
-    keys_tmp
+    keys
   end
 
 end
