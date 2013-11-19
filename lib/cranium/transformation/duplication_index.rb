@@ -1,3 +1,5 @@
+require 'set'
+
 class Cranium::Transformation::DuplicationIndex
 
   def self.[](*fields)
