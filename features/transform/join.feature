@@ -51,8 +51,6 @@ Feature: Joining CSV files
     end
 
     join :orders_file, with: :order_items_file, into: :sales_items, match_on: { :order_id => :order_id }
-
-    deduplicate :sales_items, into: :products, by: [:item]
     """
     When I execute the definition
     Then the process should be successful
