@@ -3,7 +3,7 @@ Given(/^no "([^"]*)" directory/) do |dir_path|
 end
 
 
-When(/^a "([^"]*)" data file containing:$/) do |file_name, content|
+When(/^an? "([^"]*)" data file containing:$/) do |file_name, content|
   upload_directory.save_file file_name, content
 end
 
