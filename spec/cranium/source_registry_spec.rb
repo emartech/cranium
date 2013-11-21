@@ -5,8 +5,8 @@ describe Cranium::SourceRegistry do
   let(:registry) { Cranium::SourceRegistry.new }
 
   describe "#[]" do
-    it "should return nil if a source with the specified name wasn't registered yet" do
-      registry[:name].should be_nil
+    it "should raise an error if a source with the specified name wasn't registered yet" do
+      expect { registry[:name] }.to raise_error "Undefined source 'name'"
     end
   end
 

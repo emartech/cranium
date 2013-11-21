@@ -7,7 +7,7 @@ class Cranium::SourceRegistry
 
 
   def [](name)
-    @sources[name]
+    @sources[name] or raise "Undefined source '#{name}'"
   end
 
 
