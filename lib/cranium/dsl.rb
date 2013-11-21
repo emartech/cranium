@@ -6,6 +6,7 @@ module Cranium::DSL
   autoload :SourceDefinition, 'cranium/dsl/source_definition'
 
 
+
   def database(name, &block)
     Cranium::Database.register_database name, &block
   end
@@ -39,6 +40,17 @@ module Cranium::DSL
     transform source => options[:into] do |record|
       output record if unique_on_fields? *options[:by]
     end
+  end
+
+
+
+  def join(source_name, options)
+    Cranium::Transformation::Join.new.tap do |join|
+      join.source_left = Cranium.application.sources[source_name]
+      join.source_right = Cranium.application.sources[options[:with]]
+      join.target = Cranium.application.sources[options[:into]]
+      join.match_fields = options[:match_on]
+    end.execute
   end
 
 
