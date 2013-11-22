@@ -1,4 +1,3 @@
-@wip
 Feature: Joining CSV files
 
   Scenario: Singe file transformation
@@ -9,7 +8,7 @@ Feature: Joining CSV files
     order_2,2011-02-02,customer_1,200
     order_3,2011-03-03,customer_2,300
     """
-    Given an "orders_items.csv" data file containing:
+    Given an "order_items.csv" data file containing:
     """
     order_id,item_id,item_name,item_category,quantity,sales_amount,comment
     order_1,item_1,first item,clothing,1,5,some useful comment
@@ -59,5 +58,5 @@ Feature: Joining CSV files
     order_id,order_date,customer_id,item_id,item_name,item_category,quantity,sales_amount
     order_1,2011-01-01,customer_1,item_1,first item,clothing,1,5
     order_1,2011-01-01,customer_1,item_2,second item,communication,2,6
-    order_2,2011-02-02,customer_2,item_2,second item,communication,5,12
+    order_2,2011-02-02,customer_1,item_2,second item,communication,5,12
     """

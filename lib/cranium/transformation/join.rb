@@ -8,6 +8,7 @@ class Cranium::Transformation::Join
 
   def execute
     validate_parameters
+    cache_commonly_used_values
     join_sources
   end
 
@@ -20,6 +21,15 @@ class Cranium::Transformation::Join
     raise "Missing right source for join transformation" if source_right.nil?
     raise "Missing target for join transformation" if target.nil?
     raise "Invalid match fields for join transformation" unless match_fields.nil? or match_fields.is_a? Hash
+  end
+
+
+
+  def cache_commonly_used_values
+    @left_source_field_names = source_left.fields.keys
+    @right_source_field_names = source_right.fields.keys
+    @target_field_names = target.fields.keys
+    @match_field_names = match_fields.keys
   end
 
 
@@ -41,11 +51,17 @@ class Cranium::Transformation::Join
 
 
   def build_join_table_from_file(file)
-    source_field_names = source_right.fields.keys
-    match_field_names = match_fields.values
+    line_number = 0
     CSV.foreach File.join(Cranium.configuration.upload_path, file), csv_read_options_for(source_right) do |row|
-      record = Hash[source_field_names.zip row]
-      @join_table[record.select { |field, _| match_field_names.include? field }.values] = record
+      next if 1 == (line_number += 1)
+
+      record = Hash[@right_source_field_names.zip row]
+      index_key = index_key_for record
+      if @join_table.has_key? index_key
+        @join_table[index_key] << record
+      else
+        @join_table[index_key] = [record]
+      end
     end
   end
 
@@ -62,23 +78,32 @@ class Cranium::Transformation::Join
 
 
   def process_left_source_file(input_file, output_file)
-    source_field_names = source_left.fields.keys
-    target_field_names = target.fields.keys
-    match_field_names = match_fields.keys
     line_number = 0
     CSV.foreach input_file, csv_read_options_for(source_left) do |row|
       next if 1 == (line_number += 1)
 
-      record = Hash[source_field_names.zip row]
-      index_key_for_record = record.select { |field, _| match_field_names.include? field }.values
-
-      record.merge! @join_table[index_key_for_record] if @join_table.has_key? index_key_for_record
-
-      output_file << record.
-        keep_if { |key| target_field_names.include? key }.
-        sort_by { |field, _| target_field_names.index(field) }.
-        map { |item| item[1] }
+      record = Hash[@left_source_field_names.zip row]
+      joined_records_for(record).each do |record_to_output|
+        output_file << record_to_output.
+          keep_if { |key| @target_field_names.include? key }.
+          sort_by { |field, _| @target_field_names.index(field) }.
+          map { |item| item[1] }
+      end
     end
+  end
+
+
+
+  def joined_records_for(record)
+    index_key = index_key_for record
+    return [] unless @join_table.has_key? index_key
+    @join_table[index_key].map { |matching_record| record.merge matching_record }
+  end
+
+
+
+  def index_key_for(record)
+    record.select { |field, _| @match_field_names.include? field }.values
   end
 
 
