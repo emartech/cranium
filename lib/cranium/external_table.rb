@@ -51,6 +51,8 @@ class Cranium::ExternalTable
         "DATE"
       when "Time" then
         "TIMESTAMP WITHOUT TIME ZONE"
+      when "TrueClass", "FalseClass" then
+        "BOOLEAN"
       else
         "TEXT"
     end

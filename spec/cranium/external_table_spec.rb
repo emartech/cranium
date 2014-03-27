@@ -12,6 +12,8 @@ describe Cranium::ExternalTable do
       source.field :numeric_field, Float
       source.field :date_field, Date
       source.field :timestamp_field, Time
+      source.field :boolean_field1, TrueClass
+      source.field :boolean_field2, FalseClass
       source.delimiter ';'
       source.quote '"'
       source.escape "'"
@@ -36,7 +38,9 @@ describe Cranium::ExternalTable do
           "integer_field" INTEGER,
           "numeric_field" NUMERIC,
           "date_field" DATE,
-          "timestamp_field" TIMESTAMP WITHOUT TIME ZONE
+          "timestamp_field" TIMESTAMP WITHOUT TIME ZONE,
+          "boolean_field1" BOOLEAN,
+          "boolean_field2" BOOLEAN
       )
       LOCATION ('gpfdist://gpfdist-url/upload-dir/test_products_a.csv', 'gpfdist://gpfdist-url/upload-dir/test_products_b.csv')
       FORMAT 'CSV' (DELIMITER ';' ESCAPE '''' QUOTE '"' HEADER)
