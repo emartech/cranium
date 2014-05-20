@@ -42,14 +42,8 @@ class Cranium::ImportStrategy::Base
 
 
 
-  def source_fields
-    import_definition.field_associations.keys
-  end
-
-
-
-  def target_fields
-    import_definition.field_associations.values
+  def aliased_fields
+    import_definition.field_associations.map { |association| "#{association[0]}___#{association[1]}".to_sym }
   end
 
 end

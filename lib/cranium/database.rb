@@ -1,4 +1,4 @@
-require 'cranium/extensions/sequel_greenplum'
+require 'sequel'
 
 module Cranium::Database
 

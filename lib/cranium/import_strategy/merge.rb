@@ -22,11 +22,10 @@ class Cranium::ImportStrategy::Merge < Cranium::ImportStrategy::Base
 
 
   def import_new_records
-    database[target_table].insert target_fields,
-                                  database[@source_table].
-                                    left_outer_join(target_table, merge_fields.invert).
-                                    where(merge_fields_are_empty).
-                                    select(*source_fields).qualify
+    database[target_table].multi_insert database[@source_table].
+                                          left_outer_join(target_table, merge_fields.invert).
+                                          where(merge_fields_are_empty).
+                                          select(*aliased_fields).qualify
   end
 
 

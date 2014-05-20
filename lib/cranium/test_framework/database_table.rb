@@ -21,9 +21,7 @@ class Cranium::TestFramework::DatabaseTable < Cranium::TestFramework::DatabaseEn
 
 
   def insert(data)
-    data.each do |row|
-      connection[entity_name].insert row
-    end
+    connection[entity_name].multi_insert data
   end
 
 
