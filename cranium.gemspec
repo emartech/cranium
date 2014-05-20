@@ -2,8 +2,8 @@ Gem::Specification.new do |spec|
   spec.name          = "cranium"
   spec.version       = "0.1.#{ENV['BUILD_NUMBER'] || 0 }"
   spec.authors       = ["Emarsys Technologies"]
-  spec.email         = ["emarsys_hungary@emarsys.com"]
-  spec.description   = %q{Provides Extract, Transform and Load functionality for loading data from CSV files to a database.}
+  spec.email         = ["smart-insight-dev@emarsys.com"]
+  spec.description   = %q{Provides Extract, Transform and Load functionality for loading data from CSV files to a Greenplum database.}
   spec.summary       = %q{Pure Ruby ETL framework}
   spec.homepage      = "http://gems.ett.local"
   spec.license       = "MIT"
