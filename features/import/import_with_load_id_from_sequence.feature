@@ -1,11 +1,11 @@
-Feature: Import a CSV file into the database with a split transformation
+Feature: Import data and assign a load id (audit information) from a sequence to all records
 
   Scenario: Successful import
     Given a database table called "dim_product" with the following fields:
-      | field_name  | field_type |
-      | dwh_load_id | INTEGER    |
-      | item        | TEXT       |
-      | title       | TEXT       |
+      | field_name | field_type |
+      | load_id    | INTEGER    |
+      | item       | TEXT       |
+      | title      | TEXT       |
     And a sequence called "some_sequence" starting from 33
     And a "products.csv" data file containing:
     """
@@ -15,6 +15,8 @@ Feature: Import a CSV file into the database with a split transformation
     """
     And the following definition:
     """
+    LOAD_ID = sequence("some_sequence").next_value
+
     source :products do
       encoding "UTF-8"
       delimiter ','
@@ -24,28 +26,27 @@ Feature: Import a CSV file into the database with a split transformation
     end
 
     source :transformed_products do
-      field :dwh_load_id, Integer
+      field :load_id, Integer
 
       field :id, String
       field :name, String
     end
 
     transform :products => :transformed_products do |record|
-      @load_id ||= sequence("some_sequence").next_value
-      record[:dwh_load_id] = @load_id
+      record[:load_id] = LOAD_ID
       output record
     end
 
     import :transformed_products do
       into :dim_product
 
-      put :dwh_load_id => :dwh_load_id
+      put :load_id
       put :id => :item
       put :name => :title
     end
     """
     When I execute the definition
     Then the "dim_product" table should contain:
-      | dwh_load_id (i) | item    | title                |
-      | 34              | JNI-123 | Just a product name  |
-      | 34              | CDI-234 | Another product name |
+      | load_id (i) | item    | title                |
+      | 34          | JNI-123 | Just a product name  |
+      | 34          | CDI-234 | Another product name |

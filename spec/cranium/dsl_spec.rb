@@ -79,4 +79,14 @@ describe Cranium::DSL do
     end
   end
 
+
+  describe "#sequence" do
+    it "should return a sequence with the specified name" do
+      result = dsl_object.sequence "test_sequence"
+
+      result.should be_a Cranium::Transformation::Sequence
+      result.name.should == "test_sequence"
+    end
+  end
+
 end

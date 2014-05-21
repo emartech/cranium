@@ -69,4 +69,10 @@ module Cranium::DSL
     end
   end
 
+
+
+  def sequence(name)
+    Cranium::Transformation::Sequence.new name
+  end
+
 end
