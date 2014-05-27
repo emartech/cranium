@@ -5,7 +5,7 @@ Feature: Extracting data incrementally from a database table to CSV
   process is run again. This approach typically works best with id or timestamp fields.
 
 
-  Scenario: Successful extract
+  Background:
     Given the following definition:
     """
     database :suite do
@@ -23,12 +23,15 @@ Feature: Extracting data incrementally from a database table to CSV
       | id         | INTEGER    |
       | name       | TEXT       |
     And only the following rows in the "contacts" database table:
-      | id | name       |
-      | 1  | John Doe   |
-      | 2  | Jane Doe   |
+      | id | name     |
+      | 1  | John Doe |
+      | 2  | Jane Doe |
     And the definition is executed
     And the "contacts.csv" file is deleted
-    And the following new rows in the "contacts" database table:
+
+
+  Scenario: Successful extract
+    Given the following new rows in the "contacts" database table:
       | id | name       |
       | 3  | John Smith |
       | 4  | Jane Smith |
@@ -39,4 +42,15 @@ Feature: Extracting data incrementally from a database table to CSV
     id,name
     4,Jane Smith
     3,John Smith
+    """
+
+
+  Scenario: Incremental extract doesn't remember empty 'last extracted value' - bugfix
+    Given the definition is executed again
+    And the "contacts.csv" file is deleted
+    When I execute the definition again
+    Then the process should exit successfully
+    And there should be a "contacts.csv" data file in the upload directory containing:
+    """
+    id,name
     """

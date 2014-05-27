@@ -1,4 +1,4 @@
-Given /^the definition is executed$/ do
+Given /^the definition is executed(?: again)?$/ do
   step "I execute the definition"
 end
 

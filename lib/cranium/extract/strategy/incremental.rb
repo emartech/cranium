@@ -10,7 +10,7 @@ class Cranium::Extract::Strategy::Incremental < Cranium::Extract::Strategy::Base
       target_file << row.values
     end
 
-    extract_definition.storage.save_last_value_of incremental_field, max_value
+    extract_definition.storage.save_last_value_of incremental_field, max_value unless max_value.nil?
   end
 
 end
