@@ -35,7 +35,8 @@ Feature: Import multiple CSV files into the database without any transformations
     end
     """
     When I execute the definition
-    Then the "dim_product" table should contain:
+    Then the process should exit successfully
+    And the "dim_product" table should contain:
       | item   | title          | category                                      |
       | PROD-1 | product name 1 | Main category > Subcategory > Sub-subcategory |
       | PROD-2 | product name 2 | Main category > Subcategory > Sub-subcategory |

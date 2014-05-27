@@ -27,12 +27,13 @@ Feature: Extracting data incrementally from a database table to CSV
       | 1  | John Doe   |
       | 2  | Jane Doe   |
     And the definition is executed
+    And the "contacts.csv" file is deleted
     And the following new rows in the "contacts" database table:
       | id | name       |
       | 3  | John Smith |
       | 4  | Jane Smith |
     When I execute the definition again
-    Then the process should be successful
+    Then the process should exit successfully
     And there should be a "contacts.csv" data file in the upload directory containing:
     """
     id,name

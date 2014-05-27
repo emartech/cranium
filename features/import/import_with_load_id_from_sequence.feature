@@ -46,7 +46,8 @@ Feature: Import data and assign a load id (audit information) from a sequence to
     end
     """
     When I execute the definition
-    Then the "dim_product" table should contain:
+    Then the process should exit successfully
+    And the "dim_product" table should contain:
       | load_id (i) | item    | title                |
       | 34          | JNI-123 | Just a product name  |
       | 34          | CDI-234 | Another product name |

@@ -26,7 +26,8 @@ Feature: Empty transformation
     end
     """
     When I execute the definition
-    Then there should be a "products_copy.csv" data file in the upload directory containing:
+    Then the process should exit successfully
+    And there should be a "products_copy.csv" data file in the upload directory containing:
     """
     id,name,category
     JNI-123,Just a product name,Main category > Subcategory > Sub-subcategory
@@ -62,7 +63,8 @@ Feature: Empty transformation
     end
     """
     When I execute the definition
-    Then there should be a "products_converted.csv" data file in the upload directory containing:
+    Then the process should exit successfully
+    And there should be a "products_converted.csv" data file in the upload directory containing:
     """
     id,name,category
     JNI-123,Just a product name,Main category > Subcategory > Sub-subcategory

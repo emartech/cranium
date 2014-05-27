@@ -4,7 +4,7 @@ class Cranium::TestFramework::World
 
   DEFINITION_FILE = "definition.rb"
 
-  attr_reader :result_code
+  attr_reader :output, :error_output, :result_code
 
 
 
@@ -40,13 +40,16 @@ class Cranium::TestFramework::World
 
 
   def execute_definition
-    out, err, status = Open3.capture3("bundle exec cranium #{@directory}/#{DEFINITION_FILE}")
-    unless out.empty? and err.empty? and status.exitstatus.zero?
-      puts "output: #{out}"
-      puts "error: #{err}"
-      puts "exit status: #{status.exitstatus}"
-    end
+    @output, @error_output, status = Open3.capture3("bundle exec cranium #{@directory}/#{DEFINITION_FILE}")
     @result_code = status.exitstatus
+  end
+
+
+
+  def script_output
+    "Output: #{@output}\n"\
+    "Error: #{@error_output}\n"\
+    "Exit status: #{@result_code}\n"
   end
 
 

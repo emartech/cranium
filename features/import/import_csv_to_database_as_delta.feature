@@ -31,7 +31,8 @@ Feature: Import a CSV file into the database as a delta
     end
     """
     When I execute the definition
-    Then the "dim_product" table should contain:
+    Then the process should exit successfully
+    And the "dim_product" table should contain:
       | item    | title                | category                                      | description         |
       | JNI-123 | Just a product name  | Main category > Subcategory > Sub-subcategory | Some description    |
       | CDI-234 | Another product name | Smart Insight > Cool stuff > Scripts          | Another description |

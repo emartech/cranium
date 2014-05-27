@@ -41,7 +41,8 @@ Feature: Archive source files
     archive :products, :contacts
     """
     When I execute the definition
-    Then the "/tmp/cranium_archive/" directory should contain the following files:
+    Then the process should exit successfully
+    And the "/tmp/cranium_archive/" directory should contain the following files:
       | filename         |
       | .*contacts.csv   |
       | .*products_1.csv |

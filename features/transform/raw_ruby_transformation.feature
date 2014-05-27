@@ -28,7 +28,8 @@ Feature: Raw Ruby transformation
     end
     """
     When I execute the definition
-    Then there should be a "transformed_products.csv" data file in the upload directory containing:
+    Then the process should exit successfully
+    And there should be a "transformed_products.csv" data file in the upload directory containing:
     """
     item,title,category
     *JNI-123*,J,Main category > Subcategory > Sub-subcategory
@@ -59,7 +60,8 @@ Feature: Raw Ruby transformation
     end
     """
     When I execute the definition
-    Then there should be a "transformed_products.csv" data file in the upload directory containing:
+    Then the process should exit successfully
+    And there should be a "transformed_products.csv" data file in the upload directory containing:
     """
     id
     1

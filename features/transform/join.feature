@@ -52,7 +52,7 @@ Feature: Joining CSV files
     join :orders_file, with: :order_items_file, into: :sales_items, match_on: { :order_id => :order_id }
     """
     When I execute the definition
-    Then the process should be successful
+    Then the process should exit successfully
     And there should be a "sales_items.csv" data file in the upload directory containing:
     """
     order_id,order_date,customer_id,item_id,item_name,item_category,quantity,sales_amount

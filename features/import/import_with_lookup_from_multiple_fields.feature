@@ -54,7 +54,8 @@ Feature: Import a CSV file into the database with IDs looked up from multiple co
     end
     """
     When I execute the definition
-    Then the "fct_purchases" table should contain:
+    Then the process should exit successfully
+    And the "fct_purchases" table should contain:
       | contact_key (i) | amount |
       | 11              | 100    |
       | 12              | 200    |

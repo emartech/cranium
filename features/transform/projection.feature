@@ -25,7 +25,8 @@ Feature: Projection
     end
     """
     When I execute the definition
-    Then there should be a "products_projected.csv" data file in the upload directory containing:
+    Then the process should exit successfully
+    And there should be a "products_projected.csv" data file in the upload directory containing:
     """
     id,category
     JNI-123,Main category > Subcategory > Sub-subcategory

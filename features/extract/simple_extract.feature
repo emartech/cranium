@@ -4,12 +4,15 @@ Feature: Extracting data from a database table to CSV
   and is placed in the upload directory specified in the configuration.
 
 
-  Scenario: Successful extract using raw SQL
+  Background:
     Given a database table called "contacts" with the following fields:
       | field_name | field_type |
       | id         | INTEGER    |
       | name       | TEXT       |
-    And only the following rows in the "contacts" database table:
+
+
+  Scenario: Successful extract using raw SQL
+    Given only the following rows in the "contacts" database table:
       | id | name       |
       | 1  | John Doe   |
       | 2  | Jane Doe   |
@@ -26,10 +29,31 @@ Feature: Extracting data from a database table to CSV
     end
     """
     When I execute the definition
-    Then the process should be successful
+    Then the process should exit successfully
     And there should be a "contacts.csv" data file in the upload directory containing:
     """
     id,name
     1,John Doe
     2,Jane Doe
+    """
+
+
+  Scenario: Extract should fail if file already exists
+    Given an empty "contacts.csv" data file
+    And the following definition:
+    """
+    database :suite do
+      connect_to Cranium.configuration.greenplum_connection_string
+    end
+
+    extract :contacts do
+      from :suite
+      query "SELECT id, name FROM contacts WHERE name LIKE '%Doe%' ORDER BY id"
+    end
+    """
+    When I execute the definition
+    Then the process should exit with an error
+    And the error message should contain:
+    """
+    Extract halted: a file named "contacts.csv" already exists
     """

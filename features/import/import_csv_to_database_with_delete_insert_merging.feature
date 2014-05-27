@@ -40,7 +40,7 @@ Feature: Import a CSV file into the database with merging
     end
     """
     When I execute the definition
-    Then the process should be successful
+    Then the process should exit successfully
     And the "lkp_categories" table should contain:
       | contact_id (i) | category_id (s) |
       | 1              | A               |

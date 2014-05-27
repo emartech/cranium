@@ -30,7 +30,8 @@ Feature: Split field
     end
     """
     When I execute the definition
-    Then there should be a "transformed_products.csv" data file in the upload directory containing:
+    Then the process should exit successfully
+    And there should be a "transformed_products.csv" data file in the upload directory containing:
     """
     item,title,main_category,sub_category,department
     JNI-123,Just a product name,Main category,Subcategory,Sub-subcategory

@@ -26,6 +26,12 @@ class Cranium::TestFramework::UploadDirectory
 
 
 
+  def delete_file(file_name)
+    File.unlink File.join(@working_directory, file_name)
+  end
+
+
+
   def remove_directory(path)
     FileUtils.rm_rf path
   end

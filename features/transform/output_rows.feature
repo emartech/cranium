@@ -27,7 +27,7 @@ Feature: Output rows to file
     end
     """
     When I execute the definition
-    Then the process should be successful
+    Then the process should exit successfully
     And there should be a "products_copy.csv" data file in the upload directory containing:
     """
     id,name
@@ -58,7 +58,7 @@ Feature: Output rows to file
     end
     """
     When I execute the definition
-    Then the process should be successful
+    Then the process should exit successfully
     And there should be a "products_doubled.csv" data file in the upload directory containing:
     """
     id,name,counter

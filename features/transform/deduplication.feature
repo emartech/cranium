@@ -27,7 +27,7 @@ Feature: Deduplicate data in CSV file
     deduplicate :sales_items, into: :products, by: [:item]
     """
     When I execute the definition
-    Then the process should be successful
+    Then the process should exit successfully
     And there should be a "products.csv" data file in the upload directory containing:
     """
     item,item_name

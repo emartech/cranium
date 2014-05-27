@@ -49,7 +49,8 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
     end
     """
     When I execute the definition
-    Then the "fct_purchases" table should contain:
+    Then the process should exit successfully
+    And the "fct_purchases" table should contain:
       | contact_key (i) | amount |
       | 10              | 100    |
       | 20              | 200    |
@@ -116,7 +117,8 @@ Feature: Import a CSV file into the database with IDs looked up from the databas
     end
     """
     When I execute the definition
-    Then the "fct_purchases" table should contain:
+    Then the process should exit successfully
+    And the "fct_purchases" table should contain:
       | contact_key_1 (i) | contact_key_2 (i) | amount |
       | 10                | 100               | 100    |
       | 20                | 200               | 200    |
