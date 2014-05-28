@@ -22,14 +22,15 @@ class Cranium::Application
   def run(args)
     process_file = validate_file_in_arguments args
 
-    start_time = Time.now
+    log :info, "Process '#{process_name(process_file)}' started"
+
     begin
       load process_file
     rescue Exception => ex
       log :error, ex
       raise
     ensure
-      record_timer process_name(process_file), start_time, Time.now
+      log :info, "Process '#{process_name(process_file)}' finished"
     end
   end
 

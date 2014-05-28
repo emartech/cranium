@@ -26,15 +26,6 @@ describe Cranium::Logging do
   end
 
 
-  describe "record_timer" do
-    it "should record a time-type metric in every registered logger" do
-      all_loggers_should_receive :info, "[metrics/products] 1.234s"
-
-      logging_object.record_timer "products", 0, 1.234
-    end
-  end
-
-
   describe "#log" do
     it "should log a message with the specified reporting level in every registered logger" do
       all_loggers_should_receive :error, "error message"

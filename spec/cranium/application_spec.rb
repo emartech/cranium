@@ -8,7 +8,6 @@ describe Cranium::Application do
   describe "Application" do
     it "should include metrics logging capabilities" do
       application.respond_to?(:log).should be_true
-      application.respond_to?(:record_timer).should be_true
     end
   end
 
@@ -84,9 +83,9 @@ describe Cranium::Application do
 
       it "should log the runtime of the full process" do
         application.stub :load
-        Time.stub(:now).and_return("starting time", "ending time")
 
-        application.should_receive(:record_timer).with "products", "starting time", "ending time"
+        application.should_receive(:log).with(:info, "Process 'products' started")
+        application.should_receive(:log).with(:info, "Process 'products' finished")
 
         application.run [file]
       end
@@ -101,15 +100,15 @@ describe Cranium::Application do
         end
 
         it "should log an error" do
+          application.as_null_object
           application.should_receive(:log).with(:error, error)
 
           expect { application.run [file] }.to raise_error
         end
 
         it "should still log the runtime of the full process" do
-          Time.stub(:now).and_return("starting time", "ending time")
-
-          application.should_receive(:record_timer).with "products", "starting time", "ending time"
+          application.should_receive(:log).with(:info, "Process 'products' started")
+          application.should_receive(:log).with(:info, "Process 'products' finished")
 
           expect { application.run [file] }.to raise_error
         end
