@@ -3,6 +3,7 @@ module Cranium
   autoload :Application, 'cranium/application'
   autoload :Archiver, 'cranium/archiver'
   autoload :AttributeDSL, 'cranium/attribute_dsl'
+  autoload :CommandLineOptions, 'cranium/command_line_options'
   autoload :Configuration, 'cranium/configuration'
   autoload :Database, 'cranium/database'
   autoload :DataImporter, 'cranium/data_importer'

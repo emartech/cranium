@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "cranium"
-  spec.version       = "0.1.144"
+  spec.version       = "0.1.145"
   spec.authors       = ["Emarsys Technologies"]
   spec.email         = ["smart-insight-dev@emarsys.com"]
   spec.description   = %q{Provides Extract, Transform and Load functionality for loading data from CSV files to a Greenplum database.}
@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "pg"
   spec.add_runtime_dependency "progressbar"
   spec.add_runtime_dependency "sequel"
+  spec.add_runtime_dependency "slop"
 
 
   spec.add_development_dependency "bundler"
