@@ -15,8 +15,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     virtual_machine.name = "smart-insight-devmachine"
   end
 
-  config.vm.synced_folder ".", "/vagrant", :disabled => true
+  config.vm.synced_folder ".", "/vagrant"
   config.vm.synced_folder ENV["GPFDIST_HOME"], "/home/gpadmin/smart-insight-data", owner: "gpadmin", group: "gpadmin"
 
   config.vm.provision :shell, :inline => "chown -R gpadmin.gpadmin /home/gpadmin"
+  config.vm.provision :shell, :inline => "sudo su - gpadmin -c 'cat /vagrant/db/setup.sql | psql'"
 end
