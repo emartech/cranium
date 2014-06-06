@@ -27,13 +27,13 @@ describe Cranium::Transformation::DuplicationIndex do
   describe "#duplicate?" do
     it "should return false for the first entry" do
       record.input_data = ["one", "two", "three"]
-      index.duplicate?(record).should be_false
+      index.duplicate?(record).should be_falsey
     end
 
     it "should return true the second time it's called for the same record" do
       record.input_data = ["one", "two", "three"]
       index.duplicate?(record)
-      index.duplicate?(record).should be_true
+      index.duplicate?(record).should be_truthy
     end
 
     it "should only use the specified fieldset for duplication detection" do
@@ -45,7 +45,7 @@ describe Cranium::Transformation::DuplicationIndex do
       index.duplicate? record1
 
       record2.input_data = ["one", "four", "five"]
-      index.duplicate?(record2).should be_true
+      index.duplicate?(record2).should be_truthy
     end
 
     it "should handle multiple fields for detection" do
@@ -58,10 +58,10 @@ describe Cranium::Transformation::DuplicationIndex do
       index.duplicate? record1
 
       record2.input_data = ["one", "four", "five"]
-      index.duplicate?(record2).should be_false
+      index.duplicate?(record2).should be_falsey
 
       record3.input_data = ["one", "two", "five"]
-      index.duplicate?(record3).should be_true
+      index.duplicate?(record3).should be_truthy
     end
 
     it "should raise an error if record fieldset doesn't contain index fieldset" do

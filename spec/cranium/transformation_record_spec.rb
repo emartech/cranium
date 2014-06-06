@@ -65,13 +65,13 @@ describe Cranium::TransformationRecord do
     it "should return true if the record contains data for the specified key" do
       record.input_data = ["one", "two", "three"]
 
-      record.has_key?(:field1).should be_true
+      record.has_key?(:field1).should be_truthy
     end
 
     it "should return false if the record doesn't contain data for the specified key" do
       record.input_data = ["one", "two", "three"]
 
-      record.has_key?(:field4).should be_false
+      record.has_key?(:field4).should be_falsey
     end
   end
 

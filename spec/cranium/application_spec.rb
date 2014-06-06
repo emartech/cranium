@@ -7,7 +7,7 @@ describe Cranium::Application do
 
   describe "Application" do
     it "should include metrics logging capabilities" do
-      application.respond_to?(:log).should be_true
+      application.respond_to?(:log).should be_truthy
     end
   end
 
@@ -128,7 +128,7 @@ describe Cranium::Application do
 
       application.apply_hook(:after_import)
 
-      block_called.should be_true
+      block_called.should be_truthy
     end
 
   end
