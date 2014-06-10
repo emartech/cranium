@@ -13,6 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provider :virtualbox do |virtual_machine|
     virtual_machine.name = "smart-insight-devmachine"
+    virtual_machine.memory = 1024
   end
 
   config.vm.synced_folder ".", "/vagrant"
