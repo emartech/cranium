@@ -56,11 +56,11 @@ describe Cranium::Application do
 
     context "when a non-existent file is specified as an argument" do
       it "should exit with an error" do
-        expect { application.run ["no-such-file.exists"] }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
+        expect { application.run ["--cranium-load", "no-such-file.exists"] }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
       end
 
       it "should log an error to STDOUT" do
-        expect { application.run ["no-such-file.exists"] }.to raise_error
+        expect { application.run ["--cranium-load", "no-such-file.exists"] }.to raise_error
 
         $stderr.string.chomp.should == "ERROR: File 'no-such-file.exists' does not exist"
       end
@@ -76,9 +76,8 @@ describe Cranium::Application do
 
       it "should load the first file specified as a command line parameter" do
         application.should_receive(:load).with(file)
-        application.should_not_receive(:load).with("order_items.rb")
 
-        application.run [file, "order_items.rb"]
+        application.run ["--cranium-load", file]
       end
 
       it "should log the runtime of the full process" do
@@ -87,7 +86,7 @@ describe Cranium::Application do
         application.should_receive(:log).with(:info, "Process 'products' started")
         application.should_receive(:log).with(:info, "Process 'products' finished")
 
-        application.run [file]
+        application.run ["--cranium-load", file]
       end
 
       context "when the execution of the process raises an error" do
@@ -103,14 +102,14 @@ describe Cranium::Application do
           application.as_null_object
           application.should_receive(:log).with(:error, error)
 
-          expect { application.run [file] }.to raise_error
+          expect { application.run ["--cranium-load", file] }.to raise_error
         end
 
         it "should still log the runtime of the full process" do
           application.should_receive(:log).with(:info, "Process 'products' started")
           application.should_receive(:log).with(:info, "Process 'products' finished")
 
-          expect { application.run [file] }.to raise_error
+          expect { application.run ["--cranium-load", file] }.to raise_error
         end
       end
     end

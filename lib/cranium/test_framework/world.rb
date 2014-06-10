@@ -40,7 +40,7 @@ class Cranium::TestFramework::World
 
 
   def execute_definition
-    @output, @error_output, status = Open3.capture3("bundle exec bin/cranium #{@directory}/#{DEFINITION_FILE}")
+    @output, @error_output, status = Open3.capture3("bundle exec bin/cranium --cranium-load #{@directory}/#{DEFINITION_FILE}")
     @result_code = status.exitstatus
   end
 

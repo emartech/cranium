@@ -20,7 +20,8 @@ class Cranium::Application
 
 
   def run(args)
-    process_file = validate_file_in_arguments args
+    options = Cranium::CommandLineOptions.new args
+    process_file = validate_file options.cranium_arguments[:load]
 
     log :info, "Process '#{process_name(process_file)}' started"
 
@@ -55,16 +56,16 @@ class Cranium::Application
 
   private
 
-  def validate_file_in_arguments(args)
-    exit_if_no_file_specified args
-    exit_if_no_such_file_exists args.first
-    args.first
+  def validate_file(load_file)
+    exit_if_no_file_specified load_file
+    exit_if_no_such_file_exists load_file
+    load_file
   end
 
 
 
-  def exit_if_no_file_specified(args)
-    if args.empty?
+  def exit_if_no_file_specified(file)
+    if file.nil? || file.empty?
       $stderr.puts "ERROR: No file specified"
       exit 1
     end
