@@ -6,9 +6,17 @@ class Cranium::Application
 
 
 
-  def initialize
+  def initialize(arguments)
     @sources = Cranium::SourceRegistry.new
     @hooks = {}
+
+    @options = Cranium::CommandLineOptions.new arguments
+  end
+
+
+
+  def load_arguments
+    options.load_arguments
   end
 
 
@@ -19,8 +27,7 @@ class Cranium::Application
 
 
 
-  def run(args)
-    options = Cranium::CommandLineOptions.new args
+  def run
     process_file = validate_file options.cranium_arguments[:load]
 
     load_initializer(options.cranium_arguments[:initializer])
@@ -57,6 +64,10 @@ class Cranium::Application
 
 
   private
+
+  attr_reader :options
+
+
 
   def validate_file(load_file)
     exit_if_no_file_specified load_file

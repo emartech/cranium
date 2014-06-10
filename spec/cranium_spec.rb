@@ -40,4 +40,14 @@ describe Cranium do
     end
   end
 
+
+  describe ".load_arguments" do
+    it "should return the load arguments of the application" do
+      app = double "application", load_arguments: "load_arguments"
+      allow(Cranium).to receive(:application).and_return(app)
+
+      expect(Cranium.load_arguments).to eq "load_arguments"
+    end
+  end
+
 end

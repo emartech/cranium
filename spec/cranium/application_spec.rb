@@ -2,7 +2,17 @@ require_relative '../spec_helper'
 
 describe Cranium::Application do
 
-  let(:application) { Cranium::Application.new }
+  let(:application) { Cranium::Application.new [] }
+
+
+  describe "#load_arguments" do
+
+    it "should return the provided load arguments" do
+      app = Cranium::Application.new ["--cranium-load", "load", "--customer_name", "my_customer"]
+      expect(app.load_arguments).to eq customer_name: "my_customer"
+    end
+
+  end
 
 
   describe "Application" do
@@ -43,11 +53,11 @@ describe Cranium::Application do
 
     context "when no files are specified as an argument" do
       it "should exit with an error" do
-        expect { application.run [] }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
+        expect { application.run }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
       end
 
       it "should log an error to STDOUT" do
-        expect { application.run [] }.to raise_error
+        expect { application.run }.to raise_error
 
         $stderr.string.chomp.should == "ERROR: No file specified"
       end
@@ -55,12 +65,14 @@ describe Cranium::Application do
 
 
     context "when a non-existent file is specified as an argument" do
+      let(:application) { Cranium::Application.new ["--cranium-load", "no-such-file.exists"] }
+
       it "should exit with an error" do
-        expect { application.run ["--cranium-load", "no-such-file.exists"] }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
+        expect { application.run }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
       end
 
       it "should log an error to STDOUT" do
-        expect { application.run ["--cranium-load", "no-such-file.exists"] }.to raise_error
+        expect { application.run }.to raise_error
 
         $stderr.string.chomp.should == "ERROR: File 'no-such-file.exists' does not exist"
       end
@@ -70,14 +82,17 @@ describe Cranium::Application do
     context "when called with an existing file" do
       let(:file) { "products.rb" }
 
+      let(:application) { Cranium::Application.new ["--cranium-load", file] }
+
       before(:each) do
         File.stub(:exists?).with(file).and_return(true)
       end
 
+
       it "should load the first file specified as a command line parameter" do
         application.should_receive(:load).with(file)
 
-        application.run ["--cranium-load", file]
+        application.run
       end
 
       it "should log the runtime of the full process" do
@@ -86,7 +101,7 @@ describe Cranium::Application do
         application.should_receive(:log).with(:info, "Process 'products' started")
         application.should_receive(:log).with(:info, "Process 'products' finished")
 
-        application.run ["--cranium-load", file]
+        application.run
       end
 
       context "when the execution of the process raises an error" do
@@ -95,21 +110,21 @@ describe Cranium::Application do
         before(:each) { application.stub(:load).and_raise error }
 
         it "should propagate the error" do
-          expect { application.run [file] }.to raise_error
+          expect { application.run }.to raise_error
         end
 
         it "should log an error" do
           application.as_null_object
           application.should_receive(:log).with(:error, error)
 
-          expect { application.run ["--cranium-load", file] }.to raise_error
+          expect { application.run }.to raise_error
         end
 
         it "should still log the runtime of the full process" do
           application.should_receive(:log).with(:info, "Process 'products' started")
           application.should_receive(:log).with(:info, "Process 'products' finished")
 
-          expect { application.run ["--cranium-load", file] }.to raise_error
+          expect { application.run }.to raise_error
         end
       end
     end
@@ -123,16 +138,18 @@ describe Cranium::Application do
       end
 
       it "should load the initializer" do
+        application = Cranium::Application.new ["--cranium-load", "load", "--cranium-initializer", "initializer"]
+
         application.as_null_object
         application.should_receive(:load).with("initializer")
 
-        application.run ["--cranium-load", "load", "--cranium-initializer", "initializer"]
+        application.run
       end
 
       context "when it points to a non-existing file" do
         it "should exit with an error" do
-
-          expect { application.run ["--cranium-load", "load", "--cranium-initializer", "non-existing-initializer"] }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
+          application = Cranium::Application.new ["--cranium-load", "load", "--cranium-initializer", "non-existing-initializer"]
+          expect { application.run }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
         end
       end
     end

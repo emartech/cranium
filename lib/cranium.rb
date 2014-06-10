@@ -24,8 +24,8 @@ module Cranium
 
   class << self
 
-    def application
-      @application ||= Application.new
+    def application(argv = [])
+      @application ||= Application.new(argv)
     end
 
 
@@ -41,6 +41,12 @@ module Cranium
       yield mutable_configuration
       @configuration = mutable_configuration
       @configuration.freeze
+    end
+
+
+
+    def load_arguments
+      application.load_arguments
     end
 
   end
