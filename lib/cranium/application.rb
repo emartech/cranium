@@ -23,6 +23,8 @@ class Cranium::Application
     options = Cranium::CommandLineOptions.new args
     process_file = validate_file options.cranium_arguments[:load]
 
+    load_initializer(options.cranium_arguments[:initializer])
+
     log :info, "Process '#{process_name(process_file)}' started"
 
     begin
@@ -78,6 +80,15 @@ class Cranium::Application
       $stderr.puts "ERROR: File '#{file}' does not exist"
       exit 1
     end
+  end
+
+
+
+  def load_initializer(initializer)
+    return unless initializer
+
+    exit_if_no_such_file_exists initializer
+    load initializer
   end
 
 

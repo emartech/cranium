@@ -113,6 +113,29 @@ describe Cranium::Application do
         end
       end
     end
+
+
+    context "when an initializer is provided" do
+      before(:each) do
+        File.stub(:exists?).with("load").and_return(true)
+        File.stub(:exists?).with("initializer").and_return(true)
+        File.stub(:exists?).with("non-existing-initializer").and_return(false)
+      end
+
+      it "should load the initializer" do
+        application.as_null_object
+        application.should_receive(:load).with("initializer")
+
+        application.run ["--cranium-load", "load", "--cranium-initializer", "initializer"]
+      end
+
+      context "when it points to a non-existing file" do
+        it "should exit with an error" do
+
+          expect { application.run ["--cranium-load", "load", "--cranium-initializer", "non-existing-initializer"] }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
+        end
+      end
+    end
   end
 
 
