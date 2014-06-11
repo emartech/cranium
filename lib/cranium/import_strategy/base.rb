@@ -43,13 +43,13 @@ class Cranium::ImportStrategy::Base
 
 
   def source_fields
-    import_definition.field_associations.keys
+    import_definition.field_associations.keys.map &:to_sym
   end
 
 
 
   def target_fields
-    import_definition.field_associations.values
+    import_definition.field_associations.values.map &:to_sym
   end
 
 end
