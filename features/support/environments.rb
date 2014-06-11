@@ -1,8 +1,8 @@
 case ENV["CRANIUM_ENVIRONMENT"]
   when "dev"
     Cranium.configure do |config|
-      config.greenplum_connection_string = "postgres://cranium:cranium@192.168.56.42:5432/cranium"
-      config.gpfdist_url = "192.168.56.42:8123"
+      config.greenplum_connection_string = "postgres://cranium:cranium@192.168.56.43:5432/cranium"
+      config.gpfdist_url = "gpfdhost:8123"
       config.gpfdist_home_directory = ENV["GPFDIST_HOME"]
       config.upload_directory = "cranium_build"
     end
@@ -11,7 +11,7 @@ case ENV["CRANIUM_ENVIRONMENT"]
     Cranium.configure do |config|
       config.greenplum_connection_string = "postgres://cranium@localhost/cranium"
       config.gpfdist_home_directory = "/home/gpadmin/smart-insight-data"
-      config.gpfdist_url = "192.168.56.42:8123"
+      config.gpfdist_url = "gpfdhost:8123"
       config.upload_directory = "cranium_build"
     end
 
