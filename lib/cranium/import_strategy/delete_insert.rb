@@ -22,7 +22,7 @@ class Cranium::ImportStrategy::DeleteInsert < Cranium::ImportStrategy::Base
 
 
   def import_new_records
-    database[target_table].multi_insert database[@source_table].select(*aliased_fields)
+    database.run database[target_table].insert_sql(target_fields, database[@source_table].select(*source_fields))
   end
 
 
