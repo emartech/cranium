@@ -8,7 +8,10 @@ describe Cranium::DSL do
     it "should register a database connection in the application" do
       block = lambda {}
 
-      Cranium::Database.should_receive(:register_database).with(:name, &block)
+      Cranium::Database.should_receive(:register_database) do |arg, &blk|
+        expect(arg).to eq :name
+        expect(blk).to be block
+      end
 
       dsl_object.database(:name, &block)
     end
@@ -30,7 +33,7 @@ describe Cranium::DSL do
       block = lambda {}
 
       Cranium::DSL::ExtractDefinition.stub(:new).with(:contacts).and_return(extract_definition)
-      extract_definition.should_receive(:instance_eval).with(&block)
+      expect(extract_definition).to receive(:instance_eval) { |&blk| expect(blk).to be block }
 
       extractor = double "DataExtractor"
       Cranium::Extract::DataExtractor.stub new: extractor
@@ -55,7 +58,7 @@ describe Cranium::DSL do
       block = lambda {}
 
       Cranium::DSL::ImportDefinition.stub(:new).with(:contacts).and_return(import_definition)
-      import_definition.should_receive(:instance_eval).with(&block)
+      expect(import_definition).to receive(:instance_eval) { |&blk| expect(blk).to be block }
 
       importer = double "DataImporter"
       Cranium::DataImporter.stub new: importer
@@ -68,9 +71,9 @@ describe Cranium::DSL do
 
   describe "#archive" do
     it "should archive files for the specified sources" do
-      Cranium.application.stub sources: { first_source: double(files: ["file1", "file2"]),
-                                          second_source: double(files: ["file3"]),
-                                          third_source: double(files: ["file4"]) }
+      Cranium.application.stub sources: {first_source: double(files: ["file1", "file2"]),
+                                         second_source: double(files: ["file3"]),
+                                         third_source: double(files: ["file4"])}
 
       Cranium::Archiver.should_receive(:archive).with "file1", "file2"
       Cranium::Archiver.should_receive(:archive).with "file3"

@@ -1,6 +1,14 @@
 require 'fileutils'
 require_relative "../../lib/cranium"
-require_relative "environments"
+
+
+Cranium.configure do |config|
+  config.greenplum_connection_string = "postgres://cranium:cranium@192.168.56.43:5432/cranium"
+  config.gpfdist_url = "192.168.56.43:8123"
+  config.gpfdist_home_directory = "tmp/custdata"
+  config.upload_directory = "cranium_build"
+end
+
 
 Before do
   FileUtils.rm_rf Cranium.configuration.upload_path
