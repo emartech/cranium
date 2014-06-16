@@ -21,6 +21,12 @@ class Cranium::Application
 
 
 
+  def cranium_arguments
+    options.cranium_arguments
+  end
+
+
+
   def register_source(name, &block)
     @sources.register_source(name, &block).resolve_files
   end
@@ -30,25 +36,27 @@ class Cranium::Application
   def run
     process_file = validate_file options.cranium_arguments[:load]
 
-    load_initializer(options.cranium_arguments[:initializer])
-
-    log :info, "Process '#{process_name(process_file)}' started"
-
     begin
       load process_file
     rescue Exception => ex
       log :error, ex
       raise
     ensure
-      log :info, "Process '#{process_name(process_file)}' finished"
+      apply_hook :after
     end
   end
 
 
 
   def after_import(&block)
-    @hooks[:after_import] ||= []
-    @hooks[:after_import] << block
+    register_hook :after_import, &block
+  end
+
+
+
+  def register_hook(name, &block)
+    @hooks[name] ||= []
+    @hooks[name] << block
   end
 
 
@@ -91,21 +99,6 @@ class Cranium::Application
       $stderr.puts "ERROR: File '#{file}' does not exist"
       exit 1
     end
-  end
-
-
-
-  def load_initializer(initializer)
-    return unless initializer
-
-    exit_if_no_such_file_exists initializer
-    load initializer
-  end
-
-
-
-  def process_name(file_name)
-    File.basename(file_name, File.extname(file_name))
   end
 
 end

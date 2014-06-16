@@ -6,12 +6,17 @@ describe Cranium::Application do
 
 
   describe "#load_arguments" do
-
     it "should return the provided load arguments" do
       app = Cranium::Application.new ["--cranium-load", "load", "--customer_name", "my_customer"]
       expect(app.load_arguments).to eq customer_name: "my_customer"
     end
+  end
 
+  describe "#cranium_arguments" do
+    it "should return the provided load arguments" do
+      app = Cranium::Application.new ["--cranium-load", "loads/load_file", "--customer_name", "my_customer"]
+      expect(app.cranium_arguments).to eq load: "loads/load_file"
+    end
   end
 
 
@@ -95,17 +100,22 @@ describe Cranium::Application do
         application.run
       end
 
-      it "should log the runtime of the full process" do
-        application.stub :load
 
-        application.should_receive(:log).with(:info, "Process 'products' started")
-        application.should_receive(:log).with(:info, "Process 'products' finished")
+      it "should run any registered after hooks" do
+        application.stub(:load)
+
+        hook_ran = false
+        application.register_hook :after do
+          hook_ran = true
+        end
 
         application.run
+
+        hook_ran.should be_truthy
       end
 
-      context "when the execution of the process raises an error" do
 
+      context "when the execution of the process raises an error" do
         let(:error) { StandardError.new }
         before(:each) { application.stub(:load).and_raise error }
 
@@ -120,36 +130,18 @@ describe Cranium::Application do
           expect { application.run }.to raise_error
         end
 
-        it "should still log the runtime of the full process" do
-          application.should_receive(:log).with(:info, "Process 'products' started")
-          application.should_receive(:log).with(:info, "Process 'products' finished")
+        it "should still run any registered after hooks" do
+          hook_ran = false
+          application.register_hook :after do
+            hook_ran = true
+          end
 
-          expect { application.run }.to raise_error
-        end
-      end
-    end
+          begin
+            application.run
+          rescue
+          end
 
-
-    context "when an initializer is provided" do
-      before(:each) do
-        File.stub(:exists?).with("load").and_return(true)
-        File.stub(:exists?).with("initializer").and_return(true)
-        File.stub(:exists?).with("non-existing-initializer").and_return(false)
-      end
-
-      it "should load the initializer" do
-        application = Cranium::Application.new ["--cranium-load", "load", "--cranium-initializer", "initializer"]
-
-        application.as_null_object
-        application.should_receive(:load).with("initializer")
-
-        application.run
-      end
-
-      context "when it points to a non-existing file" do
-        it "should exit with an error" do
-          application = Cranium::Application.new ["--cranium-load", "load", "--cranium-initializer", "non-existing-initializer"]
-          expect { application.run }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
+          hook_ran.should be_truthy
         end
       end
     end

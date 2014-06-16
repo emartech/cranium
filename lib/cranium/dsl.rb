@@ -75,4 +75,9 @@ module Cranium::DSL
     Cranium::Transformation::Sequence.new name
   end
 
+
+  def after(&block)
+    Cranium.application.register_hook :after, &block
+  end
+
 end

@@ -92,4 +92,14 @@ describe Cranium::DSL do
     end
   end
 
+
+  describe "#after" do
+    it "should register a new after hook for the application" do
+      block = -> {}
+
+      expect(Cranium.application).to receive(:register_hook).with(:after) { |&blk| expect(blk).to be block }
+
+      dsl_object.after &block
+    end
+  end
 end
