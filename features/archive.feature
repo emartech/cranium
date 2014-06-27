@@ -1,6 +1,6 @@
 Feature: Archive source files
 
-  Scenario: Successful transformation
+  Scenario:
     Given no "/tmp/cranium_archive" directory
     And a "products_1.csv" data file containing:
     """

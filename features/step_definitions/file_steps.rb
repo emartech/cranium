@@ -32,3 +32,8 @@ Then /^the "([^"]*)" directory should contain the following files:$/ do |directo
     files_in_dir[index].should =~ Regexp.new(files.data[index][:filename])
   end
 end
+
+
+Then /^the upload directory should contain the following files:$/ do |files|
+  step %Q(the "#{Cranium.configuration.upload_path}" directory should contain the following files:), files
+end

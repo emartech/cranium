@@ -71,9 +71,18 @@ module Cranium::DSL
 
 
 
+  def remove(*sources)
+    sources.each do |source_name|
+      Cranium::Archiver.remove *Cranium.application.sources[source_name].files
+    end
+  end
+
+
+
   def sequence(name)
     Cranium::Transformation::Sequence.new name
   end
+
 
 
   def after(&block)

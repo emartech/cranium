@@ -9,6 +9,14 @@ module Cranium::Archiver
 
 
 
+  def self.remove(*files)
+    files.each do |file_name|
+      FileUtils.rm File.join(Cranium.configuration.upload_path, file_name)
+    end
+  end
+
+
+
   private
 
   def self.create_archive_directory

@@ -31,4 +31,14 @@ describe Cranium::Archiver do
     end
   end
 
+
+  describe ".remove" do
+    it "should remove files from the upload directory" do
+      FileUtils.should_receive(:rm).with "gpfdist_home/upload_dir/file.txt"
+      FileUtils.should_receive(:rm).with "gpfdist_home/upload_dir/another_file.txt"
+
+      Cranium::Archiver.remove "file.txt", "another_file.txt"
+    end
+  end
+
 end
