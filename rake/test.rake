@@ -2,6 +2,7 @@ require 'cucumber'
 require 'cucumber/rake/task'
 require 'rspec/core/rake_task'
 
+task :default => :test
 
 desc "Run test suite (all RSpec examples and Cucumber features)"
 task :test => [:'test:spec', :'test:features']
