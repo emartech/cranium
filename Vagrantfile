@@ -7,8 +7,8 @@ FileUtils.mkdir_p("tmp/custdata") unless Dir.exists?("tmp/custdata")
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "si-build.v1"
-  config.vm.box_url = "http://vboxes.ett.local/si-build.v1.box"
+  config.vm.box = "si-build.v2"
+  config.vm.box_url = "http://vboxes.ett.local/si-build.v2.box"
 
   config.vm.hostname = 'cranium-build'
   config.vm.network :private_network, ip: "192.168.56.43"
