@@ -9,13 +9,13 @@ describe Cranium::Transformation::DuplicationIndex do
     before(:each) { Cranium::Transformation::DuplicationIndex.instance_variable_set :@instances, nil }
 
     it "should return a DuplicationIndex instance for the specified fields" do
-      Cranium::Transformation::DuplicationIndex.stub(:new).with(:field1, :field2).and_return(index)
+      allow(Cranium::Transformation::DuplicationIndex).to receive(:new).with(:field1, :field2).and_return(index)
 
-      Cranium::Transformation::DuplicationIndex[:field1, :field2].should equal index
+      expect(Cranium::Transformation::DuplicationIndex[:field1, :field2]).to eq index
     end
 
     it "should memoize the previously created instances" do
-      Cranium::Transformation::DuplicationIndex[:field1, :field2].should equal Cranium::Transformation::DuplicationIndex[:field1, :field2]
+      expect(Cranium::Transformation::DuplicationIndex[:field1, :field2]).to eq(Cranium::Transformation::DuplicationIndex[:field1, :field2])
     end
 
     it "should raise an error if empty fieldset was passed" do
@@ -27,13 +27,13 @@ describe Cranium::Transformation::DuplicationIndex do
   describe "#duplicate?" do
     it "should return false for the first entry" do
       record.input_data = ["one", "two", "three"]
-      index.duplicate?(record).should be_falsey
+      expect(index.duplicate?(record)).to be_falsey
     end
 
     it "should return true the second time it's called for the same record" do
       record.input_data = ["one", "two", "three"]
       index.duplicate?(record)
-      index.duplicate?(record).should be_truthy
+      expect(index.duplicate?(record)).to be_truthy
     end
 
     it "should only use the specified fieldset for duplication detection" do
@@ -45,7 +45,7 @@ describe Cranium::Transformation::DuplicationIndex do
       index.duplicate? record1
 
       record2.input_data = ["one", "four", "five"]
-      index.duplicate?(record2).should be_truthy
+      expect(index.duplicate?(record2)).to be_truthy
     end
 
     it "should handle multiple fields for detection" do
@@ -58,10 +58,10 @@ describe Cranium::Transformation::DuplicationIndex do
       index.duplicate? record1
 
       record2.input_data = ["one", "four", "five"]
-      index.duplicate?(record2).should be_falsey
+      expect(index.duplicate?(record2)).to be_falsey
 
       record3.input_data = ["one", "two", "five"]
-      index.duplicate?(record3).should be_truthy
+      expect(index.duplicate?(record3)).to be_truthy
     end
 
     it "should raise an error if record fieldset doesn't contain index fieldset" do

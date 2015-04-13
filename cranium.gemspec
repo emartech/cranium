@@ -16,13 +16,14 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "pg"
   spec.add_runtime_dependency "progressbar"
   spec.add_runtime_dependency "sequel"
-  spec.add_runtime_dependency "slop"
+  spec.add_runtime_dependency "slop", "~> 3"
+  spec.add_runtime_dependency "sequel-pool_cleaner"
 
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec", "~> 2.14"
+  spec.add_development_dependency "rspec"
   spec.add_development_dependency "ruby-prof"
-  spec.add_development_dependency "cucumber", "~> 1.3.10"
+  spec.add_development_dependency "cucumber", "~> 1"
   # spec.add_development_dependency "geminabox_client"
 end

@@ -22,14 +22,14 @@ describe Cranium::Application do
 
   describe "Application" do
     it "should include metrics logging capabilities" do
-      application.respond_to?(:log).should be_truthy
+      expect(application.respond_to?(:log)).to be_truthy
     end
   end
 
 
   describe "#sources" do
     it "should return a SourceRegistry" do
-      application.sources.should be_a Cranium::SourceRegistry
+      expect(application.sources).to be_a Cranium::SourceRegistry
     end
   end
 
@@ -38,8 +38,8 @@ describe Cranium::Application do
     it "should register a source in the source registry and resolve its files" do
       source = double "SourceDefinition"
 
-      application.sources.should_receive(:register_source).with(:source1).and_return(source)
-      source.should_receive :resolve_files
+      expect(application.sources).to receive(:register_source).with(:source1).and_return(source)
+      expect(source).to receive(:resolve_files)
 
       application.register_source(:source1) { file "test*.csv" }
     end
@@ -64,7 +64,7 @@ describe Cranium::Application do
       it "should log an error to STDOUT" do
         expect { application.run }.to raise_error
 
-        $stderr.string.chomp.should == "ERROR: No file specified"
+        expect($stderr.string.chomp).to eq "ERROR: No file specified"
       end
     end
 
@@ -79,7 +79,7 @@ describe Cranium::Application do
       it "should log an error to STDOUT" do
         expect { application.run }.to raise_error
 
-        $stderr.string.chomp.should == "ERROR: File 'no-such-file.exists' does not exist"
+        expect($stderr.string.chomp).to eq "ERROR: File 'no-such-file.exists' does not exist"
       end
     end
 
@@ -90,19 +90,19 @@ describe Cranium::Application do
       let(:application) { Cranium::Application.new ["--cranium-load", file] }
 
       before(:each) do
-        File.stub(:exists?).with(file).and_return(true)
+        allow(File).to receive(:exists?).with(file).and_return(true)
       end
 
 
       it "should load the first file specified as a command line parameter" do
-        application.should_receive(:load).with(file)
+        expect(application).to receive(:load).with(file)
 
         application.run
       end
 
 
       it "should run any registered after hooks" do
-        application.stub(:load)
+        allow(application).to receive :load
 
         hook_ran = false
         application.register_hook :after do
@@ -111,13 +111,13 @@ describe Cranium::Application do
 
         application.run
 
-        hook_ran.should be_truthy
+        expect(hook_ran).to be_truthy
       end
 
 
       context "when the execution of the process raises an error" do
         let(:error) { StandardError.new }
-        before(:each) { application.stub(:load).and_raise error }
+        before(:each) { allow(application).to receive(:load).and_raise error }
 
         it "should propagate the error" do
           expect { application.run }.to raise_error
@@ -125,7 +125,7 @@ describe Cranium::Application do
 
         it "should log an error" do
           application.as_null_object
-          application.should_receive(:log).with(:error, error)
+          expect(application).to receive(:log).with(:error, error)
 
           expect { application.run }.to raise_error
         end
@@ -141,7 +141,7 @@ describe Cranium::Application do
           rescue
           end
 
-          hook_ran.should be_truthy
+          expect(hook_ran).to be_truthy
         end
       end
     end
@@ -159,7 +159,7 @@ describe Cranium::Application do
 
       application.apply_hook(:after_import)
 
-      block_called.should be_truthy
+      expect(block_called).to be_truthy
     end
 
   end
