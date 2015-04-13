@@ -1,4 +1,6 @@
 require_relative '../spec_helper'
+require 'sequel'
+require 'sequel/adapters/mock'
 
 describe Cranium::Database do
 
@@ -6,23 +8,25 @@ describe Cranium::Database do
 
   before(:each) do
     Cranium.stub :configuration => (Cranium::Configuration.new.tap do |config|
-      config.greenplum_connection_string = "connection string"
-      config.loggers = "loggers"
-    end)
+                   config.greenplum_connection_string = "connection string"
+                   config.loggers = "loggers"
+                 end)
   end
 
 
   describe ".connection" do
     before { Cranium::Database.instance_variable_set :@connection, nil }
 
-    it "should connect to the DB" do
-      Sequel.should_receive(:connect).with("connection string", :loggers => "loggers").and_return "connection"
+    let(:connection) { Sequel::Mock::Database.new }
 
-      database.connection.should == "connection"
+    it "should connect to the DB" do
+      Sequel.should_receive(:connect).with("connection string", :loggers => "loggers").and_return connection
+
+      expect(database.connection).to eq connection
     end
 
     it "should return the same object every time" do
-      Sequel.stub(:connect).and_return("connection1", "connection2")
+      allow(Sequel).to receive(:connect).and_return(connection)
 
       database.connection.should equal database.connection
     end
