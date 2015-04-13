@@ -1,6 +1,7 @@
 require 'fileutils'
 require_relative "../../lib/cranium"
 
+FileUtils.mkdir_p("log") unless Dir.exists?("log")
 
 Cranium.configure do |config|
   config.greenplum_connection_string = "postgres://cranium:cranium@192.168.56.43:5432/cranium"
