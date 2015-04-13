@@ -4,3 +4,5 @@ CREATE ROLE cranium WITH RESOURCE QUEUE smart_insight CREATEEXTTABLE LOGIN PASSW
 COMMENT ON ROLE cranium IS 'Cranium test user';
 
 CREATE DATABASE cranium WITH OWNER=cranium;
+
+CREATE ROLE database_administrator WITH SUPERUSER LOGIN PASSWORD 'emarsys';
