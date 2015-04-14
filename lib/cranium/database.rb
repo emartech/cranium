@@ -4,14 +4,14 @@ require 'sequel/extensions/connection_validator'
 module Cranium::Database
 
   def self.connection
-    @connection ||= setup_connection
+    @connection ||= setup_connection(Cranium.configuration.greenplum_connection_string)
   end
 
 
 
   def self.[](name)
     @connections ||= {}
-    @connections[name] ||= Sequel.connect @definitions[name].connect_to, loggers: Cranium.configuration.loggers
+    @connections[name] ||= setup_connection(@definitions[name].connect_to)
   end
 
 
@@ -28,6 +28,7 @@ module Cranium::Database
 
   def self.setup_connection
     connection = Sequel.connect Cranium.configuration.greenplum_connection_string, loggers: Cranium.configuration.loggers
+    connection = Sequel.connect connection_string, loggers: Cranium.configuration.loggers
     connection.extension :connection_validator
     connection.pool.connection_validation_timeout = -1
     return connection

@@ -8,6 +8,7 @@ Cranium.configure do |config|
   config.gpfdist_url = "192.168.56.43:8123"
   config.gpfdist_home_directory = "tmp/custdata"
   config.upload_directory = "cranium_build"
+  config.loggers << Logger.new("log/cucumber.log")
 end
 
 

@@ -13,9 +13,10 @@ Feature: Sequel database connections are fault tolerant
     """
     And the following definition:
     """
+    require 'sequel'
+
     def terminate_connections
-      require 'sequel'
-      connection = Sequel.connect "postgres://database_administrator:emarsys@192.168.56.43:5432/cranium"
+      connection = Sequel.connect "postgres://database_administrator:emarsys@192.168.56.43:5432/cranium", loggers: Cranium.configuration.loggers
       connection.run("SELECT pg_terminate_backend(procpid) FROM pg_stat_activity WHERE procpid <> pg_backend_pid() AND datname = 'cranium'")
     end
 
@@ -39,10 +40,12 @@ Feature: Sequel database connections are fault tolerant
 
 
     transform :products => :transformed_products do |record|
-      terminate_connections
-
       output record
     end
+
+
+
+    terminate_connections
 
 
 

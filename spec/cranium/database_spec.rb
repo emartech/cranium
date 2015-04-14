@@ -5,6 +5,8 @@ require 'sequel/adapters/mock'
 describe Cranium::Database do
 
   let(:database) { Cranium::Database }
+  let(:connection) { Sequel::Mock::Database.new }
+  let(:other_connection) { Sequel::Mock::Database.new }
 
   before(:each) do
     allow(Cranium).to receive(:configuration).and_return(Cranium::Configuration.new.tap do |config|
@@ -17,8 +19,6 @@ describe Cranium::Database do
   describe ".connection" do
     before { Cranium::Database.instance_variable_set :@connection, nil }
 
-    let(:connection) { Sequel::Mock::Database.new }
-
     it "should connect to the DB" do
       expect(Sequel).to receive(:connect).with("connection string", :loggers => "loggers").and_return connection
 
@@ -26,7 +26,7 @@ describe Cranium::Database do
     end
 
     it "should return the same object every time" do
-      allow(Sequel).to receive(:connect).and_return(connection)
+      allow(Sequel).to receive(:connect).and_return(connection, other_connection)
 
       expect(database.connection).to eq database.connection
     end
@@ -44,13 +44,13 @@ describe Cranium::Database do
     end
 
     it "should return the specified database connection" do
-      expect(Sequel).to receive(:connect).with("other connection string", :loggers => "loggers").and_return "connection"
+      expect(Sequel).to receive(:connect).with("other connection string", :loggers => "loggers").and_return connection
 
-      expect(database[:dwh]).to eq "connection"
+      expect(database[:dwh]).to eq connection
     end
 
     it "should memoize the result of a previous call" do
-      allow(Sequel).to receive(:connect).and_return("connection1", "connection2")
+      allow(Sequel).to receive(:connect).and_return(connection, other_connection)
 
       expect(database[:dwh]).to eq database[:dwh]
     end
@@ -60,7 +60,7 @@ describe Cranium::Database do
         connect_to "other connection string 2"
       end
 
-      allow(Sequel).to receive(:connect).and_return("connection1", "connection2")
+      allow(Sequel).to receive(:connect).and_return(connection, other_connection)
 
       expect(database[:dwh]).not_to eq database[:dwh2]
     end
