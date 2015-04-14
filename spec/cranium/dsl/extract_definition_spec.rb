@@ -7,14 +7,14 @@ describe Cranium::DSL::ExtractDefinition do
 
   describe "#name" do
     it "should return the name of the extract definition" do
-      extract.name.should == :extract_name
+      expect(extract.name).to eq(:extract_name)
     end
   end
 
 
   describe "#storage" do
     it "should return the persistent storage corresponding to the extract" do
-      extract.storage.should be_a Cranium::Extract::Storage
+      expect(extract.storage).to be_a Cranium::Extract::Storage
     end
   end
 
@@ -22,7 +22,7 @@ describe Cranium::DSL::ExtractDefinition do
   describe "#from" do
     it "should set the attribute to the specified value" do
       extract.from :database
-      extract.from.should == :database
+      expect(extract.from).to eq(:database)
     end
   end
 
@@ -30,7 +30,7 @@ describe Cranium::DSL::ExtractDefinition do
   describe "#query" do
     it "should set the attribute to the specified value" do
       extract.query "extract query"
-      extract.query.should == "extract query"
+      expect(extract.query).to eq("extract query")
     end
   end
 
@@ -38,30 +38,30 @@ describe Cranium::DSL::ExtractDefinition do
   describe "#incrementally_by" do
     it "should set the attribute to the specified value" do
       extract.incrementally_by :id
-      extract.incrementally_by.should == :id
+      expect(extract.incrementally_by).to eq(:id)
     end
   end
 
 
   describe "#last_extracted_value_of" do
     let(:storage) { double "extract storage" }
-    before { Cranium::Extract::Storage.stub(:new).with(:extract_name).and_return(storage) }
+    before { allow(Cranium::Extract::Storage).to receive(:new).with(:extract_name).and_return(storage) }
 
     context "when there is no last extracted value for the field" do
-      before { storage.stub(:last_value_of).with(:id).and_return(nil) }
+      before { allow(storage).to receive(:last_value_of).with(:id).and_return(nil) }
 
       it "should return nil" do
-        extract.last_extracted_value_of(:id).should be_nil
+        expect(extract.last_extracted_value_of(:id)).to be_nil
       end
 
       it "should return the default value if one was specified" do
-        extract.last_extracted_value_of(:id, 0).should == 0
+        expect(extract.last_extracted_value_of(:id, 0)).to eq(0)
       end
     end
 
     it "should return the last extracted value of the field" do
-      storage.stub(:last_value_of).with(:id).and_return(15)
-      extract.last_extracted_value_of(:id).should == 15
+      allow(storage).to receive(:last_value_of).with(:id).and_return(15)
+      expect(extract.last_extracted_value_of(:id)).to eq(15)
     end
   end
 

@@ -3,7 +3,7 @@ require_relative '../spec_helper'
 describe Cranium::Archiver do
 
   before(:each) do
-    Cranium.stub(configuration: Cranium::Configuration.new.tap do |config|
+    allow(Cranium).to receive_messages(configuration: Cranium::Configuration.new.tap do |config|
       config.gpfdist_home_directory = "gpfdist_home"
       config.upload_directory = "upload_dir"
       config.archive_directory = "path/to/archive"

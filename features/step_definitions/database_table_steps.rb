@@ -36,5 +36,5 @@ Then(/^the "([^"]*)" table should contain:$/) do |table_name, data|
     expected_data << new_row
   end
 
-  database_table(table_name).content(data.fields).should =~ expected_data
+  expect(database_table(table_name).content(data.fields)).to match_array expected_data
 end

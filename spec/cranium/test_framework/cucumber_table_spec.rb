@@ -13,20 +13,20 @@ module Cranium::TestFramework
         it "should return a CucumberTable" do
           @table_data = [{ "column" => "value" }]
 
-          table.should be_a CucumberTable
+          expect(table).to be_a CucumberTable
         end
 
 
         it "should convert header values to symbols" do
           @table_data = [{ "column1" => "value1", "column2" => "value2" }]
 
-          table.fields.should == [:column1, :column2]
+          expect(table.fields).to eq([:column1, :column2])
         end
 
 
         it "should discard comment columns" do
           @table_data = [{ "column" => "value1", "#comment column" => "value2" }]
-          CucumberTable.should_receive(:new).with([{ column: "value1" }], { column: :string })
+          expect(CucumberTable).to receive(:new).with([{ column: "value1" }], { column: :string })
 
           table
         end
@@ -40,7 +40,7 @@ module Cranium::TestFramework
                            "some_column" => "else"
                          }]
 
-          table.fields.should =~ [:integer_column, :string_column, :numeric_column, :some_column]
+          expect(table.fields).to match_array([:integer_column, :string_column, :numeric_column, :some_column])
         end
 
 
@@ -58,7 +58,7 @@ module Cranium::TestFramework
                            "numeric_column (n)" => "five",
                            "some_column" => "else"
                          }]
-          CucumberTable.should_receive(:new).with(
+          expect(CucumberTable).to receive(:new).with(
             [{
                integer_column: "one",
                string_column: "two",
@@ -84,7 +84,7 @@ module Cranium::TestFramework
 
       describe "#fields" do
         it "should return the keys of the first row" do
-          CucumberTable.new(data).fields.should == %w[one three]
+          expect(CucumberTable.new(data).fields).to eq(%w[one three])
         end
       end
 
@@ -94,14 +94,14 @@ module Cranium::TestFramework
           table = CucumberTable.new(data)
           table_with_patterns = table.with_patterns({ "a" => "b" })
 
-          table_with_patterns.should be_equal table
+          expect(table_with_patterns).to be_equal table
         end
       end
 
 
       describe "#data" do
         it "should return all data as an array of hashes" do
-          CucumberTable.new(data).data.should == data
+          expect(CucumberTable.new(data).data).to eq(data)
         end
 
 
@@ -112,13 +112,13 @@ module Cranium::TestFramework
             "apple" => lambda { "pear" }
           )
 
-          table.data.should == [first: nil, second: "pear", third: "something else entirely"]
+          expect(table.data).to eq([first: nil, second: "pear", third: "something else entirely"])
         end
 
 
         it "should evaluate integer fields" do
           table = CucumberTable.new([{ integer_column: "20" }], { integer_column: :integer })
-          table.data.should == [{ integer_column: 20 }]
+          expect(table.data).to eq([{ integer_column: 20 }])
         end
 
 
@@ -126,14 +126,14 @@ module Cranium::TestFramework
           it "should return an array of empty arrays if there are no data rows" do
             table = CucumberTable.new [], { argument: :string }
 
-            table.data.columns.should == [[]]
+            expect(table.data.columns).to eq([[]])
           end
 
 
           it "should return the data in columns as an array of arrays, discarding all header information" do
             table = CucumberTable.new [{ header1: "value1", header2: "value2" }, { header1: "value3", header2: "value4" }]
 
-            table.data.columns.should == [%w[value1 value3], %w[value2 value4]]
+            expect(table.data.columns).to eq([%w[value1 value3], %w[value2 value4]])
           end
         end
       end

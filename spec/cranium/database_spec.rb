@@ -20,7 +20,7 @@ describe Cranium::Database do
     let(:connection) { Sequel::Mock::Database.new }
 
     it "should connect to the DB" do
-      Sequel.should_receive(:connect).with("connection string", :loggers => "loggers").and_return connection
+      expect(Sequel).to receive(:connect).with("connection string", :loggers => "loggers").and_return connection
 
       expect(database.connection).to eq connection
     end

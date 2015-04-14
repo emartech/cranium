@@ -58,7 +58,7 @@ describe Cranium::Application do
 
     context "when no files are specified as an argument" do
       it "should exit with an error" do
-        expect { application.run }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
+        expect { application.run }.to raise_error(SystemExit) { |exit| expect(exit.status).to eq(1) }
       end
 
       it "should log an error to STDOUT" do
@@ -73,7 +73,7 @@ describe Cranium::Application do
       let(:application) { Cranium::Application.new ["--cranium-load", "no-such-file.exists"] }
 
       it "should exit with an error" do
-        expect { application.run }.to raise_error(SystemExit) { |exit| exit.status.should == 1 }
+        expect { application.run }.to raise_error(SystemExit) { |exit| expect(exit.status).to eq(1) }
       end
 
       it "should log an error to STDOUT" do
@@ -124,7 +124,6 @@ describe Cranium::Application do
         end
 
         it "should log an error" do
-          application.as_null_object
           expect(application).to receive(:log).with(:error, error)
 
           expect { application.run }.to raise_error

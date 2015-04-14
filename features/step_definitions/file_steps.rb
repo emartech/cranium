@@ -19,17 +19,17 @@ end
 
 
 Then /^there should be a "([^"]*)" data file in the upload directory containing:$/ do |file_name, content|
-  upload_directory.file_exists?(file_name).should be_truthy, "expected file '#{file_name}' to exist"
-  upload_directory.read_file(file_name).chomp.should == content
+  expect(upload_directory.file_exists?(file_name)).to be_truthy, "expected file '#{file_name}' to exist"
+  expect(upload_directory.read_file(file_name).chomp).to eq content
 end
 
 
 Then /^the "([^"]*)" directory should contain the following files:$/ do |directory_path, files|
-  Dir.exists?(directory_path).should be_truthy, "expected directory '#{directory_path}' to exist"
+  expect(Dir.exists?(directory_path)).to be_truthy, "expected directory '#{directory_path}' to exist"
   files_in_dir = Dir["#{directory_path}/*"].map { |file_name| File.basename file_name }.sort
-  files_in_dir.count.should == files.data.count
+  expect(files_in_dir.count).to eq files.data.count
   0.upto files.data.count-1 do |index|
-    files_in_dir[index].should =~ Regexp.new(files.data[index][:filename])
+    expect(files_in_dir[index]).to match Regexp.new(files.data[index][:filename])
   end
 end
 

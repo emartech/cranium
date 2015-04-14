@@ -7,7 +7,7 @@ describe Cranium::DSL::DatabaseDefinition do
 
   describe "#name" do
     it "should return the name of the database definition" do
-      database.name.should == "name"
+      expect(database.name).to eq("name")
     end
   end
 
@@ -16,7 +16,7 @@ describe Cranium::DSL::DatabaseDefinition do
     it "should set the attribute to the specified value" do
       database.connect_to "value"
 
-      database.connect_to.should == "value"
+      expect(database.connect_to).to eq("value")
     end
   end
 

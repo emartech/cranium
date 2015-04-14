@@ -20,11 +20,11 @@ describe Cranium::SourceRegistry do
         field :test_field, String
       end
 
-      registry[:test_source].should == source
+      expect(registry[:test_source]).to eq(source)
     end
 
     it "should return the newly registered source" do
-      registry.register_source :test_source do end.should be_a Cranium::DSL::SourceDefinition
+      expect(registry.register_source(:test_source) {}).to be_a Cranium::DSL::SourceDefinition
     end
   end
 

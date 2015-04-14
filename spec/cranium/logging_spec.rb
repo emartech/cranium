@@ -6,13 +6,13 @@ describe Cranium::Logging do
   let(:loggers) { [double("Logger 1"), double("Logger 2")] }
 
   before(:each) do
-    Cranium.stub_chain(:configuration, :loggers).and_return loggers
+    allow(Cranium).to receive_message_chain(:configuration, :loggers).and_return loggers
   end
 
 
 
   def all_loggers_should_receive(level, message)
-    loggers.each { |logger| logger.should_receive(level).with(message) }
+    loggers.each { |logger| expect(logger).to receive(level).with(message) }
   end
 
 

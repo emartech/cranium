@@ -9,15 +9,15 @@ end
 
 
 Then /^the process should exit successfully$/ do
-  result_code.should eq(0), "Expected script exit code to be 0, but received #{result_code}\n\n#{script_output}\n"
+  expect(result_code).to eq(0), "Expected script exit code to be 0, but received #{result_code}\n\n#{script_output}\n"
 end
 
 
 Then /^the process should exit with an error$/ do
-  result_code.should eq(1), "Expected script exit code to be 1, but received #{result_code}\n\n#{script_output}\n"
+  expect(result_code).to eq(1), "Expected script exit code to be 1, but received #{result_code}\n\n#{script_output}\n"
 end
 
 
 Then /^the error message should contain:$/ do |message|
-  error_output.should include message
+  expect(error_output).to include message
 end

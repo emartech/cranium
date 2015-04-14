@@ -24,15 +24,15 @@ describe Cranium::ExternalTable do
 
   describe "#create" do
     it "should create an external table from the specified source" do
-      Cranium.stub configuration: OpenStruct.new(
+      allow(Cranium).to receive_messages configuration: OpenStruct.new(
         gpfdist_url: "gpfdist-url",
         gpfdist_home_directory: "/gpfdist-home",
         upload_directory: "upload-dir"
       )
 
-      source.stub files: %w(test_products_a.csv test_products_b.csv)
+      allow(source).to receive_messages files: %w(test_products_a.csv test_products_b.csv)
 
-      connection.should_receive(:run).with(<<-sql
+      expect(connection).to receive(:run).with(<<-sql
       CREATE EXTERNAL TABLE "external_products" (
           "text_field" TEXT,
           "integer_field" INTEGER,
@@ -55,7 +55,7 @@ describe Cranium::ExternalTable do
 
   describe "#destroy" do
     it "should drop the external table" do
-      connection.should_receive(:run).with(%Q[DROP EXTERNAL TABLE "external_products"])
+      expect(connection).to receive(:run).with(%Q[DROP EXTERNAL TABLE "external_products"])
 
       external_table.destroy
     end
@@ -64,7 +64,7 @@ describe Cranium::ExternalTable do
 
   describe "#name" do
     it "should return the name of the external table based on the source's name" do
-      external_table.name.should == :external_products
+      expect(external_table.name).to eq(:external_products)
     end
   end
 

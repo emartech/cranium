@@ -8,7 +8,7 @@ describe Cranium::DSL do
     it "should register a database connection in the application" do
       block = lambda {}
 
-      Cranium::Database.should_receive(:register_database) do |arg, &blk|
+      expect(Cranium::Database).to receive(:register_database) do |arg, &blk|
         expect(arg).to eq :name
         expect(blk).to be block
       end
@@ -20,7 +20,7 @@ describe Cranium::DSL do
 
   describe "#source" do
     it "should register a source in the application" do
-      Cranium.application.should_receive(:register_source).with(:name)
+      expect(Cranium.application).to receive(:register_source).with(:name)
 
       dsl_object.source(:name)
     end
@@ -32,12 +32,12 @@ describe Cranium::DSL do
       extract_definition = double "ExtractDefinition"
       block = lambda {}
 
-      Cranium::DSL::ExtractDefinition.stub(:new).with(:contacts).and_return(extract_definition)
+      allow(Cranium::DSL::ExtractDefinition).to receive(:new).with(:contacts).and_return(extract_definition)
       expect(extract_definition).to receive(:instance_eval) { |&blk| expect(blk).to be block }
 
       extractor = double "DataExtractor"
-      Cranium::Extract::DataExtractor.stub new: extractor
-      extractor.should_receive(:execute).with(extract_definition)
+      allow(Cranium::Extract::DataExtractor).to receive_messages new: extractor
+      expect(extractor).to receive(:execute).with(extract_definition)
 
       dsl_object.extract :contacts, &block
     end
@@ -46,7 +46,7 @@ describe Cranium::DSL do
 
   describe "#deduplicate" do
     it "should call transform with correct source and target arguments" do
-      dsl_object.should_receive(:transform).with(:sales_items => :products)
+      expect(dsl_object).to receive(:transform).with(:sales_items => :products)
       dsl_object.deduplicate :sales_items, into: :products, by: [:item]
     end
   end
@@ -57,12 +57,12 @@ describe Cranium::DSL do
       import_definition = double "ImportDefinition"
       block = lambda {}
 
-      Cranium::DSL::ImportDefinition.stub(:new).with(:contacts).and_return(import_definition)
+      allow(Cranium::DSL::ImportDefinition).to receive(:new).with(:contacts).and_return(import_definition)
       expect(import_definition).to receive(:instance_eval) { |&blk| expect(blk).to be block }
 
       importer = double "DataImporter"
-      Cranium::DataImporter.stub new: importer
-      importer.should_receive(:import).with(import_definition)
+      allow(Cranium::DataImporter).to receive_messages new: importer
+      expect(importer).to receive(:import).with(import_definition)
 
       dsl_object.import :contacts, &block
     end
@@ -71,12 +71,12 @@ describe Cranium::DSL do
 
   describe "#archive" do
     it "should archive files for the specified sources" do
-      Cranium.application.stub sources: {first_source: double(files: ["file1", "file2"]),
+      allow(Cranium.application).to receive_messages sources: {first_source: double(files: ["file1", "file2"]),
                                          second_source: double(files: ["file3"]),
                                          third_source: double(files: ["file4"])}
 
-      Cranium::Archiver.should_receive(:archive).with "file1", "file2"
-      Cranium::Archiver.should_receive(:archive).with "file3"
+      expect(Cranium::Archiver).to receive(:archive).with "file1", "file2"
+      expect(Cranium::Archiver).to receive(:archive).with "file3"
 
       dsl_object.archive :first_source, :second_source
     end
@@ -85,12 +85,12 @@ describe Cranium::DSL do
 
   describe "#remove" do
     it "should remove files for the specified sources" do
-      Cranium.application.stub sources: {first_source: double(files: ["file1", "file2"]),
+      allow(Cranium.application).to receive_messages sources: {first_source: double(files: ["file1", "file2"]),
                                          second_source: double(files: ["file3"]),
                                          third_source: double(files: ["file4"])}
 
-      Cranium::Archiver.should_receive(:remove).with "file1", "file2"
-      Cranium::Archiver.should_receive(:remove).with "file3"
+      expect(Cranium::Archiver).to receive(:remove).with "file1", "file2"
+      expect(Cranium::Archiver).to receive(:remove).with "file3"
 
       dsl_object.remove :first_source, :second_source
     end
@@ -101,8 +101,8 @@ describe Cranium::DSL do
     it "should return a sequence with the specified name" do
       result = dsl_object.sequence "test_sequence"
 
-      result.should be_a Cranium::Transformation::Sequence
-      result.name.should == "test_sequence"
+      expect(result).to be_a Cranium::Transformation::Sequence
+      expect(result.name).to eq("test_sequence")
     end
   end
 

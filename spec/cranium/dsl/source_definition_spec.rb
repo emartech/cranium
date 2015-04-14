@@ -15,7 +15,7 @@ describe Cranium::DSL::SourceDefinition do
     describe "#attribute" do
       context "if called without a parameter" do
         it "should return the (default) value of the attribute" do
-          source.send(attribute).should == default_value
+          expect(source.send(attribute)).to eq(default_value)
         end
       end
 
@@ -23,7 +23,7 @@ describe Cranium::DSL::SourceDefinition do
         it "should set the attribute to the specified value" do
           source.send(attribute, "new value")
 
-          source.send(attribute).should == "new value"
+          expect(source.send(attribute)).to eq("new value")
         end
       end
     end
@@ -33,51 +33,51 @@ describe Cranium::DSL::SourceDefinition do
 
   describe "#fields" do
     it "should return an empty Hash if no fields are set" do
-      source.fields.should == {}
+      expect(source.fields).to eq({})
     end
 
     it "should return the fields and types that were set" do
       source.field :field1, String
       source.field :field2, Fixnum
 
-      source.fields.should == {
+      expect(source.fields).to eq({
         field1: String,
         field2: Fixnum
-      }
+      })
     end
   end
 
 
   describe "#file_name_overriden?" do
     it "should signal if the file name parameter of the source definition has been set to something other than the default" do
-      source.file_name_overriden?.should be_falsey
+      expect(source.file_name_overriden?).to be_falsey
 
       source.file "overriden.csv"
-      source.file_name_overriden?.should be_truthy
+      expect(source.file_name_overriden?).to be_truthy
     end
   end
 
 
   describe "#files" do
     it "should return nil by default" do
-      source.files.should be_nil
+      expect(source.files).to be_nil
     end
   end
 
 
   describe "#resolve_files" do
     it "should store the file names of all files matching the file pattern" do
-      Cranium.stub configuration: (Cranium::Configuration.new.tap do |config|
+      allow(Cranium).to receive_messages configuration: (Cranium::Configuration.new.tap do |config|
         config.gpfdist_home_directory = "/home/gpfdist"
         config.upload_directory = "customer"
       end)
       source.file "product*.csv"
-      Dir.stub(:[]).with("/home/gpfdist/customer/product*.csv").and_return(["/home/gpfdist/customer/product2.csv",
+      allow(Dir).to receive(:[]).with("/home/gpfdist/customer/product*.csv").and_return(["/home/gpfdist/customer/product2.csv",
                                                                             "/home/gpfdist/customer/product1.csv"])
 
       source.resolve_files
 
-      source.files.should == ["product1.csv", "product2.csv"]
+      expect(source.files).to eq(["product1.csv", "product2.csv"])
     end
   end
 

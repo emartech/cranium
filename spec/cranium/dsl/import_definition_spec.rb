@@ -8,14 +8,14 @@ describe Cranium::DSL::ImportDefinition do
     it "should set the attribute to the specified value" do
       import.into "new value"
 
-      import.into.should == "new value"
+      expect(import.into).to eq("new value")
     end
   end
 
 
   describe "#name" do
     it "should return the name of the import definition" do
-      import.name.should == "import_name"
+      expect(import.name).to eq("import_name")
     end
   end
 
@@ -23,7 +23,7 @@ describe Cranium::DSL::ImportDefinition do
   describe "#field_associations" do
     context "when no fields are set" do
       it "should return empty hash" do
-        import.field_associations.should == {}
+        expect(import.field_associations).to eq({})
       end
     end
   end
@@ -34,7 +34,7 @@ describe Cranium::DSL::ImportDefinition do
       it "should store the field associations" do
         import.put :item => :id, :title => :name
 
-        import.field_associations.should == {:item => :id, :title => :name}
+        expect(import.field_associations).to eq({:item => :id, :title => :name})
       end
     end
 
@@ -42,7 +42,7 @@ describe Cranium::DSL::ImportDefinition do
       it "should store a field association between fields with the same name" do
         import.put :item
 
-        import.field_associations.should == {:item => :item}
+        expect(import.field_associations).to eq({:item => :item})
       end
     end
 
@@ -58,12 +58,12 @@ describe Cranium::DSL::ImportDefinition do
         import.put :title => :name
         import.put :category => :category, :brand => :brand
 
-        import.field_associations.should == {
+        expect(import.field_associations).to eq({
             :item => :id,
             :title => :name,
             :category => :category,
             :brand => :brand
-        }
+        })
       end
     end
   end
@@ -72,7 +72,7 @@ describe Cranium::DSL::ImportDefinition do
   describe "#merge_fields" do
     context "when no fields are set" do
       it "should return empty hash" do
-        import.merge_fields.should == {}
+        expect(import.merge_fields).to eq({})
       end
     end
   end
@@ -83,7 +83,7 @@ describe Cranium::DSL::ImportDefinition do
       it "should set merge field associations" do
         import.merge_on :item => :id, :title => :name
 
-        import.merge_fields.should == {:item => :id, :title => :name}
+        expect(import.merge_fields).to eq({:item => :id, :title => :name})
       end
     end
 
@@ -91,7 +91,7 @@ describe Cranium::DSL::ImportDefinition do
       it "should store a merge field association between fields with the same name" do
         import.merge_on :item
 
-        import.merge_fields.should == {:item => :item}
+        expect(import.merge_fields).to eq({:item => :item})
       end
     end
 
@@ -106,7 +106,7 @@ describe Cranium::DSL::ImportDefinition do
         import.merge_on :item => :id
         import.merge_on :title => :name
 
-        import.merge_fields.should == {:title => :name}
+        expect(import.merge_fields).to eq({:title => :name})
       end
     end
   end
@@ -115,21 +115,21 @@ describe Cranium::DSL::ImportDefinition do
   describe "#delete_insert_on" do
 
     it "should return an empty array when no value was set" do
-      import.delete_insert_on.should == []
+      expect(import.delete_insert_on).to eq([])
     end
 
 
     it "should store and return the value passed" do
       import.delete_insert_on :some_field
 
-      import.delete_insert_on.should == [:some_field]
+      expect(import.delete_insert_on).to eq([:some_field])
     end
 
 
     it "should handle multiple arguments" do
       import.delete_insert_on :some_field, :another_field
 
-      import.delete_insert_on.should == [:some_field, :another_field]
+      expect(import.delete_insert_on).to eq([:some_field, :another_field])
     end
 
   end

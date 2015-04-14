@@ -4,11 +4,11 @@ describe Cranium do
 
   describe ".application" do
     it "should return an Application object" do
-      Cranium.application.should be_a Cranium::Application
+      expect(Cranium.application).to be_a Cranium::Application
     end
 
     it "should return a singleton" do
-      Cranium.application.should equal Cranium.application
+      expect(Cranium.application).to equal Cranium.application
     end
   end
 
@@ -24,15 +24,15 @@ describe Cranium do
         config.greenplum_connection_string = "new greenplum connection"
       end
 
-      Cranium.configuration.greenplum_connection_string.should == "new greenplum connection"
-      Cranium.configuration.mysql_connection_string.should == "mysql connection"
+      expect(Cranium.configuration.greenplum_connection_string).to eq("new greenplum connection")
+      expect(Cranium.configuration.mysql_connection_string).to eq("mysql connection")
     end
   end
 
 
   describe ".configuration" do
     it "should return the configuration" do
-      Cranium.configuration.should be_a Cranium::Configuration
+      expect(Cranium.configuration).to be_a Cranium::Configuration
     end
 
     it "should not let the user modify the configuration" do
