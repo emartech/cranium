@@ -1,4 +1,3 @@
-@wip
 Feature: Sequel database connections are fault tolerant
 
   Scenario:

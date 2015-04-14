@@ -17,7 +17,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "progressbar"
   spec.add_runtime_dependency "sequel"
   spec.add_runtime_dependency "slop", "~> 3"
-  spec.add_runtime_dependency "sequel-pool_cleaner"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"

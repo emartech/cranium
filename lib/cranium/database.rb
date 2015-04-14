@@ -1,5 +1,5 @@
 require 'sequel'
-require 'sequel/extensions/pool_cleaner'
+require 'sequel/extensions/connection_validator'
 
 module Cranium::Database
 
@@ -28,8 +28,8 @@ module Cranium::Database
 
   def self.setup_connection
     connection = Sequel.connect Cranium.configuration.greenplum_connection_string, loggers: Cranium.configuration.loggers
-    connection.extension :pool_cleaner
-    connection.pool.connection_timeout = Integer(ENV['DWH_IDLE_CONNECTION_TIMEOUT'] || 1800)
+    connection.extension :connection_validator
+    connection.pool.connection_validation_timeout = -1
     return connection
   end
 
