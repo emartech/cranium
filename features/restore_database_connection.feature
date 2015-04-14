@@ -1,5 +1,6 @@
 @wip
-Feature: Sequel database connections are fault tolerant using PoolCleaner
+Feature: Sequel database connections are fault tolerant
+
   Scenario:
     Given a database table called "dim_product" with the following fields:
       | field_name | field_type |
@@ -19,6 +20,8 @@ Feature: Sequel database connections are fault tolerant using PoolCleaner
       connection.run("SELECT pg_terminate_backend(procpid) FROM pg_stat_activity WHERE procpid <> pg_backend_pid() AND datname = 'cranium'")
     end
 
+
+
     source :products do
       encoding "UTF-8"
       delimiter ','
@@ -27,16 +30,22 @@ Feature: Sequel database connections are fault tolerant using PoolCleaner
       field :name, String
     end
 
+
+
     source :transformed_products do
       field :id, String
       field :name, String
     end
+
+
 
     transform :products => :transformed_products do |record|
       terminate_connections
 
       output record
     end
+
+
 
     import :transformed_products do
       into :dim_product

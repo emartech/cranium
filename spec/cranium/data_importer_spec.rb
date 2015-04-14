@@ -9,8 +9,8 @@ describe Cranium::DataImporter do
     context "when called with both merge and delete_insert fields set" do
       it "should raise an exception" do
         connection = double
-        Cranium::Database.stub(:connection).and_return connection
-        connection.should_receive(:transaction).and_yield
+        allow(Cranium::Database).to receive(:connection).and_return connection
+        expect(connection).to receive(:transaction).and_yield
 
         definition = Cranium::DSL::ImportDefinition.new "definition_name"
         definition.delete_insert_on :some_field

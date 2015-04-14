@@ -6,14 +6,14 @@ describe Cranium::DefinitionRegistry do
 
   describe "#[]" do
     it "should return nil if a definition with the specified name wasn't registered yet" do
-      registry[:name].should be_nil
+      expect(registry[:name]).to be_nil
     end
   end
 
 
   describe "#register_definition" do
     it "should return the newly registered source" do
-      registry.register_definition :test_database do end.should be_a Cranium::DSL::DatabaseDefinition
+      expect(registry.register_definition(:test_database) {}).to be_a Cranium::DSL::DatabaseDefinition
     end
 
     it "should register a new database definition and configure it through the block passed" do
@@ -24,7 +24,7 @@ describe Cranium::DefinitionRegistry do
         connect_to "connection string"
       end
 
-      registry[:test_database].should == expected_definition
+      expect(registry[:test_database]).to eq expected_definition
     end
 
 
@@ -37,7 +37,7 @@ describe Cranium::DefinitionRegistry do
         file "test.csv"
       end
 
-      registry[:test_source].should == expected_definition
+      expect(registry[:test_source]).to eq expected_definition
     end
 
   end

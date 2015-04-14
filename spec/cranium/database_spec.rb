@@ -7,10 +7,10 @@ describe Cranium::Database do
   let(:database) { Cranium::Database }
 
   before(:each) do
-    Cranium.stub :configuration => (Cranium::Configuration.new.tap do |config|
-                   config.greenplum_connection_string = "connection string"
-                   config.loggers = "loggers"
-                 end)
+    allow(Cranium).to receive(:configuration).and_return(Cranium::Configuration.new.tap do |config|
+                                                           config.greenplum_connection_string = "connection string"
+                                                           config.loggers = "loggers"
+                                                         end)
   end
 
 
@@ -28,7 +28,7 @@ describe Cranium::Database do
     it "should return the same object every time" do
       allow(Sequel).to receive(:connect).and_return(connection)
 
-      database.connection.should equal database.connection
+      expect(database.connection).to eq database.connection
     end
   end
 
@@ -44,15 +44,15 @@ describe Cranium::Database do
     end
 
     it "should return the specified database connection" do
-      Sequel.should_receive(:connect).with("other connection string", :loggers => "loggers").and_return "connection"
+      expect(Sequel).to receive(:connect).with("other connection string", :loggers => "loggers").and_return "connection"
 
-      database[:dwh].should == "connection"
+      expect(database[:dwh]).to eq "connection"
     end
 
     it "should memoize the result of a previous call" do
-      Sequel.stub(:connect).and_return("connection1", "connection2")
+      allow(Sequel).to receive(:connect).and_return("connection1", "connection2")
 
-      database[:dwh].should equal database[:dwh]
+      expect(database[:dwh]).to eq database[:dwh]
     end
 
     it "should memoize connections by name" do
@@ -60,9 +60,9 @@ describe Cranium::Database do
         connect_to "other connection string 2"
       end
 
-      Sequel.stub(:connect).and_return("connection1", "connection2")
+      allow(Sequel).to receive(:connect).and_return("connection1", "connection2")
 
-      database[:dwh].should_not equal database[:dwh2]
+      expect(database[:dwh]).not_to eq database[:dwh2]
     end
   end
 

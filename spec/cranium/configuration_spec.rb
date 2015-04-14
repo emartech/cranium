@@ -9,7 +9,7 @@ describe Cranium::Configuration do
       config.gpfdist_home_directory = "/gpfdist/home/dir"
       config.upload_directory = "uploads/customer"
 
-      config.upload_path.should == "/gpfdist/home/dir/uploads/customer"
+      expect(config.upload_path).to eq "/gpfdist/home/dir/uploads/customer"
     end
   end
 
@@ -17,14 +17,14 @@ describe Cranium::Configuration do
   describe "#storage_directory" do
     it "should return the previously set value" do
       config.storage_directory = "/some/path"
-      config.storage_directory.should == "/some/path"
+      expect(config.storage_directory).to eq "/some/path"
     end
 
     it "should return the default storage directory if one wasn't explicitly set" do
       config.gpfdist_home_directory = "/gpfdist/home/dir"
       config.upload_directory = "uploads/customer"
 
-      config.storage_directory.should == "/gpfdist/home/dir/uploads/customer/.cranium"
+      expect(config.storage_directory).to eq "/gpfdist/home/dir/uploads/customer/.cranium"
     end
   end
 
