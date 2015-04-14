@@ -24,4 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "ruby-prof"
   spec.add_development_dependency "cucumber", "~> 1"
+  spec.add_development_dependency "transpec"
 end
