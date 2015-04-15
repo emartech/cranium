@@ -26,8 +26,7 @@ module Cranium::Database
   private
 
 
-  def self.setup_connection
-    connection = Sequel.connect Cranium.configuration.greenplum_connection_string, loggers: Cranium.configuration.loggers
+  def self.setup_connection(connection_string)
     connection = Sequel.connect connection_string, loggers: Cranium.configuration.loggers
     connection.extension :connection_validator
     connection.pool.connection_validation_timeout = -1
