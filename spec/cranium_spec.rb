@@ -36,7 +36,7 @@ describe Cranium do
     end
 
     it "should not let the user modify the configuration" do
-      expect { Cranium.configuration.greenplum_connection_string = "constring" }.to raise_error
+      expect { Cranium.configuration.greenplum_connection_string = "constring" }.to raise_error(RuntimeError)
     end
   end
 

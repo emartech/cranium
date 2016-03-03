@@ -62,7 +62,7 @@ describe Cranium::Application do
       end
 
       it "should log an error to STDOUT" do
-        expect { application.run }.to raise_error
+        expect { application.run }.to raise_error(SystemExit)
 
         expect($stderr.string.chomp).to eq "ERROR: No file specified"
       end
@@ -77,7 +77,7 @@ describe Cranium::Application do
       end
 
       it "should log an error to STDOUT" do
-        expect { application.run }.to raise_error
+        expect { application.run }.to raise_error(SystemExit)
 
         expect($stderr.string.chomp).to eq "ERROR: File 'no-such-file.exists' does not exist"
       end
