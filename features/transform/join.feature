@@ -3,7 +3,7 @@ Feature: Joining CSV files
   Scenario: Singe file transformation
     Given an "orders.csv" data file containing:
     """
-    order_id,order_date,customer_id,total_price
+    id,order_date,customer_id,total_price
     order_1,2011-01-01,customer_1,100
     order_2,2011-02-02,customer_1,200
     order_3,2011-03-03,customer_2,300
@@ -20,7 +20,7 @@ Feature: Joining CSV files
     source :orders_file do
       file "orders.csv"
 
-      field :order_id, String
+      field :id, String
       field :order_date, Date
       field :customer_id, String
       field :total_price, Integer
@@ -49,7 +49,7 @@ Feature: Joining CSV files
       field :sales_amount, String
     end
 
-    join :orders_file, with: :order_items_file, into: :sales_items, match_on: { :order_id => :order_id }
+    join :orders_file, with: :order_items_file, into: :sales_items, match_on: { :order_id => :id }
     """
     When I execute the definition
     Then the process should exit successfully

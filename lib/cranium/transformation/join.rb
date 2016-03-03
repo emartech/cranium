@@ -29,7 +29,6 @@ class Cranium::Transformation::Join
     @left_source_field_names = source_left.fields.keys
     @right_source_field_names = source_right.fields.keys
     @target_field_names = target.fields.keys
-    @match_field_names = match_fields.keys
   end
 
 
@@ -56,7 +55,7 @@ class Cranium::Transformation::Join
       next if 1 == (line_number += 1)
 
       record = Hash[@right_source_field_names.zip row]
-      index_key = index_key_for record
+      index_key = right_index_key_for record
       if @join_table.has_key? index_key
         @join_table[index_key] << record
       else
@@ -95,15 +94,21 @@ class Cranium::Transformation::Join
 
 
   def joined_records_for(record)
-    index_key = index_key_for record
+    index_key = left_index_key_for record
     return [] unless @join_table.has_key? index_key
     @join_table[index_key].map { |matching_record| record.merge matching_record }
   end
 
 
 
-  def index_key_for(record)
-    record.select { |field, _| @match_field_names.include? field }.values
+  def left_index_key_for(record)
+    record.select { |field, _| match_fields.values.include? field }.values
+  end
+
+
+
+  def right_index_key_for(record)
+    record.select { |field, _| match_fields.keys.include? field }.values
   end
 
 
