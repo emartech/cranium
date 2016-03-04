@@ -124,3 +124,57 @@ Feature: Joining CSV files
     order_2,item_2,second item,2011-02-02,customer_1,communication,5,12
     order_3,,,2011-03-03,customer_2,,,
     """
+
+
+  Scenario: Close file after join
+    Given an "orders.csv" data file containing:
+    """
+    id,order_date
+    order_1,2011-01-01
+    """
+    Given an "order_items.csv" data file containing:
+    """
+    order_id,item_id
+    order_1,item_1
+    """
+    And the following definition:
+    """
+    source :orders_file do
+      file "orders.csv"
+
+      field :id, String
+      field :order_date, Date
+    end
+
+    source :order_items_file do
+      file "order_items.csv"
+
+      field :order_id, String
+      field :item_id, String
+    end
+
+    source :sales_items do
+      field :id, String
+      field :item_id, String
+      field :order_date, String
+    end
+
+    source :sales_items_transformed do
+      field :id, String
+      field :item_id, String
+      field :order_date, String
+    end
+
+    join :orders_file, with: :order_items_file, into: :sales_items, match_on: { :order_id => :id }, type: :left
+
+    transform :sales_items => :sales_items_transformed do |record|
+      output record
+    end
+    """
+    When I execute the definition
+    Then the process should exit successfully
+    And there should be a "sales_items_transformed.csv" data file in the upload directory containing:
+    """
+    id,item_id,order_date
+    order_1,item_1,2011-01-01
+    """

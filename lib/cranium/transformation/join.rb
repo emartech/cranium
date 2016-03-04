@@ -69,10 +69,13 @@ class Cranium::Transformation::Join
 
   def write_output_file
     CSV.open "#{Cranium.configuration.upload_path}/#{target.file}", "w:#{target.encoding}", csv_write_options_for(target) do |target_file|
+      @target_file = target_file
       source_left.files.each do |file|
         process_left_source_file File.join(Cranium.configuration.upload_path, file), target_file
       end
     end
+
+    @target.resolve_files
   end
 
 
