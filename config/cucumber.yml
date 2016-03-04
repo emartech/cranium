@@ -1,6 +1,7 @@
 default:
   --backtrace
   --tags ~@wip
+  --require features
 
 build:
   --backtrace
