@@ -50,6 +50,7 @@ module Cranium::DSL
       join.source_right = Cranium.application.sources[options[:with]]
       join.target = Cranium.application.sources[options[:into]]
       join.match_fields = options[:match_on]
+      join.type = options[:type] || :inner
     end.execute
   end
 

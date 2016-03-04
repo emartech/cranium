@@ -32,6 +32,11 @@ describe Cranium::Transformation::Join do
         join.match_fields = :field
         expect { join.execute }.to raise_error "Invalid match fields for join transformation"
       end
+
+      it "should raise an error if :type is not supported" do
+        join.type = :cross
+        expect { join.execute }.to raise_error "Invalid type for join transformation"
+      end
     end
   end
 

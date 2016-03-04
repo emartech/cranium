@@ -2,7 +2,7 @@ require 'csv'
 
 class Cranium::Transformation::Join
 
-  attr_accessor :source_left, :source_right, :target, :match_fields
+  attr_accessor :source_left, :source_right, :target, :match_fields, :type
 
 
 
@@ -21,6 +21,7 @@ class Cranium::Transformation::Join
     raise "Missing right source for join transformation" if source_right.nil?
     raise "Missing target for join transformation" if target.nil?
     raise "Invalid match fields for join transformation" unless match_fields.nil? or match_fields.is_a? Hash
+    raise "Invalid type for join transformation" unless %i(inner left).include?(type)
   end
 
 
@@ -82,11 +83,12 @@ class Cranium::Transformation::Join
       next if 1 == (line_number += 1)
 
       record = Hash[@left_source_field_names.zip row]
-      joined_records_for(record).each do |record_to_output|
-        output_file << record_to_output.
-          keep_if { |key| @target_field_names.include? key }.
-          sort_by { |field, _| @target_field_names.index(field) }.
-          map { |item| item[1] }
+
+      joined_records = joined_records_for(record)
+      joined_records << record if joined_records.empty? && type == :left
+
+      joined_records.each do |record_to_output|
+        output_file << @target_field_names.map { |field| record_to_output[field] }
       end
     end
   end
