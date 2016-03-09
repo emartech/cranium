@@ -7,6 +7,7 @@ module Cranium
   autoload :Configuration, 'cranium/configuration'
   autoload :Database, 'cranium/database'
   autoload :DataImporter, 'cranium/data_importer'
+  autoload :DataReader, 'cranium/data_reader'
   autoload :DataTransformer, 'cranium/data_transformer'
   autoload :DefinitionRegistry, 'cranium/definition_registry'
   autoload :DimensionManager, 'cranium/dimension_manager'

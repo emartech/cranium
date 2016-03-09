@@ -27,6 +27,13 @@ module Cranium::DSL
 
 
 
+  def read(name, &block)
+    source = Cranium.application.sources[name]
+    Cranium::DataReader.new(source).read(&block)
+  end
+
+
+
   def transform(names, &block)
     source = Cranium.application.sources[names.keys.first]
     target = Cranium.application.sources[names.values.first]
