@@ -20,8 +20,6 @@ Feature: Sequel database connections are fault tolerant
       connection.run("SELECT pg_terminate_backend(procpid) FROM pg_stat_activity WHERE procpid <> pg_backend_pid() AND datname = 'cranium'")
     end
 
-
-
     source :products do
       encoding "UTF-8"
       delimiter ','
@@ -30,24 +28,16 @@ Feature: Sequel database connections are fault tolerant
       field :name, String
     end
 
-
-
     source :transformed_products do
       field :id, String
       field :name, String
     end
 
-
-
     transform :products => :transformed_products do |record|
       output record
     end
 
-
-
     terminate_connections
-
-
 
     import :transformed_products do
       into :dim_product
