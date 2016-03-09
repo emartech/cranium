@@ -35,6 +35,14 @@ describe Cranium::DSL::ExtractDefinition do
   end
 
 
+  describe "#columns" do
+    it "should set the attribute to the specified value" do
+      extract.query %w(id name status)
+      expect(extract.query).to eq(%w(id name status))
+    end
+  end
+
+
   describe "#incrementally_by" do
     it "should set the attribute to the specified value" do
       extract.incrementally_by :id

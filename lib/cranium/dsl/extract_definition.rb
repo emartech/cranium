@@ -4,11 +4,11 @@ class Cranium::DSL::ExtractDefinition
     include Cranium::AttributeDSL
   end
 
-  attr_reader :name
-  attr_reader :storage
+  attr_reader :name, :storage
 
   define_attribute :from
   define_attribute :query
+  define_attribute :columns
   define_attribute :incrementally_by
 
 

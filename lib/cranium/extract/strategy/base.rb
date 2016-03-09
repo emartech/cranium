@@ -11,7 +11,7 @@ class Cranium::Extract::Strategy::Base
     CSV.open target_file_path, "w:UTF-8" do |target_file|
       dataset = Cranium::Database[extract_definition.from].fetch extract_definition.query
 
-      target_file << dataset.columns
+      target_file << (extract_definition.columns || dataset.columns)
       write_dataset_into_file target_file, dataset, extract_definition
     end
   end

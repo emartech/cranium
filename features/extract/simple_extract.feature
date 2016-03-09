@@ -37,6 +37,32 @@ Feature: Extracting data from a database table to CSV
     2,Jane Doe
     """
 
+  Scenario: Successful extract with overrided columns
+    Given only the following rows in the "contacts" database table:
+      | id | name       |
+      | 1  | John Doe   |
+      | 2  | Jane Doe   |
+      | 3  | John Smith |
+    And the following definition:
+    """
+    database :suite do
+      connect_to Cranium.configuration.greenplum_connection_string
+    end
+
+    extract :contacts do
+      from :suite
+      columns %w(uid full_name)
+      query "SELECT id, name FROM contacts WHERE name LIKE '%Doe%' ORDER BY id"
+    end
+    """
+    When I execute the definition
+    Then the process should exit successfully
+    And there should be a "contacts.csv" data file in the upload directory containing:
+    """
+    uid,full_name
+    1,John Doe
+    2,Jane Doe
+    """
 
   Scenario: Extract should fail if file already exists
     Given an empty "contacts.csv" data file
