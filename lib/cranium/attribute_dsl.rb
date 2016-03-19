@@ -26,4 +26,18 @@ module Cranium::AttributeDSL
     attribute_method
   end
 
+
+
+  def define_boolean_attribute(name)
+    class_eval <<-attribute_method
+
+      def #{name}(*args)
+        return !!@#{name} if args.count.zero?
+
+        @#{name} = !!args
+      end
+
+    attribute_method
+  end
+
 end

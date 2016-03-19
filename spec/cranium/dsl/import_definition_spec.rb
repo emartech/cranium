@@ -134,4 +134,20 @@ describe Cranium::DSL::ImportDefinition do
 
   end
 
+
+  describe "#truncate_insert" do
+
+    it "should return false when no value was set" do
+      expect(import.truncate_insert).to eq(false)
+    end
+
+
+    it "should store and return the value passed" do
+      import.truncate_insert true
+
+      expect(import.truncate_insert).to eq(true)
+    end
+
+  end
+
 end
