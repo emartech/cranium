@@ -152,4 +152,27 @@ describe Cranium::Transformation::Index do
     end
   end
 
+
+  describe "#insert" do
+    before(:each) do
+      stub_cache_query :dim_contact, [:contact_key], :contact_key, {[1234] => "contact"}
+    end
+
+    it "should insert a new record into the specified table" do
+      expect(dimension_manager).to receive(:insert).with(:contact_key, {contact_key: 1, customer_id: 2345})
+
+      index.insert :contact_key,
+                   table: :dim_contact,
+                   record: {contact_key: 1, customer_id: 2345}
+    end
+
+    it "should return the new record's lookup value" do
+      allow(dimension_manager).to receive_messages insert: 98765
+
+      expect(index.insert :contact_key,
+                          table: :dim_contact,
+                          record: {contact_key: 98765}).to eq(98765)
+    end
+  end
+
 end

@@ -29,6 +29,12 @@ class Cranium::Transformation::Index
 
 
 
+  def insert(field_name, options)
+    Cranium::DimensionManager.for(options[:table], [field_name]).insert(field_name, options[:record])
+  end
+
+
+
   def validate(options)
     raise ArgumentError, "Cannot specify both :if_not_found_then and :if_not_found_then_insert options" if options.has_key? :if_not_found_then_insert and options.has_key? :if_not_found_then
   end
