@@ -109,6 +109,12 @@ class Cranium::DataTransformer
 
 
 
+  def insert(field_name, settings)
+    @index.insert field_name, settings
+  end
+
+
+
   def next_value_in_sequence(name)
     Cranium::Transformation::Sequence.by_name name
   end
