@@ -16,7 +16,7 @@ Feature: Sequel database connections are fault tolerant
     require 'sequel'
 
     def terminate_connections
-      connection = Sequel.connect "postgres://database_administrator:emarsys@192.168.56.43:5432/cranium", loggers: Cranium.configuration.loggers
+      connection = Sequel.connect "postgres://database_administrator:emarsys@#{ENV['DATABASE_HOST'] || '192.168.56.43'}:5432/cranium", loggers: Cranium.configuration.loggers
       connection.run("SELECT pg_terminate_backend(procpid) FROM pg_stat_activity WHERE procpid <> pg_backend_pid() AND datname = 'cranium'")
     end
 

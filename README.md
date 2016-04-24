@@ -1,6 +1,6 @@
 # Cranium
 
-TODO: Write a gem description
+An awesome ETL tool.
 
 ## Installation
 
@@ -16,9 +16,23 @@ Or install it yourself as:
 
     $ gem install cranium
 
-## Usage
+## Development
 
-TODO: Write usage instructions here
+start up the db
+
+    docker-compose create && docker-compose start
+    
+find out what's the ip is (in case you're using native docker)
+
+    docker-compose ps 
+    
+(if using docker-machine use the machine's ip)
+setup the DATABASE_HOST enviroment variable to this IP (192.168.64.4 in my case)
+    
+    export DATABASE_HOST=192.168.64.4
+    
+Now, your ready to run the integration tests :)
+
 
 ## Contributing
 

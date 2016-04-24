@@ -1,8 +1,9 @@
 greenplum:
   image: kevinmtrowbridge/gpdb-docker
   ports:
-    - 22:22
     - 5432:5432
     - 8123:8123
   volumes:
     - ./tmp/custdata:/home/gpadmin/gpfdist-data
+    - ./db:/db
+  command: sh /db/start.sh
