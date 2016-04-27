@@ -62,7 +62,7 @@ Feature: Import a CSV file into the database with new dimension values always in
 
 
   Scenario: Example use case for the insert
-    If purchases made by a predefined contact identifier (NA in this case) do not look for it insert .
+    If purchases made by a predefined contact identifier (NA in this case) do not look for it insert.
     Otherwise use lookup to find or create that contact
 
     Given a database table called "dim_contact" with the following fields:
@@ -135,3 +135,64 @@ Feature: Import a CSV file into the database with new dimension values always in
       | 11              | NA      | Unknown contact NA |
       | 12              | NA      | Unknown contact NA |
       | 13              | 2       | Unknown contact 2  |
+
+
+  Scenario: Successful import with a large number of users (contacts) to insert
+    Given a database table called "dim_contact" with the following fields:
+      | field_name   | field_type |
+      | contact_key  | SERIAL     |
+      | user_id      | TEXT       |
+      | name         | TEXT       |
+      | load_id      | NUMERIC    |
+      | load_date    | DATE       |
+      | is_generated | BOOLEAN    |
+    And only the following rows in the "dim_contact" database table:
+      | contact_key (i) | user_id | name |
+      | 10              | 1       | Alma |
+    And the current value in sequence "dim_contact_contact_key_seq" is 10
+    And a database table called "fct_purchases" with the following fields:
+      | field_name  | field_type |
+      | contact_key | INTEGER    |
+      | amount      | TEXT       |
+    And a 500_000 lines long "purchases.csv" data file containing rows like:
+    """
+    user_id,amount
+    NA,100
+    """
+    And the following definition:
+    """
+    source :purchases do
+      field :user_id, String
+      field :amount, String
+    end
+
+    source :transformed_purchases do
+      field :contact_key, Integer
+      field :amount, String
+    end
+
+    now = Time.now
+    transform :purchases => :transformed_purchases do |record|
+      record[:contact_key] = insert :contact_key,
+                                    table: :dim_contact,
+                                    record: {
+                                      load_id: 1,
+                                      load_date: now,
+                                      contact_key: next_value_in_sequence("dim_contact_contact_key_seq"),
+                                      user_id: record[:user_id],
+                                      name: "Unknown contact #{record[:user_id]}",
+                                      is_generated: true
+                                    }
+      output record
+    end
+
+    import :transformed_purchases do
+      into :fct_purchases
+      put :contact_key
+      put :amount
+    end
+    """
+    When I execute the definition
+    Then the process should exit successfully
+    And the "fct_purchases" table should contain 500_000 purchases
+    And the "dim_contact" table should contain 500_001 contacts

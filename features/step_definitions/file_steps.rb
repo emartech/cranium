@@ -13,6 +13,13 @@ Given /^an? "([^"]*)" data file containing:$/ do |file_name, content|
 end
 
 
+Given /^an? ([\d_]+) lines long "([^"]*)" data file containing rows like:$/ do |lines_count, file_name, content|
+  lines = content.split("\n")
+
+  upload_directory.save_file file_name, "#{lines.first}\n" + "#{lines.last}\n" * lines_count.to_i
+end
+
+
 Given /^the "([^"]*)" file is deleted$/ do |file_name|
   upload_directory.delete_file file_name
 end

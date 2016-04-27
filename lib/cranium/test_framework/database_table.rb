@@ -14,6 +14,12 @@ class Cranium::TestFramework::DatabaseTable < Cranium::TestFramework::DatabaseEn
 
 
 
+  def count
+    connection[entity_name].count
+  end
+
+
+
   def content(fields = ["*".to_sym])
     connection[entity_name].select(*fields).all
   end

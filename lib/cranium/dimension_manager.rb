@@ -36,13 +36,17 @@ class Cranium::DimensionManager
 
 
   def flush
-    db.multi_insert(@rows) unless @rows.empty?
+    db.multi_insert(@rows, slice: INSERT_BATCH_SIZE) unless @rows.empty?
     @rows = []
   end
 
 
 
   private
+
+  INSERT_BATCH_SIZE = 100_000.freeze
+
+
 
   def to_multi_key_cache(table_data)
     Hash[table_data.map { |row| [row[0..-2], row.last] }]

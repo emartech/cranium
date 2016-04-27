@@ -38,3 +38,8 @@ Then(/^the "([^"]*)" table should contain:$/) do |table_name, data|
 
   expect(database_table(table_name).content(data.fields)).to match_array expected_data
 end
+
+
+Then(/^the "([^"]*)" table should contain ([\d_]+) .+$/) do |table_name, count|
+  expect(database_table(table_name).count).to eq count.to_i
+end
