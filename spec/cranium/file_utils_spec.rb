@@ -3,7 +3,7 @@ require_relative '../spec_helper'
 describe Cranium::FileUtils do
 
   describe '#line_count' do
-    let(:path) { 'tmp/3_lines.txt' }
+    let(:path) { '/tmp/3_lines.txt' }
     let(:number_of_lines) { 3 }
 
     before do
