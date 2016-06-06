@@ -30,7 +30,7 @@ class Cranium::DataTransformer
   private
 
   def transform_input_file(input_file, transformation_block)
-    Cranium::ProgressOutput.show_progress File.basename(input_file), File.line_count(input_file) do |progress_bar|
+    Cranium::ProgressOutput.show_progress File.basename(input_file), Cranium::FileUtils.line_count(input_file) do |progress_bar|
       line_number = 0
       CSV.foreach input_file, csv_read_options_for(@source) do |row|
         next if 1 == (line_number += 1)

@@ -1,7 +1,7 @@
-class File
+module Cranium::FileUtils
 
   def self.line_count(file_path)
-    (`wc -l #{file_path}`.match /^\s*(?<line_count>\d+).*/)["line_count"].to_i
+    File.read(file_path).each_line.count
   end
 
 end
