@@ -14,6 +14,7 @@ module Cranium
   autoload :DSL, 'cranium/dsl'
   autoload :ExternalTable, 'cranium/external_table'
   autoload :Extract, 'cranium/extract'
+  autoload :FileUtils, 'cranium/file_utils'
   autoload :ImportStrategy, 'cranium/import_strategy'
   autoload :Logging, 'cranium/logging'
   autoload :ProgressOutput, 'cranium/progress_output'

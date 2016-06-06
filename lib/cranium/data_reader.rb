@@ -1,5 +1,4 @@
 require 'csv'
-require 'cranium/extensions/file'
 
 class Cranium::DataReader
 
