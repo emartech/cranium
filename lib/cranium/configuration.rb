@@ -10,11 +10,13 @@ class Cranium::Configuration
   attr_accessor :gpfdist_home_directory
   attr_accessor :gpfdist_url
   attr_accessor :loggers
+  attr_accessor :log_queries
 
 
 
   def initialize
     @loggers = []
+    @log_queries = true
   end
 
 

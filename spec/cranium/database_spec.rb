@@ -7,13 +7,14 @@ describe Cranium::Database do
   let(:database) { Cranium::Database }
   let(:connection) { Sequel::Mock::Database.new }
   let(:other_connection) { Sequel::Mock::Database.new }
-
-  before(:each) do
-    allow(Cranium).to receive(:configuration).and_return(Cranium::Configuration.new.tap do |config|
-                                                           config.greenplum_connection_string = "connection string"
-                                                           config.loggers = "loggers"
-                                                         end)
+  let(:config) do
+    Cranium::Configuration.new.tap do |config|
+      config.greenplum_connection_string = "connection string"
+      config.loggers = "loggers"
+    end
   end
+
+  before(:each) { allow(Cranium).to receive(:configuration).and_return(config) }
 
 
   describe ".connection" do
@@ -29,6 +30,22 @@ describe Cranium::Database do
       allow(Sequel).to receive(:connect).and_return(connection, other_connection)
 
       expect(database.connection).to eq database.connection
+    end
+
+    context 'when query logging is turned off' do
+      let(:config) do
+        Cranium::Configuration.new.tap do |config|
+          config.greenplum_connection_string = "connection string"
+          config.loggers = "loggers"
+          config.log_queries = false
+        end
+      end
+
+      it "should connect to the DB without any loggers" do
+        expect(Sequel).to receive(:connect).with("connection string").and_return connection
+
+        expect(database.connection).to eq connection
+      end
     end
   end
 

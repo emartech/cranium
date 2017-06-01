@@ -4,6 +4,10 @@ describe Cranium::Configuration do
 
   let(:config) { Cranium::Configuration.new }
 
+  describe '#log_queries' do
+    it { is_expected.to be_truthy }
+  end
+
   describe "#upload_path" do
     it "should return the full upload path" do
       config.gpfdist_home_directory = "/gpfdist/home/dir"
