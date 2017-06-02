@@ -1,5 +1,7 @@
 require 'sequel'
 require 'sequel/extensions/connection_validator'
+Sequel::Deprecation.output = false
+Sequel.split_symbols = true
 
 module Cranium::Database
 
