@@ -34,28 +34,33 @@ describe Cranium::DimensionManager do
   end
 
   describe "#create_cache_for_field" do
+    let(:manager) { Cranium::DimensionManager.new :table, keys }
+
+    before do
+      database = double("Database connection")
+      query = double
+      allow(manager).to receive(:db).and_return database
+      allow(database).to receive(:select).with(*(keys + [:value_field])).and_return query
+      allow(query).to receive(:group).with(*(keys + [:value_field])).and_return dataset
+    end
+
     context "with single key" do
-      let(:manager) { Cranium::DimensionManager.new :table, [:key] }
+      let(:keys) { [:key] }
+      let(:dataset) { [{key: 1, value_field: 10},
+                       {key: 2, value_field: 20}] }
 
       it "should load key-value pairs into a hash" do
-        database = double("Database connection")
-        allow(manager).to receive(:db).and_return database
-
-        expect(database).to receive(:select_map).with([:key, :value_field]).and_return([[1, 10], [2, 20]])
-
         expect(manager.create_cache_for_field(:value_field)).to eq [1] => 10, [2] => 20
       end
     end
 
     context "with multiple keys" do
-      let(:manager) { Cranium::DimensionManager.new :table, [:key_1, :key_2] }
+      let(:keys) { [:key_1, :key_2] }
+      let(:dataset) { [{key_1: 1, key_2: 1, value_field: 11},
+                       {key_1: 1, key_2: 2, value_field: 12},
+                       {key_1: 2, key_2: 1, value_field: 21}] }
 
       it "should load key-value pairs into a hash" do
-        database = double("Database connection")
-        allow(manager).to receive(:db).and_return database
-
-        expect(database).to receive(:select_map).with([:key_1, :key_2, :value_field]).and_return([[1, 1, 11], [1, 2, 12], [2, 1, 21]])
-
         expect(manager.create_cache_for_field(:value_field)).to eq [1, 1] => 11, [1, 2] => 12, [2, 1] => 21
       end
     end
