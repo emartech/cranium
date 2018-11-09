@@ -2,6 +2,7 @@ Feature: Archive source files
 
   Scenario:
     Given no "/tmp/cranium_archive" directory
+    And no "/tmp/cranium_storage" directory
     And a "products_1.csv" data file containing:
     """
     """
@@ -39,6 +40,8 @@ Feature: Archive source files
     end
 
     archive :products, :contacts
+
+    move :purchases, to: "/tmp/cranium_storage"
     """
     When I execute the definition
     Then the process should exit successfully
@@ -47,3 +50,6 @@ Feature: Archive source files
       | .*contacts.csv   |
       | .*products_1.csv |
       | .*products_2.csv |
+    And the "/tmp/cranium_storage" directory should contain the following files:
+      | filename      |
+      | purchases.csv |

@@ -97,6 +97,22 @@ describe Cranium::DSL do
   end
 
 
+  describe "#move" do
+    let(:target_directory) { "/tmp/target" }
+
+    it "should move files for the specified sources" do
+      allow(Cranium.application).to receive_messages sources: {first_source: double(files: ["file1", "file2"]),
+                                                               second_source: double(files: ["file3"]),
+                                                               third_source: double(files: ["file4"])}
+
+      expect(Cranium::Archiver).to receive(:move).with "file1", "file2", target_directory: target_directory
+      expect(Cranium::Archiver).to receive(:move).with "file3", target_directory: target_directory
+
+      dsl_object.move :first_source, :second_source, to: target_directory
+    end
+  end
+
+
   describe "#sequence" do
     it "should return a sequence with the specified name" do
       result = dsl_object.sequence "test_sequence"

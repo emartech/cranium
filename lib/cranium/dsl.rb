@@ -87,6 +87,14 @@ module Cranium::DSL
 
 
 
+  def move(*sources, to: "")
+    sources.each do |source_name|
+      Cranium::Archiver.move *Cranium.application.sources[source_name].files, target_directory: to
+    end
+  end
+
+
+
   def sequence(name)
     Cranium::Transformation::Sequence.new name
   end
