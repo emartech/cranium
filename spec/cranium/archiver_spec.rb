@@ -1,44 +1,72 @@
-require_relative '../spec_helper'
+RSpec.describe Cranium::Archiver do
+  subject(:archiver) { described_class }
 
-describe Cranium::Archiver do
-
-  before(:each) do
-    allow(Cranium).to receive_messages(configuration: Cranium::Configuration.new.tap do |config|
-      config.gpfdist_home_directory = "gpfdist_home"
-      config.upload_directory = "upload_dir"
-      config.archive_directory = "path/to/archive"
-    end)
+  let(:configuration) do
+    Cranium::Configuration.new.tap do |config|
+      config.gpfdist_home_directory = "tmp"
+      config.upload_directory = "upload_directory"
+      config.archive_directory = "tmp/archive_directory"
+    end
   end
+  let(:file1) { "file.txt" }
+  let(:file2) { "another_file.txt" }
 
+  before do
+    allow(Cranium).to receive_messages(configuration: configuration)
+
+    FileUtils.mkdir_p(configuration.upload_path)
+    FileUtils.touch(File.join(configuration.upload_path, file1))
+    FileUtils.touch(File.join(configuration.upload_path, file2))
+  end
 
   describe ".archive" do
-    it "should create the archive directory if it doesn't exist" do
-      allow(Dir).to receive(:exists?).with("path/to/archive").and_return(false)
+    before { FileUtils.rm_rf configuration.archive_directory }
 
-      expect(FileUtils).to receive(:mkpath).with "path/to/archive"
+    context "when archive directory does not exist" do
+      it "creates the archive directory" do
+        archiver.archive file1, file2
 
-      Cranium::Archiver.archive
+        expect(File.exists?(configuration.archive_directory)).to eq true
+      end
     end
 
-    it "should move files to the archive directory" do
-      allow(Dir).to receive(:exists?).with("path/to/archive").and_return(true)
-      allow(Time).to receive(:now).and_return Time.new(2000, 1, 1, 1, 2, 3)
+    context "when there are some file in the upload directory" do
+      it "moves files to the archive directory" do
+        archiver.archive file1, file2
 
-      expect(FileUtils).to receive(:mv).with "gpfdist_home/upload_dir/file.txt", "path/to/archive/2000-01-01_01h02m03s_file.txt"
-      expect(FileUtils).to receive(:mv).with "gpfdist_home/upload_dir/another_file.txt", "path/to/archive/2000-01-01_01h02m03s_another_file.txt"
-
-      Cranium::Archiver.archive "file.txt", "another_file.txt"
+        expect(File.exist?(File.join(configuration.upload_path, file1))).to eq false
+        expect(File.exist?(File.join(configuration.upload_path, file2))).to eq false
+        expect(File.exist?(File.join(configuration.archive_directory, Dir.glob("*#{file1}")))).to eq true
+        expect(File.exist?(File.join(configuration.archive_directory, Dir.glob("*#{file2}")))).to eq true
+      end
     end
   end
-
 
   describe ".remove" do
-    it "should remove files from the upload directory" do
-      expect(FileUtils).to receive(:rm).with "gpfdist_home/upload_dir/file.txt"
-      expect(FileUtils).to receive(:rm).with "gpfdist_home/upload_dir/another_file.txt"
+    it "removes files from the upload directory" do
+      archiver.remove file1, file2
 
-      Cranium::Archiver.remove "file.txt", "another_file.txt"
+      expect(File.exist?(File.join(configuration.archive_directory, Dir.glob("*#{file1}")))).to eq true
+      expect(File.exist?(File.join(configuration.archive_directory, Dir.glob("*#{file2}")))).to eq true
     end
   end
 
+  describe ".move" do
+    let(:target_directory) { "tmp/target_directory" }
+
+    it "creates given directory if it does not exist" do
+      archiver.move(file1, file2, target_directory: target_directory)
+
+      expect(File.exists?(target_directory)).to eq true
+    end
+
+    it "moves files from upload directory into a given directory" do
+      archiver.move(file1, file2, target_directory: target_directory)
+
+      expect(File.exist?(File.join(configuration.upload_path, file1))).to eq false
+      expect(File.exist?(File.join(configuration.upload_path, file2))).to eq false
+      expect(File.exist?(File.join(target_directory, file1))).to eq true
+      expect(File.exist?(File.join(target_directory, file2))).to eq true
+    end
+  end
 end
