@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'dotenv/load'
 require_relative "../../lib/cranium"
 
 FileUtils.mkdir_p("log") unless Dir.exists?("log")
