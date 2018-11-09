@@ -22,8 +22,9 @@ class Cranium::TestFramework::World
 
 
   def save_definition(definition)
-    config = <<-config_string
+    config = <<~config_string
       require 'logger'
+      require 'date'
 
       Cranium.configure do |config|
         config.greenplum_connection_string = "#{Cranium.configuration.greenplum_connection_string}"
@@ -32,6 +33,7 @@ class Cranium::TestFramework::World
         config.upload_directory = "#{Cranium.configuration.upload_directory}"
         config.loggers << Logger.new("log/application.log")
       end
+
     config_string
 
     upload_directory.save_file DEFINITION_FILE, config + definition
