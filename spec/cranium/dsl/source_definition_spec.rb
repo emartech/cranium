@@ -38,11 +38,11 @@ describe Cranium::DSL::SourceDefinition do
 
     it "should return the fields and types that were set" do
       source.field :field1, String
-      source.field :field2, Fixnum
+      source.field :field2, Integer
 
       expect(source.fields).to eq({
         field1: String,
-        field2: Fixnum
+        field2: Integer
       })
     end
   end
