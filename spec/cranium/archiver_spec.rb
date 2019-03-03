@@ -20,9 +20,9 @@ RSpec.describe Cranium::Archiver do
   end
 
   describe ".archive" do
-    before { FileUtils.rm_rf configuration.archive_directory }
-
     context "when archive directory does not exist" do
+      before { FileUtils.rm_rf configuration.archive_directory }
+
       it "creates the archive directory" do
         archiver.archive file1, file2
 
@@ -43,6 +43,8 @@ RSpec.describe Cranium::Archiver do
   end
 
   describe ".remove" do
+    before { FileUtils.mkdir_p configuration.archive_directory }
+
     it "removes files from the upload directory" do
       archiver.remove file1, file2
 
