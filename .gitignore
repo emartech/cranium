@@ -5,6 +5,7 @@
 .yardoc
 .vagrant
 .idea
+.ruby-version
 Gemfile.lock
 InstalledFiles
 _yardoc
