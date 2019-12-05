@@ -11,7 +11,7 @@ class Cranium::ImportStrategy::Base
 
 
   def import
-    external_table = Cranium::ExternalTable.new Cranium.application.sources[import_definition.name], Cranium::Database.connection
+    external_table = Cranium::ExternalTable.new Cranium.application.sources[import_definition.name], Cranium::Database.connection, error_threshold: @import_definition.error_threshold
 
     external_table.create
     number_of_items_imported = import_from external_table.name
