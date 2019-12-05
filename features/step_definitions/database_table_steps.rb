@@ -3,13 +3,13 @@ Given(/^a database table called "([^"]*)" with the following fields:$/) do |tabl
 end
 
 
-Given (/^only the following rows in the "([^"]*)" database table:$/) do |table_name, rows|
+Given(/^only the following rows in the "([^"]*)" database table:$/) do |table_name, rows|
   database_table(table_name).clear
   step %Q(the following new rows in the "#{table_name}" database table:), rows
 end
 
 
-Given (/^the following new rows in the "([^"]*)" database table:$/) do |table_name, rows|
+Given(/^the following new rows in the "([^"]*)" database table:$/) do |table_name, rows|
   database_table(table_name).insert rows.data
 end
 
