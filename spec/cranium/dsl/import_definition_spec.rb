@@ -12,6 +12,14 @@ describe Cranium::DSL::ImportDefinition do
     end
   end
 
+  describe "#error_threshold" do
+    it "should set the error threshold to the given percentage" do
+      import.error_threshold 10
+
+      expect(import.error_threshold).to eq 10
+    end
+  end
+
 
   describe "#name" do
     it "should return the name of the import definition" do

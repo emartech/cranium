@@ -10,6 +10,7 @@ class Cranium::DSL::ImportDefinition
   attr_reader :merge_fields
 
   define_attribute :into
+  define_attribute :error_threshold
   define_boolean_attribute :truncate_insert
   define_array_attribute :delete_insert_on
 

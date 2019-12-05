@@ -1,5 +1,6 @@
 require_relative '../spec_helper'
 require 'ostruct'
+require 'date'
 
 describe Cranium::ExternalTable do
 
@@ -19,36 +20,63 @@ describe Cranium::ExternalTable do
       source.escape "'"
     end
   end
-  let(:external_table) { Cranium::ExternalTable.new source, connection }
 
+  subject(:external_table) { Cranium::ExternalTable.new source, connection }
 
   describe "#create" do
-    it "should create an external table from the specified source" do
+    before do
       allow(Cranium).to receive_messages configuration: OpenStruct.new(
-        gpfdist_url: "gpfdist-url",
-        gpfdist_home_directory: "/gpfdist-home",
-        upload_directory: "upload-dir"
+          gpfdist_url: "gpfdist-url",
+          gpfdist_home_directory: "/gpfdist-home",
+          upload_directory: "upload-dir"
       )
 
       allow(source).to receive_messages files: %w(test_products_a.csv test_products_b.csv)
+    end
 
-      expect(connection).to receive(:run).with(<<-sql
-      CREATE EXTERNAL TABLE "external_products" (
-          "text_field" TEXT,
-          "integer_field" INTEGER,
-          "numeric_field" NUMERIC,
-          "date_field" DATE,
-          "timestamp_field" TIMESTAMP WITHOUT TIME ZONE,
-          "boolean_field1" BOOLEAN,
-          "boolean_field2" BOOLEAN
-      )
-      LOCATION ('gpfdist://gpfdist-url/upload-dir/test_products_a.csv', 'gpfdist://gpfdist-url/upload-dir/test_products_b.csv')
-      FORMAT 'CSV' (DELIMITER ';' ESCAPE '''' QUOTE '"' HEADER)
-      ENCODING 'UTF8'
+    it "should create an external table from the specified source" do
+      expect(connection).to receive(:run).with(<<~sql
+        CREATE EXTERNAL TABLE "external_products" (
+            "text_field" TEXT,
+            "integer_field" INTEGER,
+            "numeric_field" NUMERIC,
+            "date_field" DATE,
+            "timestamp_field" TIMESTAMP WITHOUT TIME ZONE,
+            "boolean_field1" BOOLEAN,
+            "boolean_field2" BOOLEAN
+        )
+        LOCATION ('gpfdist://gpfdist-url/upload-dir/test_products_a.csv', 'gpfdist://gpfdist-url/upload-dir/test_products_b.csv')
+        FORMAT 'CSV' (DELIMITER ';' ESCAPE '''' QUOTE '"' HEADER)
+        ENCODING 'UTF8'
       sql
       )
 
       external_table.create
+    end
+
+    context "with error_threshold argument" do
+      subject(:external_table) { Cranium::ExternalTable.new source, connection, error_threshold: 10 }
+
+      it "should create an external table from the specified source" do
+        expect(connection).to receive(:run).with(<<~sql
+          CREATE EXTERNAL TABLE "external_products" (
+              "text_field" TEXT,
+              "integer_field" INTEGER,
+              "numeric_field" NUMERIC,
+              "date_field" DATE,
+              "timestamp_field" TIMESTAMP WITHOUT TIME ZONE,
+              "boolean_field1" BOOLEAN,
+              "boolean_field2" BOOLEAN
+          )
+          LOCATION ('gpfdist://gpfdist-url/upload-dir/test_products_a.csv', 'gpfdist://gpfdist-url/upload-dir/test_products_b.csv')
+          FORMAT 'CSV' (DELIMITER ';' ESCAPE '''' QUOTE '"' HEADER)
+          ENCODING 'UTF8'
+          SEGMENT REJECT LIMIT 10 PERCENT
+        sql
+        )
+
+        external_table.create
+      end
     end
   end
 
@@ -67,5 +95,4 @@ describe Cranium::ExternalTable do
       expect(external_table.name).to eq(:external_products)
     end
   end
-
 end
