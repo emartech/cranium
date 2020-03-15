@@ -7,11 +7,15 @@ class Cranium::DSL::DatabaseDefinition
   attr_reader :name
 
   define_attribute :connect_to
+  define_attribute :retry_count
+  define_attribute :retry_delay
 
 
 
   def initialize(name)
     @name = name
+    @retry_count = 0
+    @retry_delay = 0
   end
 
 

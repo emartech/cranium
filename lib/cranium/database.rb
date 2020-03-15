@@ -13,7 +13,9 @@ module Cranium::Database
 
   def self.[](name)
     @connections ||= {}
-    @connections[name] ||= setup_connection(@definitions[name].connect_to)
+    @connections[name] ||= setup_connection(@definitions[name].connect_to,
+                                            @definitions[name].retry_count,
+                                            @definitions[name].retry_delay)
   end
 
 
@@ -28,15 +30,19 @@ module Cranium::Database
   private
 
 
-  def self.setup_connection(connection_string)
-    connection = if Cranium.configuration.log_queries
-                   Sequel.connect(connection_string, loggers: Cranium.configuration.loggers)
-                 else
-                   Sequel.connect(connection_string)
-                 end
-    connection.extension :connection_validator
-    connection.pool.connection_validation_timeout = -1
-    return connection
+  def self.setup_connection(connection_details, retry_count = 0, retry_delay = 0)
+    (retry_count + 1).times do |try_count|
+      connection = if Cranium.configuration.log_queries
+                     Sequel.connect(connection_details, loggers: Cranium.configuration.loggers)
+                   else
+                     Sequel.connect(connection_details)
+                   end
+      connection.extension :connection_validator
+      connection.pool.connection_validation_timeout = -1
+      break connection
+    rescue Sequel::DatabaseConnectionError
+      (try_count == retry_count) ? raise : sleep(retry_delay)
+    end
   end
 
 end

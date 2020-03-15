@@ -81,6 +81,40 @@ describe Cranium::Database do
 
       expect(database[:dwh]).not_to eq database[:dwh2]
     end
+
+    context 'when retry_count is specified' do
+      before do
+        database.register_database :dwh do
+          connect_to "other connection string"
+          retry_count 3
+          retry_delay 15
+        end
+        allow(database).to receive(:sleep)
+      end
+
+      it "should retry connecting to the DB the specified number of times" do
+        call_count = 0
+        allow(Sequel).to receive(:connect) do
+          call_count += 1
+          call_count < 3 ? raise(Sequel::DatabaseConnectionError) : connection
+        end
+
+        expect(database[:dwh]).to eq connection
+      end
+
+      it "should not retry connecting to the DB more than the specified number of times" do
+        allow(Sequel).to receive(:connect).exactly(4).times.and_raise(Sequel::DatabaseConnectionError)
+
+        expect { database[:dwh] }.to raise_error(Sequel::DatabaseConnectionError)
+      end
+
+      it "should wait retry_delay seconds between connection attempts" do
+        allow(Sequel).to receive(:connect).and_raise(Sequel::DatabaseConnectionError)
+        expect(database).to receive(:sleep).with(15).exactly(3).times
+
+        expect { database[:dwh] }.to raise_error(Sequel::DatabaseConnectionError)
+      end
+    end
   end
 
 end
