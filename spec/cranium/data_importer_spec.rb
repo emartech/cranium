@@ -6,6 +6,7 @@ describe Cranium::DataImporter do
   before do
     allow(Cranium::Database).to receive(:connection).and_return connection
     allow(connection).to receive(:transaction).and_yield
+    allow(Cranium.application).to receive(:apply_hook).with :after_import
   end
 
   let(:importer) { Cranium::DataImporter.new }
@@ -14,7 +15,7 @@ describe Cranium::DataImporter do
   describe "#import" do
 
     context "when called with delete_on strategy" do
-      xit "calls Delete strategy" do
+      it "calls Delete strategy" do
         import_strategy = instance_double Cranium::ImportStrategy::Delete
         allow(Cranium::ImportStrategy::Delete).to receive(:new).with(definition).and_return import_strategy
         expect(import_strategy).to receive(:import).and_return 0
