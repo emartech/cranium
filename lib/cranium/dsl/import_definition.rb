@@ -13,6 +13,7 @@ class Cranium::DSL::ImportDefinition
   define_attribute :error_threshold
   define_boolean_attribute :truncate_insert
   define_array_attribute :delete_insert_on
+  define_array_attribute :delete_on
 
 
   def initialize(name)

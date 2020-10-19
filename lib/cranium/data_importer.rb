@@ -17,14 +17,16 @@ class Cranium::DataImporter
   private
 
   def importer_for_definition(import_definition)
-    if [!import_definition.merge_fields.empty?, !import_definition.delete_insert_on.empty?, import_definition.truncate_insert].count(true) > 1
-      raise StandardError, "Import should not combine merge_on, delete_insert_on and truncate_insert settings"
+    if [!import_definition.merge_fields.empty?, !import_definition.delete_insert_on.empty?, !import_definition.delete_on.empty?, import_definition.truncate_insert].count(true) > 1
+      raise StandardError, "Import should not combine merge_on, delete_insert_on, delete_on and truncate_insert settings"
     end
 
     if !import_definition.merge_fields.empty?
       Cranium::ImportStrategy::Merge.new(import_definition)
     elsif !import_definition.delete_insert_on.empty?
       Cranium::ImportStrategy::DeleteInsert.new(import_definition)
+    elsif !import_definition.delete_on.empty?
+      Cranium::ImportStrategy::Delete.new(import_definition)
     elsif import_definition.truncate_insert
       Cranium::ImportStrategy::TruncateInsert.new(import_definition)
     else
